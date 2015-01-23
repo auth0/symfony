@@ -1,0 +1,46 @@
+{
+    "name":        "Auth0/JWTAuth",
+    "type":        "symfony-bundle",
+    "description": "Support for authenticating users JWT.",
+    "keywords":    [
+        "authentication",
+        "firewall",
+        "jwt",
+        "security",
+        "auth0"
+    ],
+    "homepage":    "http://github.com/auth0/JWTAuth",
+    "license":     "MIT",
+
+    "authors": [
+        {
+            "name": "Germán Lena",
+            "email": "german.lena@gmail.com"
+        }
+    ],
+
+    "require": {
+        "php":                          ">=5.3.3",
+        "symfony/framework-bundle":     "~2.3",
+        "symfony/security-bundle":      "~2.1",
+        "symfony/options-resolver":     "~2.1",
+        "kriswallsmith/buzz":           "~0.7",
+        "symfony/yaml":                 "~2.3",
+        "firebase/php-jwt":             "~1.1",
+        "adoy/oauth2":                  "~1.0"
+    },
+
+    "require-dev": {
+    },
+
+    "suggest": {
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Auth0\\JWTAuthBundle\\": ""
+        }
+    },
+
+    "target-dir": "Auth0/SymfonyJWTBundle"
+}
