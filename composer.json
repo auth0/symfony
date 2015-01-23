@@ -37,5 +37,5 @@
         }
     },
 
-    "target-dir": "Auth0/SymfonyJWTBundle"
+    "target-dir": "Auth0/JWTAuthBundle"
 }
