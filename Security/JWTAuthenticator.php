@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface {
+class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface,onAuthenticationFailure {
 
     protected $auth0Service;
 
@@ -33,7 +33,7 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
 
         // validate the token
         $authToken = str_replace('Bearer ', '', $authorizationHeader);
-
+        throw new BadCredentialsException('Invalid token');
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
         } catch(\UnexpectedValueException $ex) {
