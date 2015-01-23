@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('auth0_symfony_jwt');
+        $rootNode = $treeBuilder->root('auth0_jwt_auth');
 
         $rootNode
             ->children()

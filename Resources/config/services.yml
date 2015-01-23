@@ -1,8 +1,8 @@
 services:
-    auth0_symfony_jwt.auth0_service:
+    auth0_jwt_auth.auth0_service:
         class: "Auth0\JWTAuthBundle\Security\Auth0Service"
-        arguments: [%auth0_symfony_jwt.client_id%, %auth0_symfony_jwt.client_secret%, %auth0_symfony_jwt.domain%, , %auth0_symfony_jwt.redirect_url%]
+        arguments: [%auth0_jwt_auth.client_id%, %auth0_jwt_auth.client_secret%, %auth0_jwt_auth.domain%, , %auth0_jwt_auth.redirect_url%]
 
-    auth0_symfony_jwt.jwt_authenticator:
+    auth0_jwt_auth.jwt_authenticator:
         class:     "Auth0\JWTAuthBundle\Security\JWTAuthenticator"
-        arguments: ["@auth0_symfony_jwt.auth0_service"]
+        arguments: ["@auth0_jwt_auth.auth0_service"]
