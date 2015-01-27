@@ -5,6 +5,7 @@ namespace Auth0\JWTAuthBundle\Security;
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -12,8 +13,9 @@ use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
-class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface,onAuthenticationFailure {
+class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorInterface,AuthenticationFailureHandlerInterface {
 
     protected $auth0Service;
 
@@ -33,7 +35,7 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
 
         // validate the token
         $authToken = str_replace('Bearer ', '', $authorizationHeader);
-        throw new BadCredentialsException('Invalid token');
+
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
         } catch(\UnexpectedValueException $ex) {
@@ -78,7 +80,7 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new Response("Authentication Failed.", 403);
+        return new Response("Authentication Failed: {$exception->getMessage()}", 403);
     }
 
 } 
