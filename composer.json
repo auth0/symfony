@@ -9,7 +9,7 @@
         "security",
         "auth0"
     ],
-    "homepage":    "http://github.com/auth0/JWTAuthBundle",
+    "homepage":    "http://github.com/auth0/jwt-auth-bundle",
     "license":     "MIT",
 
     "authors": [
