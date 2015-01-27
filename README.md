@@ -1,4 +1,4 @@
-# jwt-auth
+# jwt-auth-bundle
 
 JWT Authentication bundle for Symphony
 
@@ -20,7 +20,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
     "require": {
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth": "0.1.*"
+        "auth0/jwt-auth": "0.0.2"
     }
 }
 ~~~
