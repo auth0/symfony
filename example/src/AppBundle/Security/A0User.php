@@ -11,6 +11,13 @@ namespace AppBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 
+/**
+ * Class A0User
+ *
+ * This class represents your app User.
+ *
+ * @package AppBundle\Security
+ */
 class A0User implements UserInterface, EquatableInterface
 {
     private $jwt;

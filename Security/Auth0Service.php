@@ -21,7 +21,7 @@ class Auth0Service {
     private $domain;
     private $oauth_client;
 
-    public function __construct($client_id, $client_secret, $domain, $redirect_uri){
+    public function __construct($client_id, $client_secret, $domain){
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->domain = $domain;
