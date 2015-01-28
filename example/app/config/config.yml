@@ -73,7 +73,6 @@ swiftmailer:
     spool:     { type: memory }
 
 auth0_jwt_auth:
-    domain:        wptest.auth0.com
-    client_id:     OZ9ytsylM8CDlC3A0ciEOhx12ul2edbm
-    client_secret: EycSsmds_9XLZ0-5KtuZdJyuQD8x70RO3adRAqstlg3EixRv7A0pr1TzBqYXo1u1
-    redirect_url:  http://localhost:8000/auth0/callback
+    domain:        domain.auth0.com
+    client_id:     000
+    client_secret: 000
