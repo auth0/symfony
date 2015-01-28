@@ -26,7 +26,6 @@ class Auth0JWTAuthExtension extends Extension{
         $container->setParameter('auth0_jwt_auth.client_id', $config['client_id']);
         $container->setParameter('auth0_jwt_auth.client_secret', $config['client_secret']);
         $container->setParameter('auth0_jwt_auth.domain', $config['domain']);
-        $container->setParameter('auth0_jwt_auth.redirect_url', $config['redirect_url']);
     }
 
 } 

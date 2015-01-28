@@ -1,13 +1,6 @@
-# jwt-auth-bundle
+#Auth0\JWTAuth bundle usage demo
 
-JWT Authentication bundle for Symphony
-
-
-##Demo
-
-Check the usage demo: https://github.com/auth0/jwt-auth-bundle/tree/master/example
-
-##Usage
+For the jwy-auth package check: https://github.com/auth0/jwt-auth-bundle
 
 ###1. Install dependencies
 
@@ -20,7 +13,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
     "require": {
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth": "0.0.3"
+        "auth0/jwt-auth": "0.0.2"
     }
 }
 ~~~
@@ -34,12 +27,13 @@ auth0_symfony_jwt:
     domain:        yourdomain.auth0.com
     client_id:     YOURCLIENTID
     client_secret: YOURCLIENTSECRET
+    redirect_url:  http://localhost:8000/auth0/callback
 ~~~
 
 ###3. Setup your User and UserProvider
 
 Create your User and UserProvider.
-The UserProvider must implements the JWTUserProviderInterface (see /source/AppBundle/Security/A0UserProvider) and return a User object that implements the UserInterface.
+The UserProvider must implements the JWTUserProviderInterface (see /source/AppBundle/Security/A0UserProvider).
 
 The configure your services on /app/config/services.yml
 
@@ -52,11 +46,7 @@ services:
 
 ###4. Setup the SecurityProvider
 
-Modify the file /app/config/security.yml:
-
-- define your user provider
-- define your secured area that want to authenticate using JWT
-- define the access_control section with the roles needed for each route
+Modify the file /app/config/security.yml
 
 ~~~yml
 security:
@@ -71,12 +61,7 @@ security:
             stateless: true
             simple_preauth:
                 authenticator: auth0_symfony_jwt.jwt_authenticator
-
-    access_control:
-        - { path: ^/api, roles: ROLE_OAUTH_USER }
 ~~~
 
 
-## Issue Reporting
 
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.

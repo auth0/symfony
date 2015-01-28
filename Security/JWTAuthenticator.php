@@ -4,6 +4,7 @@
 namespace Auth0\JWTAuthBundle\Security;
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
@@ -33,9 +34,10 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
             throw new BadCredentialsException('No authorization header sent');
         }
 
-        // validate the token
+        // extract the JWT
         $authToken = str_replace('Bearer ', '', $authorizationHeader);
 
+        // decode and validate the JWT
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
         } catch(\UnexpectedValueException $ex) {
@@ -58,6 +60,14 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
+        // The user provider should implement JWTUserProviderInterface
+        if (!$userProvider instanceof JWTUserProviderInterface) {
+
+            throw new InvalidArgumentException('Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface');
+
+        }
+
+        // Get the user for the injected UserProvider
         $user = $userProvider->loadUserByJWT($token->getCredentials());
 
         if (!$user) {
@@ -68,6 +78,7 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
 
         return new PreAuthenticatedToken(
             $user,
+            $token,
             $providerKey,
             $user->getRoles()
         );

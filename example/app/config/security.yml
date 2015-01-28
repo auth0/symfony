@@ -1,0 +1,15 @@
+security:
+    providers:
+        a0:
+            id:
+                a0_user_provider
+
+    firewalls:
+        secured_area:
+            pattern: ^/api
+            stateless: true
+            simple_preauth:
+                authenticator: auth0_jwt_auth.jwt_authenticator
+
+    access_control:
+        - { path: ^/api, roles: ROLE_OAUTH_USER }
