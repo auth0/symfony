@@ -39,7 +39,11 @@ auth0_symfony_jwt:
 ###3. Setup your User and UserProvider
 
 Create your User and UserProvider.
-The UserProvider must implements the JWTUserProviderInterface (see /source/AppBundle/Security/A0UserProvider) and return a User object that implements the UserInterface.
+
+The UserProvider must implements the JWTUserProviderInterface (see /source/AppBundle/Security/A0UserProvider). This class should implement 2 methods:
+- loadUserByJWT: This method receives the decoded JWT (but overloaded with the encoded token on the token attribute) and should return a User.
+- getAnonymousUser: This method should return an anonymous user that represents an unauthenticated one.
+*Both methods can throw an AuthenticationException exception in case that the user is not found, in the case of the loadUserByJWT method, or you don't want to handle unauthenticated users on your app, in the case of the getAnonymousUser method.*
 
 The configure your services on /app/config/services.yml
 
@@ -73,6 +77,7 @@ security:
                 authenticator: auth0_symfony_jwt.jwt_authenticator
 
     access_control:
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: ROLE_OAUTH_USER }
 ~~~
 

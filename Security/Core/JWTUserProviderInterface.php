@@ -22,9 +22,7 @@ interface JWTUserProviderInterface extends UserProviderInterface{
      *
      * @return UserInterface
      *
-     * @see JWTInfoNotFoundException
-     *
-     * @throws JWTInfoNotFoundException if the user is not found
+     * @throws AuthenticationException if the user is not found
      */
     public function loadUserByJWT($jwt);
 
@@ -38,7 +36,7 @@ interface JWTUserProviderInterface extends UserProviderInterface{
      *
      * @return UserInterface
      *
-     * @throws JWTInfoNotFoundException
+     * @throws AuthenticationException
      */
     public function getAnonymousUser();
 
