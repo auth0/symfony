@@ -31,7 +31,11 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
         $authorizationHeader = $request->headers->get('Authorization');
 
         if ($authorizationHeader == null) {
-            throw new BadCredentialsException('No authorization header sent');
+            return new PreAuthenticatedToken(
+                'anon.',
+                null,
+                $providerKey
+            );
         }
 
         // extract the JWT
@@ -67,13 +71,18 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
 
         }
 
-        // Get the user for the injected UserProvider
-        $user = $userProvider->loadUserByJWT($token->getCredentials());
+        if ($token->getCredentials() === null) {
+            $user = $userProvider->getAnonymousUser();
+        }
+        else {
+            // Get the user for the injected UserProvider
+            $user = $userProvider->loadUserByJWT($token->getCredentials());
 
-        if (!$user) {
-            throw new AuthenticationException(
-                sprintf('Invalid JWT.')
-            );
+            if (!$user) {
+                throw new AuthenticationException(
+                    sprintf('Invalid JWT.')
+                );
+            }
         }
 
         return new PreAuthenticatedToken(

@@ -12,4 +12,5 @@ security:
                 authenticator: auth0_jwt_auth.jwt_authenticator
 
     access_control:
-        - { path: ^/api, roles: ROLE_OAUTH_USER }
+            - { path: ^/api/unsecure, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/api, roles: ROLE_OAUTH_USER }
