@@ -25,6 +25,31 @@ Modify your `composer.json` to add the following dependencies and run `composer 
 }
 ~~~
 
+###2. Add the bundle to your AppKernell.php file
+
+~~~php
+
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            
+            ...
+            
+            new \Auth0\JWTAuthBundle\Auth0JWTAuthBundle(),
+            
+            ...
+            
+        );
+        
+        ...
+        
+        return $bundles;
+    }
+   
+~~~
+
 ###2. Configure your Auth0 app data
 
 Modify the file /app/config/config.yml
