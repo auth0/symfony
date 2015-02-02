@@ -55,7 +55,7 @@ class AppKernel extends Kernel
 Modify the file /app/config/config.yml
 
 ~~~yml
-auth0_symfony_jwt:
+auth0_jwt_auth:
     domain:        yourdomain.auth0.com
     client_id:     YOURCLIENTID
     client_secret: YOURCLIENTSECRET
