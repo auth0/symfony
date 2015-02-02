@@ -76,7 +76,7 @@ The configure your services on /app/config/services.yml
 services:
     a0_user_provider:
         class: AppBundle\Security\A0UserProvider
-        arguments: ["@auth0_symfony_jwt.auth0_service"]
+        arguments: ["@auth0_jwt_auth.auth0_service"]
 ~~~
 
 ###5. Setup the SecurityProvider
