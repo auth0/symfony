@@ -50,7 +50,7 @@ class AppKernel extends Kernel
    
 ~~~
 
-###2. Configure your Auth0 app data
+###3. Configure your Auth0 app data
 
 Modify the file /app/config/config.yml
 
@@ -61,7 +61,7 @@ auth0_symfony_jwt:
     client_secret: YOURCLIENTSECRET
 ~~~
 
-###3. Setup your User and UserProvider
+###4. Setup your User and UserProvider
 
 Create your User and UserProvider.
 
@@ -79,7 +79,7 @@ services:
         arguments: ["@auth0_symfony_jwt.auth0_service"]
 ~~~
 
-###4. Setup the SecurityProvider
+###5. Setup the SecurityProvider
 
 Modify the file /app/config/security.yml:
 
