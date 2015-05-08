@@ -7,6 +7,19 @@ JWT Authentication bundle for Symphony
 
 Check the usage demo: https://github.com/auth0/jwt-auth-bundle/tree/master/example
 
+##News
+
+###Version 1.2 release
+
+- PSR-4 compliance
+- Support for API v2 & auth0-php 1.0
+
+#### BC breaks
+
+- The profile data is not longer a `stdClass`, is an asociative array.
+- There are some BC issues related to the auth0-php changes. We recomment to read the [auth0-php README](https://github.com/auth0/Auth0-PHP).
+
+
 ##Usage
 
 ###1. Install dependencies
@@ -34,20 +47,20 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
-            
+
             ...
-            
+
             new \Auth0\JWTAuthBundle\Auth0JWTAuthBundle(),
-            
+
             ...
-            
+
         );
-        
+
         ...
-        
+
         return $bundles;
     }
-   
+
 ~~~
 
 ###3. Configure your Auth0 app data

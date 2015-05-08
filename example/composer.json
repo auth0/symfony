@@ -20,7 +20,7 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth-bundle": "1.0.0"
+        "auth0/jwt-auth-bundle": "dev-api_v2"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
