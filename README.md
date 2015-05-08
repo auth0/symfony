@@ -7,6 +7,29 @@ JWT Authentication bundle for Symphony
 
 Check the usage demo: https://github.com/auth0/jwt-auth-bundle/tree/master/example
 
+##News
+
+###Version 1.2 release
+
+- PSR-4 compliance
+- Support for API v2 & auth0-php 1.0
+
+#### BC breaks
+
+- Config
+    - package name space changed to `jwt_auth`
+    - `domain` is no longer needed
+    - added optional `secret_base64_encoded` field
+- Removed dependency with Auth0. Now you can use non base64 tokens.
+- The profile data is not longer a `stdClass`, is an asociative array.
+- There are some BC issues related to the auth0-php changes. We recomment to read the [auth0-php README](https://github.com/auth0/Auth0-PHP).
+
+#### Auth0 integration
+
+This package has built in Auth0 integration (as you can check on the example) but is not mandatory. You can use this package to authenticate other JWT.
+
+The auth-php SDK is used to decode the JWT and if you are woking with Auth0 you can inject to your `UserProvider` to get the user profile (as you can check on the [example](https://github.com/auth0/jwt-auth-bundle/blob/master/example/src/AppBundle/Security/A0UserProvider.php)).
+
 ##Usage
 
 ###1. Install dependencies
@@ -20,7 +43,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
     "require": {
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth-bundle": "1.0.0"
+        "auth0/jwt-auth-bundle": "~1.1"
     }
 }
 ~~~
@@ -34,20 +57,20 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
-            
+
             ...
-            
-            new \Auth0\JWTAuthBundle\Auth0JWTAuthBundle(),
-            
+
+            new \Auth0\JWTAuthBundle\JWTAuthBundle(),
+
             ...
-            
+
         );
-        
+
         ...
-        
+
         return $bundles;
     }
-   
+
 ~~~
 
 ###3. Configure your Auth0 app data
@@ -55,10 +78,10 @@ class AppKernel extends Kernel
 Modify the file /app/config/config.yml
 
 ~~~yml
-auth0_jwt_auth:
-    domain:        yourdomain.auth0.com
+jwt-auth-bundle:
     client_id:     YOURCLIENTID
     client_secret: YOURCLIENTSECRET
+    secret_base64_encoded: (optional) TRUE if the secret is base64 encoded (true by default as the Auth0 secret)
 ~~~
 
 ###4. Setup your User and UserProvider
@@ -76,7 +99,7 @@ The configure your services on /app/config/services.yml
 services:
     a0_user_provider:
         class: AppBundle\Security\A0UserProvider
-        arguments: ["@auth0_jwt_auth.auth0_service"]
+        arguments: ["@jwt_auth.auth0_service"]
 ~~~
 
 ###5. Setup the SecurityProvider
@@ -99,7 +122,7 @@ security:
             pattern: ^/api
             stateless: true
             simple_preauth:
-                authenticator: auth0_jwt_aut.jwt_authenticator
+                authenticator: jwt_auth.jwt_authenticator
 
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

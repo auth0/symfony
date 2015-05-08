@@ -72,7 +72,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-auth0_jwt_auth:
-    domain:        domain.auth0.com
-    client_id:     000
-    client_secret: 000
+jwt_auth:
+    client_id:     KNuydwEqwGsPNpxdAhACmOWDUmBEZsLn
+    client_secret: cQT57M1wIYvcW1Rr6lTGWitqlkBtYwsyYkHG-mhVKdxhXBATWDwM6tB0mJFJVWFv

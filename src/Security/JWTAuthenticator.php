@@ -44,6 +44,7 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
         // decode and validate the JWT
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
+            $token->token = $authToken;
         } catch(\UnexpectedValueException $ex) {
             throw new BadCredentialsException('Invalid token');
         }
@@ -103,4 +104,4 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
         return new Response("Authentication Failed: {$exception->getMessage()}", 403);
     }
 
-} 
+}
