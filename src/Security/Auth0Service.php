@@ -21,9 +21,10 @@ class Auth0Service {
     private $client_secret;
     private $oauth_client;
 
-    public function __construct($client_id, $client_secret){
+    public function __construct($client_id, $client_secret, $secret_base64_encoded){
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
+        $this->secret_base64_encoded = $secret_base64_encoded;
     }
 
     /**
@@ -40,7 +41,7 @@ class Auth0Service {
      */
     public function decodeJWT($encToken) {
 
-        return Auth0JWT::decode($encToken, $this->client_id, $this->client_secret);
+        return Auth0JWT::decode($encToken, $this->client_id, $this->client_secret, $this->secret_base64_encoded);
 
     }
 }
