@@ -24,6 +24,11 @@ Check the usage demo: https://github.com/auth0/jwt-auth-bundle/tree/master/examp
 - The profile data is not longer a `stdClass`, is an asociative array.
 - There are some BC issues related to the auth0-php changes. We recomment to read the [auth0-php README](https://github.com/auth0/Auth0-PHP).
 
+#### Auth0 integration
+
+This package has built in Auth0 integration (as you can check on the example) but is not mandatory. You can use this package to authenticate other JWT.
+
+The auth-php SDK is used to decode the JWT and if you are woking with Auth0 you can inject to your `UserProvider` to get the user profile (as you can check on the [example](https://github.com/auth0/jwt-auth-bundle/blob/master/example/src/AppBundle/Security/A0UserProvider.php)).
 
 ##Usage
 
