@@ -16,6 +16,9 @@ Check the usage demo: https://github.com/auth0/jwt-auth-bundle/tree/master/examp
 
 #### BC breaks
 
+- Config
+    - package name space changed to `jwt_auth`
+    - `domain` is no longer needed
 - The profile data is not longer a `stdClass`, is an asociative array.
 - There are some BC issues related to the auth0-php changes. We recomment to read the [auth0-php README](https://github.com/auth0/Auth0-PHP).
 
@@ -33,7 +36,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
     "require": {
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth-bundle": "1.0.0"
+        "auth0/jwt-auth-bundle": "~1.1"
     }
 }
 ~~~
@@ -50,7 +53,7 @@ class AppKernel extends Kernel
 
             ...
 
-            new \Auth0\JWTAuthBundle\Auth0JWTAuthBundle(),
+            new \Auth0\JWTAuthBundle\JWTAuthBundle(),
 
             ...
 
@@ -68,8 +71,7 @@ class AppKernel extends Kernel
 Modify the file /app/config/config.yml
 
 ~~~yml
-auth0_jwt_auth:
-    domain:        yourdomain.auth0.com
+jwt-auth-bundle:
     client_id:     YOURCLIENTID
     client_secret: YOURCLIENTSECRET
 ~~~
@@ -89,7 +91,7 @@ The configure your services on /app/config/services.yml
 services:
     a0_user_provider:
         class: AppBundle\Security\A0UserProvider
-        arguments: ["@auth0_jwt_auth.auth0_service"]
+        arguments: ["@jwt-auth-bundle.auth0_service"]
 ~~~
 
 ###5. Setup the SecurityProvider

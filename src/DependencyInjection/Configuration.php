@@ -18,11 +18,10 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('auth0_jwt_auth');
+        $rootNode = $treeBuilder->root('jwt_auth');
 
         $rootNode
             ->children()
-            ->scalarNode('domain')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('client_id')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('client_secret')->isRequired()->cannotBeEmpty()->end();
 

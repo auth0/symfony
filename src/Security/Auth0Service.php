@@ -19,13 +19,11 @@ class Auth0Service {
 
     private $client_id;
     private $client_secret;
-    private $domain;
     private $oauth_client;
 
-    public function __construct($client_id, $client_secret, $domain){
+    public function __construct($client_id, $client_secret){
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
-        $this->domain = $domain;
     }
 
     /**

@@ -6,4 +6,4 @@ parameters:
 services:
     a0_user_provider:
         class: AppBundle\Security\A0UserProvider
-        arguments: ["@auth0_jwt_auth.auth0_service"]
+        arguments: ["@jwt_auth.auth0_service"]
