@@ -33,3 +33,5 @@
 
 # Composer PHAR
 /example/composer.phar
+
+.DS_Store
