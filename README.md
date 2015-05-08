@@ -81,7 +81,7 @@ Modify the file /app/config/config.yml
 jwt-auth-bundle:
     client_id:     YOURCLIENTID
     client_secret: YOURCLIENTSECRET
-    secret_base64_encoded: TRUE if the secret is base64 encoded (true by default as the Auth0 secret)
+    secret_base64_encoded: (optional) TRUE if the secret is base64 encoded (true by default as the Auth0 secret)
 ~~~
 
 ###4. Setup your User and UserProvider
@@ -99,7 +99,7 @@ The configure your services on /app/config/services.yml
 services:
     a0_user_provider:
         class: AppBundle\Security\A0UserProvider
-        arguments: ["@jwt-auth-bundle.auth0_service"]
+        arguments: ["@jwt_auth.auth0_service"]
 ~~~
 
 ###5. Setup the SecurityProvider
@@ -122,7 +122,7 @@ security:
             pattern: ^/api
             stateless: true
             simple_preauth:
-                authenticator: auth0_jwt_aut.jwt_authenticator
+                authenticator: jwt_auth.jwt_authenticator
 
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
