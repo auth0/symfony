@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.2.1](https://github.com/auth0/jwt-auth-bundle/tree/1.2.1) (2015-05-12)
+
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.0...1.2.1)
+
+**Closed issues:**
+
+- SDK Client headers spec compliant [\#6](https://github.com/auth0/jwt-auth-bundle/issues/6)
+
+**Merged pull requests:**
+
+- SDK Client headers spec compliant \#6 [\#7](https://github.com/auth0/jwt-auth-bundle/pull/7) ([glena](https://github.com/glena))
+
 ## [1.2.0](https://github.com/auth0/jwt-auth-bundle/tree/1.2.0) (2015-05-08)
 
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.0.0...1.2.0)
