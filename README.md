@@ -18,7 +18,6 @@ Check the usage demo: https://github.com/auth0/jwt-auth-bundle/tree/master/examp
 
 - Config
     - package name space changed to `jwt_auth`
-    - `domain` is no longer needed
     - added optional `secret_base64_encoded` field
 - Removed dependency with Auth0. Now you can use non base64 tokens.
 - The profile data is not longer a `stdClass`, is an asociative array.
@@ -81,6 +80,7 @@ Modify the file /app/config/config.yml
 jwt-auth-bundle:
     client_id:     YOURCLIENTID
     client_secret: YOURCLIENTSECRET
+    domain: (optional) YOURAUTH0DOMAIN (ie: tenant.auth0.com)
     secret_base64_encoded: (optional) TRUE if the secret is base64 encoded (true by default as the Auth0 secret)
 ~~~
 

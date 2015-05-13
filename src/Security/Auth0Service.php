@@ -19,11 +19,13 @@ class Auth0Service {
 
     private $client_id;
     private $client_secret;
+    private $domain;
     private $oauth_client;
 
-    public function __construct($client_id, $client_secret, $secret_base64_encoded){
+    public function __construct($client_id, $client_secret, $domain, $secret_base64_encoded){
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
+        $this->domain = $domain;
         $this->secret_base64_encoded = $secret_base64_encoded;
     }
 
@@ -32,7 +34,7 @@ class Auth0Service {
      * @return User info as described in https://docs.auth0.com/user-profile
      */
     public function getUserProfileByA0UID($jwt, $a0UID) {
-        return ApiUsers::get($jwt, $a0UID);
+        return ApiUsers::get($this->domain, $jwt, $a0UID);
     }
 
     /**

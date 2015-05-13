@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('client_id')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('client_secret')->isRequired()->cannotBeEmpty()->end()
+            ->scalarNode('domain')->defaultValue('')->end()
             ->booleanNode('secret_base64_encoded')->cannotBeEmpty()->defaultTrue()->end();
 
         return $treeBuilder;
