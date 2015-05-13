@@ -76,6 +76,7 @@ class JWTAuthenticator extends ContainerAware implements SimplePreAuthenticatorI
             $user = $userProvider->getAnonymousUser();
         }
         else {
+
             // Get the user for the injected UserProvider
             $user = $userProvider->loadUserByJWT($token->getCredentials());
 
