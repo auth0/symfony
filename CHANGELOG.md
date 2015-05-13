@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.2.2](https://github.com/auth0/jwt-auth-bundle/tree/1.2.2) (2015-05-13)
+
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.1...1.2.2)
+
+**Merged pull requests:**
+
+- Added optional domain config + support for auth0-php 1.0.2 [\#8](https://github.com/auth0/jwt-auth-bundle/pull/8) ([glena](https://github.com/glena))
+
 ## [1.2.1](https://github.com/auth0/jwt-auth-bundle/tree/1.2.1) (2015-05-12)
 
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.0...1.2.1)
@@ -18,7 +26,7 @@
 
 **Implemented enhancements:**
 
-- Use auth0-php instead of custom implementation on Auth0Service [\#4](https://github.com/auth0/jwt-auth-bundle/issues/4)
+- Use auth0-php instead of custom implementation no Auth0Service [\#4](https://github.com/auth0/jwt-auth-bundle/issues/4)
 
 - Auth0 settings should be optional [\#3](https://github.com/auth0/jwt-auth-bundle/issues/3)
 
