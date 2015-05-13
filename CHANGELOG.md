@@ -18,7 +18,7 @@
 
 **Implemented enhancements:**
 
-- Use auth0-php instead of custom implementation no Auth0Service [\#4](https://github.com/auth0/jwt-auth-bundle/issues/4)
+- Use auth0-php instead of custom implementation on Auth0Service [\#4](https://github.com/auth0/jwt-auth-bundle/issues/4)
 
 - Auth0 settings should be optional [\#3](https://github.com/auth0/jwt-auth-bundle/issues/3)
 
