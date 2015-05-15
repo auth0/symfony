@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.2.3](https://github.com/auth0/jwt-auth-bundle/tree/1.2.3) (2015-05-15)
+
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.2...1.2.3)
+
+**Merged pull requests:**
+
+- New info headers scheme [\#9](https://github.com/auth0/jwt-auth-bundle/pull/9) ([glena](https://github.com/glena))
+
 ## [1.2.2](https://github.com/auth0/jwt-auth-bundle/tree/1.2.2) (2015-05-13)
 
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.1...1.2.2)
