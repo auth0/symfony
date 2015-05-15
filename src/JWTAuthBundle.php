@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class JWTAuthBundle extends Bundle
 {
-	const SDK_VERSION = "1.2.2";
+	const SDK_VERSION = "1.2.3";
 
 	public function __construct() {
 		$oldInfoHeaders = ApiClient::getInfoHeadersData();
