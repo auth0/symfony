@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.2.4](https://github.com/auth0/jwt-auth-bundle/tree/1.2.4) (2015-07-17)
+
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.3...1.2.4)
+
+**Merged pull requests:**
+
+- Updated JWT dependency [\#10](https://github.com/auth0/jwt-auth-bundle/pull/10) ([glena](https://github.com/glena))
+
 ## [1.2.3](https://github.com/auth0/jwt-auth-bundle/tree/1.2.3) (2015-05-15)
 
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.2...1.2.3)
