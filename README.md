@@ -40,8 +40,8 @@ Modify your `composer.json` to add the following dependencies and run `composer 
 ~~~js
 {
     "require": {
-        "firebase/php-jwt": "dev-master",
-        "adoy/oauth2": "dev-master"
+        "adoy/oauth2": "dev-master",
+        "auth0/jwt-auth-bundle": "~1.1"
     }
 }
 ~~~
