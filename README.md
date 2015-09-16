@@ -46,7 +46,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
 }
 ~~~
 
-###2. Add the bundle to your AppKernell.php file
+###2. Add the bundle to your AppKernel.php file
 
 ~~~php
 
@@ -58,7 +58,7 @@ class AppKernel extends Kernel
 
             ...
 
-            new \Auth0\JWTAuthBundle\JWTAuthBundle(),
+            new Auth0\JWTAuthBundle\JWTAuthBundle(),
 
             ...
 
