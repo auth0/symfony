@@ -9,8 +9,8 @@
         "security",
         "auth0"
     ],
-    "homepage":    "http://github.com/auth0/jwt-auth-bundle",
-    "license":     "MIT",
+    "homepage": "http://github.com/auth0/jwt-auth-bundle",
+    "license": "MIT",
 
     "authors": [
         {
@@ -20,9 +20,9 @@
     ],
 
     "require": {
-        "php":                          ">=5.3.3",
-        "adoy/oauth2":                  "dev-master",
-        "auth0/auth0-php":              "~1.0"
+        "php": ">=5.3.3",
+        "adoy/oauth2": "dev-master",
+        "auth0/auth0-php": "~1.0"
     },
 
     "require-dev": {

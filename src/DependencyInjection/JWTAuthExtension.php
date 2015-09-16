@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: german
- * Date: 1/21/15
- * Time: 9:24 PM
- */
 
 namespace Auth0\JWTAuthBundle\DependencyInjection;
 
@@ -13,8 +7,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class JWTAuthExtension extends Extension{
-
+/**
+ * @author german
+ */
+class JWTAuthExtension extends Extension
+{
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
