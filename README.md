@@ -1,6 +1,6 @@
 # jwt-auth-bundle
 
-JWT Authentication bundle for Symphony
+JWT Authentication bundle for Symfony
 
 
 ##Demo
