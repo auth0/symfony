@@ -1,16 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: german
- * Date: 1/22/15
- * Time: 9:23 PM
- */
 
 namespace Auth0\JWTAuthBundle\Security\Core;
 
-
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
+/**
+ * @author german
+ */
 class JWTInfoNotFoundException extends AuthenticationException
 {
     private $jwt;

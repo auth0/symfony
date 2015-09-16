@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: german
- * Date: 1/20/15
- * Time: 11:54 PM
- */
 
 namespace Auth0\JWTAuthBundle\Security;
 
@@ -13,6 +7,8 @@ use Auth0\SDK\API\ApiUsers;
 use Symfony\Component\Security\Core\User\User;
 
 /**
+ * @author german
+ *
  * Service that provides access to the Auth0 SDK and JWT validation
  */
 class Auth0Service {
@@ -22,7 +18,8 @@ class Auth0Service {
     private $domain;
     private $oauth_client;
 
-    public function __construct($client_id, $client_secret, $domain, $secret_base64_encoded){
+    public function __construct($client_id, $client_secret, $domain, $secret_base64_encoded)
+    {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->domain = $domain;
@@ -31,19 +28,21 @@ class Auth0Service {
 
     /**
      * Get the Auth0 User Profile based on the JWT (and validate it).
+     *
      * @return User info as described in https://docs.auth0.com/user-profile
      */
-    public function getUserProfileByA0UID($jwt, $a0UID) {
+    public function getUserProfileByA0UID($jwt, $a0UID)
+    {
         return ApiUsers::get($this->domain, $jwt, $a0UID);
     }
 
     /**
      * Decodes the JWT and validate it
+     *
      * @return stdClass
      */
-    public function decodeJWT($encToken) {
-
+    public function decodeJWT($encToken)
+    {
         return Auth0JWT::decode($encToken, $this->client_id, $this->client_secret, $this->secret_base64_encoded);
-
     }
 }
