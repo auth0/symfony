@@ -21,7 +21,6 @@
 
     "require": {
         "php": ">=5.3.3",
-        "adoy/oauth2": "dev-master",
         "auth0/auth0-php": "~1.0"
     },
 

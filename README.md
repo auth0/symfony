@@ -35,15 +35,8 @@ The auth-php SDK is used to decode the JWT and if you are woking with Auth0 you 
 
 We recommend using [Composer](http://getcomposer.org/doc/01-basic-usage.md) to install the library.
 
-Modify your `composer.json` to add the following dependencies and run `composer update`.
-
-~~~js
-{
-    "require": {
-        "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth-bundle": "~1.1"
-    }
-}
+~~~
+composer require auth0/jwt-auth-bundle 
 ~~~
 
 ###2. Add the bundle to your AppKernel.php file
