@@ -3,7 +3,7 @@
 namespace Auth0\JWTAuthBundle\Security;
 
 use Auth0\SDK\Auth0JWT;
-use Auth0\SDK\API\ApiUsers;
+use Auth0\SDK\Auth0Api;
 use Symfony\Component\Security\Core\User\User;
 
 /**
@@ -33,7 +33,8 @@ class Auth0Service {
      */
     public function getUserProfileByA0UID($jwt, $a0UID)
     {
-        return ApiUsers::get($this->domain, $jwt, $a0UID);
+        $auth0Api = new Auth0Api($jwt, $this->domain);
+        return $auth0Api->users->get($a0UID);
     }
 
     /**
