@@ -5,13 +5,13 @@ namespace Auth0\JWTAuthBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
 
-use Auth0\SDK\API\ApiClient;
-use Auth0\SDK\API\InformationHeaders;
+use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\JWTAuthBundle\DependencyInjection\Auth0Extension;
 
 class JWTAuthBundle extends Bundle
 {
-	const SDK_VERSION = "1.2.3";
+	const SDK_VERSION = "1.2.7";
 
 	public function __construct()
     {
