@@ -1,12 +1,24 @@
 # Change Log
 
-## [Unreleased](https://github.com/auth0/jwt-auth-bundle/tree/HEAD)
+## [1.2.7](https://github.com/auth0/jwt-auth-bundle/tree/1.2.7) (2016-01-18)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.6...1.2.7)
 
-[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.5...HEAD)
+**Merged pull requests:**
+
+- updated auth0-php dependency [\#21](https://github.com/auth0/jwt-auth-bundle/pull/21) ([glena](https://github.com/glena))
+
+## [1.2.6](https://github.com/auth0/jwt-auth-bundle/tree/1.2.6) (2015-11-17)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.5...1.2.6)
 
 **Closed issues:**
 
+- Setting secret\_base64\_encoded as false causes an exception [\#18](https://github.com/auth0/jwt-auth-bundle/issues/18)
 - Installation method is incorrect [\#15](https://github.com/auth0/jwt-auth-bundle/issues/15)
+
+**Merged pull requests:**
+
+- \[\#18\] Remove "cannotBeEmpty" property of secret\_base64\_encoded [\#19](https://github.com/auth0/jwt-auth-bundle/pull/19) ([mickadoo](https://github.com/mickadoo))
+- Replaces scope: 'openid profile' [\#17](https://github.com/auth0/jwt-auth-bundle/pull/17) ([aguerere](https://github.com/aguerere))
 
 ## [1.2.5](https://github.com/auth0/jwt-auth-bundle/tree/1.2.5) (2015-10-29)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.4...1.2.5)
