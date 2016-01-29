@@ -10,8 +10,8 @@ class JWTAuthenticatorTest extends \PHPUnit_Framework_TestCase
     public function testTokenCreation()
     {
         $mockAuth0 = $this->getMockBuilder('Auth0\JWTAuthBundle\Security\Auth0Service')
-          ->disableOriginalConstructor()
-          ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $mockAuth0->expects($this->once())
             ->method('decodeJWT')
@@ -35,8 +35,34 @@ class JWTAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $token = $authenticator->createToken($request, $providerKey);
 
         $this->assertEquals('anon.',$token->GetUser());
-        $this->assertEquals($providerKey,$token->getProviderKey());
-        $this->assertEquals($providerKey,$token->getProviderKey());
+        $this->assertEquals($providerKey, $token->getProviderKey());
+        $this->assertEquals($providerKey, $token->getProviderKey());
+    }
+
+    public function testNoAuthorization()
+    {
+        $mockAuth0 = $this->getMockBuilder('Auth0\JWTAuthBundle\Security\Auth0Service')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $authenticator = new JWTAuthenticator($mockAuth0);
+        $providerKey = 'providerKey';
+
+        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $request->headers = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+
+        $request->headers
+            ->expects($this->once())
+            ->method('get')
+            ->with('Authorization')
+            ->will($this->returnValue(NULL));
+
+        $token = $authenticator->createToken($request, $providerKey);
+
+        $this->assertInstanceOf('Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken', $token);
+
+        $this->assertEquals($providerKey, $token->getProviderKey());
+        $this->assertNull($token->getCredentials());
     }
 
 }
