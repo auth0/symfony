@@ -1,8 +1,8 @@
 services:
     jwt_auth.auth0_service:
-        class: "Auth0\JWTAuthBundle\Security\Auth0Service"
+        class: "Auth0\\JWTAuthBundle\\Security\\Auth0Service"
         arguments: [%jwt_auth.client_id%, %jwt_auth.client_secret%, %jwt_auth.domain%, %jwt_auth.secret_base64_encoded%]
 
     jwt_auth.jwt_authenticator:
-        class:     "Auth0\JWTAuthBundle\Security\JWTAuthenticator"
+        class:     "Auth0\\JWTAuthBundle\\Security\\JWTAuthenticator"
         arguments: ["@jwt_auth.auth0_service"]
