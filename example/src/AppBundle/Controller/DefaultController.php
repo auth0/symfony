@@ -12,14 +12,9 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('AppBundle:Default:index.html.twig');
-    }
-
-    /**
-     * @Route("/login", name="loginpage")
-     */
-    public function loginAction()
-    {
-        return $this->render('AppBundle:Default:login.html.twig');
+        return $this->render('AppBundle:Default:index.html.twig',array(
+          'AUTH0_DOMAIN' => $this->container->getParameter('jwt_auth.domain'),
+          'AUTH0_CLIENT_ID' => $this->container->getParameter('jwt_auth.client_id')
+        ));
     }
 }

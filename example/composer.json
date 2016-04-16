@@ -18,9 +18,7 @@
         "sensio/distribution-bundle": "~3.0.12",
         "sensio/framework-extra-bundle": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "firebase/php-jwt": "dev-master",
-        "adoy/oauth2": "dev-master",
-        "auth0/jwt-auth-bundle": "~1.2"
+        "auth0/jwt-auth-bundle": "~1.2.8"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

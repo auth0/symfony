@@ -27,7 +27,7 @@ angular.module( 'sample', [
     clientID: AUTH0_CLIENT_ID,
     loginUrl: '/login'
   });
-
+  
   jwtInterceptorProvider.tokenGetter = function(store) {
     return store.get('token');
   }
@@ -60,4 +60,3 @@ angular.module( 'sample', [
 })
 
 ;
-
