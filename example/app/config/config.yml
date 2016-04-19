@@ -73,6 +73,6 @@ swiftmailer:
     spool:     { type: memory }
 
 jwt_auth:
-    client_id:     KNuydwEqwGsPNpxdAhACmOWDUmBEZsLn
-    client_secret: cQT57M1wIYvcW1Rr6lTGWitqlkBtYwsyYkHG-mhVKdxhXBATWDwM6tB0mJFJVWFv
-    domain: wptest.auth0.com
+    client_id:     {CLIENT_ID}
+    client_secret: {CLIENT_SECRET}
+    domain: {DOMAIN}

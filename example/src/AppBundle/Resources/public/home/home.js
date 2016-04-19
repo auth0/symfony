@@ -7,6 +7,7 @@ angular.module( 'sample.home', [
 
   $scope.callApi = function() {
     // Just call the API as you'd do using $http
+
     $http({
       url: 'http://localhost:8000/api/ping',
       method: 'GET'
