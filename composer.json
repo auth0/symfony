@@ -21,7 +21,6 @@
 
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "~3.0",
         "auth0/auth0-php": "~3.3"
     },
 
