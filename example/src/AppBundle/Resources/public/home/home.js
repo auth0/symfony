@@ -1,9 +1,8 @@
 angular.module( 'sample.home', [
-'auth0'
+'auth0.lock'
 ])
-.controller( 'HomeCtrl', function HomeController( $scope, auth, $http, $location, store ) {
-
-  $scope.auth = auth;
+.controller( 'HomeCtrl', function HomeController( $scope, lock, $http, $location, store ) {
+  $scope.profile = store.get('profile');
 
   $scope.callApi = function() {
     // Just call the API as you'd do using $http
@@ -19,7 +18,6 @@ angular.module( 'sample.home', [
   }
 
   $scope.logout = function() {
-    auth.signout();
     store.remove('profile');
     store.remove('token');
     $location.path('/login');

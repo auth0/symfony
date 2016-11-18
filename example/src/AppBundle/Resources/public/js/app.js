@@ -1,12 +1,12 @@
 angular.module( 'sample', [
-  'auth0',
+  'auth0.lock',
   'ngRoute',
   'sample.home',
   'sample.login',
   'angular-storage',
   'angular-jwt'
 ])
-.config( function myAppConfig ( $routeProvider, authProvider, $httpProvider, $locationProvider,
+.config( function myAppConfig ( $routeProvider, lockProvider, $httpProvider, $locationProvider,
   jwtInterceptorProvider) {
   $routeProvider
     .when( '/', {
@@ -22,7 +22,7 @@ angular.module( 'sample', [
     });
 
 
-  authProvider.init({
+  lockProvider.init({
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
     loginUrl: '/login'
@@ -36,21 +36,33 @@ angular.module( 'sample', [
   // NOTE: in case you are calling APIs which expect a token signed with a different secret, you might
   // want to check the delegation-token example
   $httpProvider.interceptors.push('jwtInterceptor');
-}).run(function($rootScope, auth, store, jwtHelper, $location) {
-  $rootScope.$on('$locationChangeStart', function() {
-    if (!auth.isAuthenticated) {
+}).run(function($rootScope, lock, store, jwtHelper, $location) {
+    $rootScope.$on('$locationChangeStart', function () {
       var token = store.get('token');
       if (token) {
         if (!jwtHelper.isTokenExpired(token)) {
-          auth.authenticate(store.get('profile'), token);
+          lock.getProfile(token, function (error, profile) { store.set('profile', profile); });
         } else {
           $location.path('/login');
         }
+      } else {
+        $location.path('/login');
       }
-    }
 
-  });
-})
+    });
+    
+    lock.on('authenticated', function (authResult) {
+      store.set('token', authResult.idToken);
+      lock.getProfile(authResult.idToken, function (err, profile) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        store.set('profile', profile);
+        $location.path("/");
+      });
+    });
+  })
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location ) {
   $scope.$on('$routeChangeSuccess', function(e, nextRoute){
     if ( nextRoute.$$route && angular.isDefined( nextRoute.$$route.pageTitle ) ) {
