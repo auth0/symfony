@@ -2,7 +2,7 @@
 
 ###1. Install dependencies
 
-Run `composer update`.
+Run `composer install`.
 
 ###2. Configure your Auth0 app data
 
