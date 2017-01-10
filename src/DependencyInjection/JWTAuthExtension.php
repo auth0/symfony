@@ -23,5 +23,8 @@ class JWTAuthExtension extends Extension
         $container->setParameter('jwt_auth.client_id', $config['client_id']);
         $container->setParameter('jwt_auth.client_secret', $config['client_secret']);
         $container->setParameter('jwt_auth.domain', $config['domain']);
+        $container->setParameter('jwt_auth.api_identifier', $config['api_identifier']);
+        $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
+        $container->setParameter('jwt_auth.secret_base64_encoded', $config['secret_base64_encoded']);
     }
 }

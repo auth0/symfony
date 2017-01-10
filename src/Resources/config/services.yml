@@ -6,3 +6,4 @@ services:
     jwt_auth.jwt_authenticator:
         class:     "Auth0\\JWTAuthBundle\\Security\\JWTAuthenticator"
         arguments: ["@jwt_auth.auth0_service"]
+
