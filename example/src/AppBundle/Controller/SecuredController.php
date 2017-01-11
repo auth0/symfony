@@ -15,32 +15,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class SecuredController extends Controller
 {
     /**
-     * @Route("/api/ping", name="pingpage")
+     * @Route("/api/public", name="pingpage")
      */
     public function indexAction()
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $username = $user->getUsername();
-        if ($username === null) {
-            $username = 'ANONYMOUS';
-        }
-
-        return new JsonResponse(array('status' => "Pong! {$username}"));
+        return new JsonResponse(array(
+          'message' => "Hello from a public endpoint! You don't need to be authenticated to see this."
+        ));
     }
     /**
-     * @Route("/api/unsecure/ping", name="unsecurepingpage")
+     * @Route("/api/private", name="unsecurepingpage")
      */
     public function unsecureIndexAction()
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $username = $user->getUsername();
-        if ($username === null) {
-            $username = 'ANONYMOUS';
-        }
-
-        return new JsonResponse(array('status' => "Pong! {$username}"));
+        return new JsonResponse(array(
+          'message' => "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this."
+        ));
     }
 
-} 
+}

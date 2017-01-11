@@ -20,11 +20,11 @@ class JWTAuthExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setParameter('jwt_auth.client_id', $config['client_id']);
-        $container->setParameter('jwt_auth.client_secret', $config['client_secret']);
+        $container->setParameter('jwt_auth.api_secret', $config['api_secret']);
         $container->setParameter('jwt_auth.domain', $config['domain']);
         $container->setParameter('jwt_auth.api_identifier', $config['api_identifier']);
         $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
         $container->setParameter('jwt_auth.secret_base64_encoded', $config['secret_base64_encoded']);
+        $container->setParameter('jwt_auth.supported_algs', $config['supported_algs']);
     }
 }

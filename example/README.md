@@ -15,7 +15,3 @@ Run ```php app/console assets:install --symlink```
 ###4. Initialize the server
 
 Run ```php app/console server:run```
-
-
-
-
