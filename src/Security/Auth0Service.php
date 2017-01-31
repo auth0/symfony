@@ -54,8 +54,6 @@ class Auth0Service {
      */
     public function decodeJWT($encToken)
     {
-        return Auth0JWT::decode($encToken, $this->client_id, $this->client_secret);
-
         $verifier = new JWTVerifier([
             'valid_audiences' => [ $this->client_id, $this->api_identifier ],
             'client_secret' => $this->client_secret,
