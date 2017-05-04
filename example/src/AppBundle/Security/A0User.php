@@ -39,7 +39,7 @@ class A0User implements UserInterface, EquatableInterface
 
     public function getUsername()
     {
-        return $this->jwt["email"];
+        return isset($this->jwt["email"]) ? $this->jwt["email"] : $this->jwt["sub"];
     }
 
     public function eraseCredentials()

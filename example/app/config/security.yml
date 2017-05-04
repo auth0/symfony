@@ -1,16 +1,16 @@
 security:
-    providers:
-        a0:
-            id:
-                a0_user_provider
+  providers:
+    a0:
+      id:
+        a0_user_provider
 
-    firewalls:
-        secured_area:
-            pattern: ^/api
-            stateless: true
-            simple_preauth:
-                authenticator: jwt_auth.jwt_authenticator
+  firewalls:
+    secured_area:
+      pattern: ^/api
+      stateless: true
+      simple_preauth:
+        authenticator: jwt_auth.jwt_authenticator
 
-    access_control:
-            - { path: ^/api/unsecure, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/api, roles: ROLE_OAUTH_USER }
+  access_control:
+    - { path: ^/api/secure, roles: ROLE_OAUTH_USER }
+    - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }

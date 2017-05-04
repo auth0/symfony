@@ -29,18 +29,15 @@ class SecuredController extends Controller
         return new JsonResponse(array('status' => "Pong! {$username}"));
     }
     /**
-     * @Route("/api/unsecure/ping", name="unsecurepingpage")
+     * @Route("/api/secure/ping", name="unsecurepingpage")
      */
     public function unsecureIndexAction()
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $username = $user->getUsername();
-        if ($username === null) {
-            $username = 'ANONYMOUS';
-        }
 
         return new JsonResponse(array('status' => "Pong! {$username}"));
     }
 
-} 
+}
