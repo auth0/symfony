@@ -25,10 +25,22 @@ class A0UserProvider implements JWTUserProviderInterface
     }
 
     public function loadUserByJWT($jwt) {
+        // you can fetch the user profile from the auth0 api
+        // or from your database
+        // $data = $this->auth0Service->getUserProfileByA0UID($jwt->token,$jwt->sub);
 
-        $data = $this->auth0Service->getUserProfileByA0UID($jwt->token,$jwt->sub);
+        // in this case, we will just use whant we got from
+        // the token because we dont need any info from the profile
+        $data = [ 'sub' => $jwt->sub ];
 
-        return new A0User($data, array('ROLE_OAUTH_USER'));
+        $scopes = explode(' ', $jwt->scope);
+        $roles = array();
+
+        if (array_search('read:messages', $scopes) !== false) {
+          $roles[] = 'ROLE_OAUTH_READER';
+        }
+
+        return new A0User($data, $roles);
     }
 
     public function loadUserByUsername($username)

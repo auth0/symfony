@@ -1,7 +1,7 @@
 services:
     jwt_auth.auth0_service:
         class: "Auth0\\JWTAuthBundle\\Security\\Auth0Service"
-        arguments: ["%jwt_auth.client_id%","%jwt_auth.client_secret%","%jwt_auth.domain%","%jwt_auth.api_identifier%","%jwt_auth.authorized_issuer%","%jwt_auth.secret_base64_encoded%", "%supported_algs%"]
+        arguments: ["%jwt_auth.client_id%","%jwt_auth.client_secret%","%jwt_auth.domain%","%jwt_auth.api_identifier%","%jwt_auth.authorized_issuer%","%jwt_auth.secret_base64_encoded%", "%jwt_auth.supported_algs%"]
 
     jwt_auth.jwt_authenticator:
         class:     "Auth0\\JWTAuthBundle\\Security\\JWTAuthenticator"
