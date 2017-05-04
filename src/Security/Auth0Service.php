@@ -20,13 +20,14 @@ class Auth0Service {
     private $api_identifier;
     private $authorized_issuer;
     private $secret_base64_encoded;
+    private $supported_algs;
 
     /**
      * @param string $client_id
      * @param string $client_secret
      * @param string $domain
      */
-    public function __construct($client_id, $client_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded)
+    public function __construct($client_id, $client_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs)
     {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
@@ -34,6 +35,7 @@ class Auth0Service {
         $this->api_identifier = $api_identifier;
         $this->authorized_issuer = $authorized_issuer;
         $this->secret_base64_encoded = $secret_base64_encoded;
+        $this->supported_algs = $supported_algs;
     }
 
     /**
@@ -58,6 +60,7 @@ class Auth0Service {
             'valid_audiences' => [ $this->client_id, $this->api_identifier ],
             'client_secret' => $this->client_secret,
             'authorized_iss' => $this->authorized_issuer,
+            'supported_algs' => $this->supported_algs,
             'secret_base64_encoded' => $this->secret_base64_encoded
         ]);
 

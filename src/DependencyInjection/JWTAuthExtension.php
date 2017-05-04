@@ -26,5 +26,6 @@ class JWTAuthExtension extends Extension
         $container->setParameter('jwt_auth.api_identifier', $config['api_identifier']);
         $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
         $container->setParameter('jwt_auth.secret_base64_encoded', $config['secret_base64_encoded']);
+        $container->setParameter('jwt_auth.supported_algs', $config['supported_algs']);
     }
 }
