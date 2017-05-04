@@ -2,8 +2,9 @@
 
 namespace Auth0\JWTAuthBundle\Security;
 
-use Auth0\SDK\Auth0JWT;
+use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Auth0Api;
+use Auth0\SDK\API\Authentication;
 use Symfony\Component\Security\Core\User\User;
 
 /**
@@ -13,20 +14,27 @@ use Symfony\Component\Security\Core\User\User;
  */
 class Auth0Service {
 
-    private $client_id;
-    private $client_secret;
+    private $api_secret;
     private $domain;
+    private $api_identifier;
+    private $authorized_issuer;
+    private $secret_base64_encoded;
+    private $supported_algs;
+    private $authApi;
 
     /**
-     * @param string $client_id
-     * @param string $client_secret
+     * @param string $api_secret
      * @param string $domain
      */
-    public function __construct($client_id, $client_secret, $domain)
+    public function __construct($api_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs)
     {
-        $this->client_id = $client_id;
-        $this->client_secret = $client_secret;
+        $this->api_secret = $api_secret;
         $this->domain = $domain;
+        $this->api_identifier = $api_identifier;
+        $this->authorized_issuer = $authorized_issuer;
+        $this->secret_base64_encoded = $secret_base64_encoded;
+        $this->supported_algs = $supported_algs;
+        $this->authApi = new Authentication($this->domain);
     }
 
     /**
@@ -36,8 +44,7 @@ class Auth0Service {
      */
     public function getUserProfileByA0UID($jwt, $a0UID)
     {
-        $auth0Api = new Auth0Api($jwt, $this->domain);
-        return $auth0Api->users->get($a0UID);
+        return $this->authApi->userinfo($jwt);
     }
 
     /**
@@ -47,6 +54,14 @@ class Auth0Service {
      */
     public function decodeJWT($encToken)
     {
-        return Auth0JWT::decode($encToken, $this->client_id, $this->client_secret);
+        $verifier = new JWTVerifier([
+            'valid_audiences' => [ $this->api_identifier ],
+            'client_secret' => $this->api_secret,
+            'authorized_iss' => [$this->authorized_issuer],
+            'supported_algs' => $this->supported_algs,
+            'secret_base64_encoded' => $this->secret_base64_encoded
+        ]);
+
+        return $verifier->verifyAndDecode($encToken);
     }
 }
