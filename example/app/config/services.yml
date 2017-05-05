@@ -1,9 +1,0 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
-parameters:
-    #parameter_name: value
-
-services:
-    a0_user_provider:
-        class: AppBundle\Security\A0UserProvider
-        arguments: ["@jwt_auth.auth0_service"]
