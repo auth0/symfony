@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('domain')->defaultValue('')->end()
             ->scalarNode('api_identifier')->defaultValue('')->end()
             ->scalarNode('authorized_issuer')->defaultValue('')->end()
-            ->scalarNode('supported_algs')->defaultValue(['RS256'])->end()
+            ->arrayNode('supported_algs')->prototype('scalar')->end()->end()
             ->scalarNode('secret_base64_encoded')->defaultValue(false)->end();
 
         return $treeBuilder;
