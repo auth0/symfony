@@ -12,12 +12,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
+use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 
-class JWTAuthenticator implements SimplePreAuthenticatorInterface,AuthenticationFailureHandlerInterface
+class JWTAuthenticator implements SimplePreAuthenticatorInterface, AuthenticationFailureHandlerInterface
 {
     use ContainerAwareTrait;
     protected $auth0Service;
@@ -47,7 +47,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
             $token->token = $authToken;
-        } catch(\UnexpectedValueException $ex) {
+        } catch (\UnexpectedValueException $ex) {
             throw new BadCredentialsException('Invalid token');
         }
 
@@ -102,5 +102,4 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
     {
         return new Response("Authentication Failed: {$exception->getMessage()}", 403);
     }
-
 }
