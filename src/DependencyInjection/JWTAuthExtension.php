@@ -4,6 +4,7 @@ namespace Auth0\JWTAuthBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -26,5 +27,11 @@ class JWTAuthExtension extends Extension
         $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
         $container->setParameter('jwt_auth.secret_base64_encoded', $config['secret_base64_encoded']);
         $container->setParameter('jwt_auth.supported_algs', $config['supported_algs']);
+
+        if (!empty($config['cache'])) {
+            $ref = new Reference($config['cache']);
+            $container->getDefinition('jwt_auth.auth0_service')
+                ->replaceArgument(6, $ref);
+        }
     }
 }
