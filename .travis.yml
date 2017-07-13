@@ -3,7 +3,7 @@ language: php
 php:
     - 5.5
     - 7.1
-    - hhvm
+
 env:
   global:
     - TEST_COMMAND="vendor/bin/phpunit"
@@ -15,7 +15,7 @@ matrix:
   fast_finish: true
   include:
     - php: 5.5
-      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_VERSION=2.7.* TEST_COMMAND="vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
+      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_VERSION=2.8.* TEST_COMMAND="vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
     - php: hhvm
       dist: trusty
       env: SYMFONY_VERSION=3.3.*
