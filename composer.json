@@ -34,7 +34,7 @@
         "psr-4": {
             "Auth0\\JWTAuthBundle\\": "src/"
         }
-    }
+    },
     "autoload-dev": {
         "psr-4": {
             "Auth0\\JWTAuthBundle\\": "Tests/"

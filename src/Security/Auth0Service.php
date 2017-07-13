@@ -39,6 +39,7 @@ class Auth0Service {
         $this->api_identifier = $api_identifier;
         $this->authorized_issuer = $authorized_issuer;
         $this->secret_base64_encoded = $secret_base64_encoded;
+        $this->supported_algs = $supported_algs;
         $this->cache = $cache;
         $this->authApi = new Authentication($this->domain);
     }
