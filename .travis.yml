@@ -8,7 +8,7 @@ env:
   global:
     - TEST_COMMAND="vendor/bin/phpunit"
   matrix:
-    - SYMFONY_VERSION=3.2.*
+    - SYMFONY_VERSION=3.3.*
     - SYMFONY_VERSION=2.8.*
 
 matrix:
@@ -16,6 +16,9 @@ matrix:
   include:
     - php: 5.5
       env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_VERSION=2.7.* TEST_COMMAND="vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
+    - php: hhvm
+      dist: trusty
+      env: SYMFONY_VERSION=3.3.*
 
 install:
     - composer require symfony/symfony:${SYMFONY_VERSION} --no-update
