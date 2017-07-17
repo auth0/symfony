@@ -23,8 +23,8 @@ class JWTAuthenticatorTest extends \PHPUnit_Framework_TestCase
         //generated with http://jwt.io/
         $JWT = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RvbWFpbi5jb20vIiwic3ViIjoiYXV0aDB8MDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsImF1ZCI6ImNsaWVudF9pZCIsImV4cCI6MTQyMjQ0MDI3MSwiaWF0IjoxNDIyNDA0MjcxfQ.xSuCAetwfHpCWhE_5NqTrwHq0eQ7CVffQwgSqTHwwrY';
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $request->headers = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $request->headers = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')->getMock();
 
         $request->headers
             ->expects($this->atLeastOnce())
@@ -48,8 +48,8 @@ class JWTAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $authenticator = new JWTAuthenticator($mockAuth0);
         $providerKey = 'providerKey';
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $request->headers = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $request->headers = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')->getMock();
 
         $request->headers
             ->expects($this->once())
