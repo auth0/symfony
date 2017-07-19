@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.0.2](https://github.com/auth0/jwt-auth-bundle/tree/3.0.2) (2017-07-19)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/2.0.0...3.0.2)
+
+**Added**
+- Added support for cache [\#51](https://github.com/auth0/jwt-auth-bundle/pull/51) ([Nyholm](https://github.com/Nyholm))
+
 ## [2.0.0](https://github.com/auth0/jwt-auth-bundle/tree/2.0.0) (2016-01-29)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/1.2.8...2.0.0)
 
