@@ -32,7 +32,8 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue('RS256')
                 ->end()
             ->end()
-            ->scalarNode('secret_base64_encoded')->defaultValue(false)->end();
+            ->scalarNode('secret_base64_encoded')->defaultValue(false)->end()
+            ->scalarNode('cache')->defaultNull()->info('The cache service you want to use. Example "jwt_auth.cache.file_system".')->end();
 
         return $treeBuilder;
     }

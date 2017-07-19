@@ -1,0 +1,2 @@
+jwt_auth:
+  cache: jwt_auth.cache.file_system
