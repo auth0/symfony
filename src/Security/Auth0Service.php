@@ -29,8 +29,15 @@ class Auth0Service {
     private $cache;
 
     /**
+     * Auth0Service constructor.
+     *
      * @param string $api_secret
      * @param string $domain
+     * @param array|string $api_identifier
+     * @param string $authorized_issuer
+     * @param boolean $secret_base64_encoded
+     * @param array $supported_algs
+     * @param CacheHandler|null $cache
      */
     public function __construct($api_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs, CacheHandler $cache = null)
     {
@@ -41,6 +48,7 @@ class Auth0Service {
         $this->secret_base64_encoded = $secret_base64_encoded;
         $this->supported_algs = $supported_algs;
         $this->cache = $cache;
+
         $this->authApi = new Authentication($this->domain);
     }
 
@@ -62,7 +70,8 @@ class Auth0Service {
     public function decodeJWT($encToken)
     {
         $config = [
-            'valid_audiences' => [$this->api_identifier],
+            // The api_identifier setting could come through as an array or a string.
+            'valid_audiences' => is_array($this->api_identifier) ? $this->api_identifier : [$this->api_identifier],
             'client_secret' => $this->api_secret,
             'authorized_iss' => [$this->authorized_issuer],
             'supported_algs' => $this->supported_algs,
