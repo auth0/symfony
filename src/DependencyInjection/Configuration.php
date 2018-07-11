@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('api_identifier')->defaultValue('')->end()
             ->scalarNode('api_client_id')->defaultValue('')->end()
             ->arrayNode('api_identifier_array')
-                ->scalarPrototype()->end()
+                ->prototype('scalar')->end()
             ->end()
             ->scalarNode('authorized_issuer')->defaultValue('')->end()
             ->arrayNode('supported_algs')
