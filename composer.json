@@ -1,7 +1,7 @@
 {
     "name":        "auth0/jwt-auth-bundle",
     "type":        "symfony-bundle",
-    "description": "Support for authenticating users JWT.",
+    "description": "Support for authenticating users with a JWT in Symfony.",
     "keywords":    [
         "authentication",
         "firewall",
@@ -15,7 +15,11 @@
     "authors": [
         {
             "name": "Germán Lena",
-            "email": "german.lena@gmail.com"
+            "email": "german@auth0.com"
+        },
+        {
+            "name": "Josh Cunningham",
+            "email": "josh.cunningham@auth0.com"
         }
     ],
 
