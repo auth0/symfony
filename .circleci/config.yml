@@ -21,19 +21,13 @@ commands:
   run-tests:
     steps:
       - run: ./vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml
-      - run: 
+      - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
 
-jobs: 
-  php_5: 
-    docker: 
-      - image: circleci/php:5.6
-    steps:
-      - prepare
-      - run-tests
-  php_7: 
-    docker: 
+jobs:
+  php_7:
+    docker:
       - image: circleci/php:7.1
     steps:
       - prepare
@@ -55,9 +49,6 @@ jobs:
 
 #Each workflow represents a Github check
 workflows:
-  build_php_5:
-    jobs:
-      - php_5
   build_php_7:
     jobs:
       - php_7
@@ -66,6 +57,6 @@ workflows:
       - php_7
       - snyk:
           # Must define SNYK_TOKEN env
-          context: snyk-env 
-          requires: 
+          context: snyk-env
+          requires:
             - php_7
