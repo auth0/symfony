@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/auth0/jwt-auth-bundle.svg?style=svg)](https://circleci.com/gh/auth0/jwt-auth-bundle)
+
 # jwt-auth-bundle
 
 JWT Authentication bundle for Symfony
