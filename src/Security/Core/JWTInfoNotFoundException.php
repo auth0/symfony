@@ -42,22 +42,22 @@ class JWTInfoNotFoundException extends AuthenticationException
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize(array(
+        return serialize([
             $this->jwt,
-            parent::serialize(),
-        ));
+            parent::__serialize(),
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function unserialize($str)
+    public function __unserialize(array $data): void
     {
-        list($this->jwt, $parentData) = unserialize($str);
+        [$this->jwt, $parentData] = unserialize($data);
 
-        parent::unserialize($parentData);
+        parent::__unserialize($parentData);
     }
 
     /**
