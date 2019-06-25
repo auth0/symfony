@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        # to make using tests, bin files and another simpler
+        public: true
     jwt_auth.auth0_service:
         class: Auth0\JWTAuthBundle\Security\Auth0Service
         arguments: ["%jwt_auth.api_secret%","%jwt_auth.domain%","%jwt_auth.api_identifier%","%jwt_auth.authorized_issuer%","%jwt_auth.secret_base64_encoded%", "%jwt_auth.supported_algs%", ~]
