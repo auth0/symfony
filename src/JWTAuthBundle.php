@@ -11,7 +11,7 @@ use Auth0\JWTAuthBundle\DependencyInjection\Auth0Extension;
 
 class JWTAuthBundle extends Bundle
 {
-	const SDK_VERSION = "3.0.0";
+	const SDK_VERSION = "4.0.0";
 
 	public function __construct()
     {

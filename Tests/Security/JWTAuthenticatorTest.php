@@ -2,10 +2,11 @@
 
 namespace Auth0\JWTAuthBundle\Tests\Security;
 
-use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\JWTAuthenticator;
 
-class JWTAuthenticatorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class JWTAuthenticatorTest extends TestCase
 {
     public function testTokenCreation()
     {
