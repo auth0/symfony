@@ -17,3 +17,6 @@ services:
         class: Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator
         arguments:
             - "@jwt_auth.auth0_service"
+
+    jwt_auth.security.user.jwt_user_provider:
+        class: Auth0\JWTAuthBundle\Security\User\JwtUserProvider
