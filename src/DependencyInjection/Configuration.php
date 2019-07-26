@@ -17,8 +17,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('jwt_auth');
+        $treeBuilder = new TreeBuilder('jwt_auth');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
