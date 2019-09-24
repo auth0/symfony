@@ -27,20 +27,20 @@ class JwtGuardAuthenticatorTest extends TestCase
     private $guardAuthenticator;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject
+     * @var Auth0Service|PHPUnit_Framework_MockObject_MockObject
      */
-    private $authZeroServiceMock;
+    private $auth0Service;
 
     /**
      * Creates a JwtGuardAuthenticator instance for testing.
      */
     protected function setUp()
     {
-        $this->authZeroServiceMock = $this->getMockBuilder(Auth0Service::class)
+        $this->auth0Service = $this->getMockBuilder(Auth0Service::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->guardAuthenticator = new JwtGuardAuthenticator($this->authZeroServiceMock);
+        $this->guardAuthenticator = new JwtGuardAuthenticator($this->auth0Service);
     }
 
     /**
@@ -96,7 +96,7 @@ class JwtGuardAuthenticatorTest extends TestCase
      */
     public function testGetUserReturnsUnknownUserWhenJwtDecodingFails()
     {
-        $this->authZeroServiceMock->expects($this->once())
+        $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('invalidToken')
             ->willThrowException(new InvalidTokenException('Malformed token.'));
@@ -129,7 +129,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $jwt->sub = 'authenticated-user';
         $jwt->token = 'validToken';
 
-        $this->authZeroServiceMock->expects($this->once())
+        $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('validToken')
             ->willReturn($jwt);
@@ -161,7 +161,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $jwt->sub = 'authenticated-user';
         $jwt->token = 'validToken';
 
-        $this->authZeroServiceMock->expects($this->once())
+        $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('validToken')
             ->willReturn($jwt);
@@ -186,7 +186,7 @@ class JwtGuardAuthenticatorTest extends TestCase
      */
     public function testCheckCredentialsThrowsAuthenticationExceptionWhenJwtDecodingFails()
     {
-        $this->authZeroServiceMock->expects($this->once())
+        $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('invalidToken')
             ->willThrowException(new InvalidTokenException('Malformed token.'));
@@ -205,7 +205,7 @@ class JwtGuardAuthenticatorTest extends TestCase
      */
     public function testCheckCredentialsReturnsTrueWhenJwtDecodingSuccessful()
     {
-        $this->authZeroServiceMock->expects($this->once())
+        $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('validToken')
             ->willReturn(new stdClass());
