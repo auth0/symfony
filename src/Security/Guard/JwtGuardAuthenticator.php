@@ -39,7 +39,8 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has('Authorization');
+        return $request->headers->has('Authorization') &&
+               strpos($request->headers->get('Authorization'), 'Bearer') === 0;
     }
 
     /**
