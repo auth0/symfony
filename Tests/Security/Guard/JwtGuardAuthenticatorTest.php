@@ -85,7 +85,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $request->headers->set('Authorization', 'Bearer token');
 
         $this->assertSame(
-            array('jwt' => 'token'),
+            ['jwt' => 'token'],
             $this->guardAuthenticator->getCredentials($request)
         );
     }
@@ -109,14 +109,14 @@ class JwtGuardAuthenticatorTest extends TestCase
             ->method('loadUserByUsername');
 
         $user = $this->guardAuthenticator->getUser(
-            array('jwt' => 'invalidToken'),
+            ['jwt' => 'invalidToken'],
             $userProviderMock
         );
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertSame('unknown', $user->getUsername());
         $this->assertNull($user->getPassword());
-        $this->assertSame(array(), $user->getRoles());
+        $this->assertSame([], $user->getRoles());
     }
 
     /**
@@ -134,7 +134,7 @@ class JwtGuardAuthenticatorTest extends TestCase
             ->with('validToken')
             ->willReturn($jwt);
 
-        $user = new User($jwt->sub, $jwt->token, array('ROLE_JWT_AUTHENTICATED'));
+        $user = new User($jwt->sub, $jwt->token, ['ROLE_JWT_AUTHENTICATED']);
 
         $userProviderMock = $this->getMockBuilder(JWTUserProviderInterface::class)
             ->getMock();
@@ -144,7 +144,7 @@ class JwtGuardAuthenticatorTest extends TestCase
             ->willReturn($user);
 
         $returnedUser = $this->guardAuthenticator->getUser(
-            array('jwt' => 'validToken'),
+            ['jwt' => 'validToken'],
             $userProviderMock
         );
 
@@ -166,7 +166,7 @@ class JwtGuardAuthenticatorTest extends TestCase
             ->with('validToken')
             ->willReturn($jwt);
 
-        $user = new User($jwt->sub, null, array('ROLE_JWT_AUTHENTICATED'));
+        $user = new User($jwt->sub, null, ['ROLE_JWT_AUTHENTICATED']);
 
         $userProviderMock = $this->getMockBuilder(UserProviderInterface::class)
             ->getMock();
@@ -175,7 +175,7 @@ class JwtGuardAuthenticatorTest extends TestCase
             ->with($jwt->sub)
             ->willReturn($user);
 
-        $returnedUser = $this->guardAuthenticator->getUser(array('jwt' => 'validToken'), $userProviderMock);
+        $returnedUser = $this->guardAuthenticator->getUser(['jwt' => 'validToken'], $userProviderMock);
 
         $this->assertSame($user, $returnedUser);
     }
@@ -195,7 +195,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $this->expectExceptionMessage('Malformed token.');
 
         $this->guardAuthenticator->checkCredentials(
-            array('jwt' => 'invalidToken'),
+            ['jwt' => 'invalidToken'],
             new User('unknown', null)
         );
     }
@@ -212,7 +212,7 @@ class JwtGuardAuthenticatorTest extends TestCase
 
         $this->assertTrue(
             $this->guardAuthenticator->checkCredentials(
-                array('jwt' => 'validToken'),
+                ['jwt' => 'validToken'],
                 new User('unknown', null)
             )
         );

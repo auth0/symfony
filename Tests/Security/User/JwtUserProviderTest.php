@@ -45,7 +45,7 @@ class JwtUserProviderTest extends TestCase
         $jwt->sub = 'username';
         $jwt->token = 'validToken';
 
-        $expectedUser = new User('username', 'validToken', array('ROLE_JWT_AUTHENTICATED'));
+        $expectedUser = new User('username', 'validToken', ['ROLE_JWT_AUTHENTICATED']);
 
         $this->assertEquals(
             $expectedUser,
@@ -62,7 +62,7 @@ class JwtUserProviderTest extends TestCase
         $jwt = new stdClass();
         $jwt->sub = 'username';
 
-        $expectedUser = new User('username', null, array('ROLE_JWT_AUTHENTICATED'));
+        $expectedUser = new User('username', null, ['ROLE_JWT_AUTHENTICATED']);
 
         $this->assertEquals(
             $expectedUser,
@@ -86,7 +86,7 @@ class JwtUserProviderTest extends TestCase
         $expectedUser = new User(
             'username',
             'validToken',
-            array('ROLE_JWT_AUTHENTICATED', 'ROLE_JWT_SCOPE_READ_MESSAGES', 'ROLE_JWT_SCOPE_WRITE_MESSAGES')
+            ['ROLE_JWT_AUTHENTICATED', 'ROLE_JWT_SCOPE_READ_MESSAGES', 'ROLE_JWT_SCOPE_WRITE_MESSAGES']
         );
 
         $this->assertEquals(
@@ -123,7 +123,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testRefreshUser()
     {
-        $user = new User('john.doe', 'validToken', array('ROLE_JWT_AUTHENTICATED'));
+        $user = new User('john.doe', 'validToken', ['ROLE_JWT_AUTHENTICATED']);
 
         $returnedUser = $this->userProvider->refreshUser($user);
 
