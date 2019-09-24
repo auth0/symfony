@@ -22,16 +22,16 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
     /**
      * @var Auth0Service
      */
-    private $authZeroService;
+    private $auth0Service;
 
     /**
      * Constructs a new JwtGuardAuthenticator instance.
      *
-     * @param Auth0Service $authZeroService
+     * @param Auth0Service $auth0Service
      */
-    public function __construct(Auth0Service $authZeroService)
+    public function __construct(Auth0Service $auth0Service)
     {
-        $this->authZeroService = $authZeroService;
+        $this->auth0Service = $auth0Service;
     }
 
     /**
@@ -77,7 +77,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         try {
-            $jwt = $this->authZeroService->decodeJWT($credentials['jwt']);
+            $jwt = $this->auth0Service->decodeJWT($credentials['jwt']);
         } catch (CoreException $exception) {
             // Skip JWT verification exceptions here.
             // Verification will be done in checkCredentials().
@@ -104,7 +104,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         try {
-            $this->authZeroService->decodeJWT($credentials['jwt']);
+            $this->auth0Service->decodeJWT($credentials['jwt']);
 
             return true;
         } catch (CoreException $exception) {
