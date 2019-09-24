@@ -18,8 +18,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Tests the @see JwtGuardAuthenticator.
- *
- * @author Niels Nijens <nijens.niels@gmail.com>
  */
 class JwtGuardAuthenticatorTest extends TestCase
 {
