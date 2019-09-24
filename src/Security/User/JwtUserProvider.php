@@ -97,20 +97,19 @@ class JwtUserProvider implements JWTUserProviderInterface
      */
     private function getScopesFromJwtAsRoles(stdClass $jwt)
     {
-        $roles = array();
-
-        if (isset($jwt->scope)) {
-            $scopes = explode(' ', $jwt->scope);
-
-            $roles = array_map(
-                function ($scope) {
-                    $roleSuffix = strtoupper(str_replace(array(':', '-'), '_', $scope));
-
-                    return sprintf('ROLE_JWT_SCOPE_%s', $roleSuffix);
-                },
-                $scopes
-            );
+        if (isset($jwt->scope) === false) {
+            return array();
         }
+
+        $scopes = explode(' ', $jwt->scope);
+        $roles = array_map(
+            function ($scope) {
+                $roleSuffix = strtoupper(str_replace(array(':', '-'), '_', $scope));
+
+                return sprintf('ROLE_JWT_SCOPE_%s', $roleSuffix);
+            },
+            $scopes
+        );
 
         return $roles;
     }
