@@ -52,7 +52,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         // Removes the 'Bearer ' part from the Authorization header value.
-        $jwt = substr($request->headers->get('Authorization', ''), 7);
+        $jwt = str_replace('Bearer ', '', $request->headers->get('Authorization', ''));
         if (empty($jwt)) {
             return null;
         }
