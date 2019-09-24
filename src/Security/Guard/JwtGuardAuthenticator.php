@@ -17,8 +17,6 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 /**
  * Handles authentication with JSON Web Tokens through the 'Authorization' request header.
- *
- * @author Niels Nijens <nijens.niels@gmail.com>
  */
 class JwtGuardAuthenticator extends AbstractGuardAuthenticator
 {

@@ -11,9 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Basic JWT UserProvider implementation when you do not require loading the user from the database and
- * the JWT verification with Auth0 is enough for your use-case.
- *
- * @author Niels Nijens <nijens.niels@gmail.com>
+ * the JWT verification with Auth0 is enough for your use-case. Eg. Machine-to-Machine authentication.
  */
 class JwtUserProvider implements JWTUserProviderInterface
 {

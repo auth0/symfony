@@ -11,8 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Tests the @see JwtUserProvider.
- *
- * @author Niels Nijens <nijens.niels@gmail.com>
  */
 class JwtUserProviderTest extends TestCase
 {
