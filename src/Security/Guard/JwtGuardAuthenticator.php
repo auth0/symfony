@@ -7,7 +7,6 @@ use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Auth0\SDK\Exception\CoreException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\User;
@@ -142,7 +141,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
             ),
         );
 
-        return new JsonResponse($responseBody, Response::HTTP_FORBIDDEN);
+        return new JsonResponse($responseBody, JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -159,7 +158,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
             'message' => 'Authentication required.',
         );
 
-        return new JsonResponse($responseBody, Response::HTTP_UNAUTHORIZED);
+        return new JsonResponse($responseBody, JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     /**

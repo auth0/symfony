@@ -245,7 +245,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $response = $this->guardAuthenticator->onAuthenticationFailure($request, $exception);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertSame(JsonResponse::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame(JsonResponse::HTTP_UNAUTHORIZED, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString(
             '{"message": "Authentication failed: Malformed token."}',
             $response->getContent()
