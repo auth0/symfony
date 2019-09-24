@@ -57,9 +57,9 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
             return null;
         }
 
-        return array(
+        return [
             'jwt' => $jwt,
-        );
+        ];
     }
 
     /**
@@ -81,7 +81,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
         } catch (CoreException $exception) {
             // Skip JWT verification exceptions here.
             // Verification will be done in checkCredentials().
-            return new User('unknown', null, array());
+            return new User('unknown', null, []);
         }
 
         if ($userProvider instanceof JWTUserProviderInterface) {
@@ -134,12 +134,12 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $responseBody = array(
+        $responseBody = [
             'message' => sprintf(
                 'Authentication failed: %s.',
                 rtrim($exception->getMessage(), '.')
             ),
-        );
+        ];
 
         return new JsonResponse($responseBody, JsonResponse::HTTP_UNAUTHORIZED);
     }
@@ -154,9 +154,9 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authenticationException = null)
     {
-        $responseBody = array(
+        $responseBody = [
             'message' => 'Authentication required.',
-        );
+        ];
 
         return new JsonResponse($responseBody, JsonResponse::HTTP_UNAUTHORIZED);
     }
