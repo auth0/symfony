@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.2.0](https://github.com/auth0/jwt-auth-bundle/tree/3.2.0) (2019-09-26)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.1.0...3.2.0)
+
+**Added**
+- GuardAuthenticator implementation for Symfony 2.8 and later [\#75](https://github.com/auth0/jwt-auth-bundle/pull/75) ([niels-nijens](https://github.com/niels-nijens))
+
 ## [3.1.0](https://github.com/auth0/jwt-auth-bundle/tree/3.1.0) (2018-07-12)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.0.2...3.1.0)
 
