@@ -55,7 +55,9 @@ class Auth0Service {
     /**
      * Get the Auth0 User Profile based on the JWT (and validate it).
      *
-     * @return User info as described in https://docs.auth0.com/user-profile
+     * @param string $jwt
+     *
+     * @return array info as described in https://docs.auth0.com/user-profile
      */
     public function getUserProfileByA0UID($jwt, $a0UID)
     {
