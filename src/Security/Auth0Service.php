@@ -6,7 +6,6 @@ use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Auth0Api;
 use Auth0\SDK\API\Authentication;
-use Symfony\Component\Security\Core\User\User;
 
 /**
  * @author german
