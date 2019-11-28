@@ -33,7 +33,7 @@ class Auth0Service {
      * @param string $api_secret
      * @param string $domain
      * @param array|string $api_identifier
-     * @param string $authorized_issuer
+     * @param array|string $authorized_issuer
      * @param boolean $secret_base64_encoded
      * @param array $supported_algs
      * @param CacheHandler|null $cache
@@ -74,7 +74,7 @@ class Auth0Service {
             // The api_identifier setting could come through as an array or a string.
             'valid_audiences' => is_array($this->api_identifier) ? $this->api_identifier : [$this->api_identifier],
             'client_secret' => $this->api_secret,
-            'authorized_iss' => [$this->authorized_issuer],
+            'authorized_iss' => is_array($this->authorized_issuer) ? $this->authorized_issuer : [$this->authorized_issuer],
             'supported_algs' => $this->supported_algs,
             'secret_base64_encoded' => $this->secret_base64_encoded
         ];
