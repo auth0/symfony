@@ -1,5 +1,20 @@
 # Change Log
 
+## [3.3.0](https://github.com/auth0/jwt-auth-bundle/tree/3.3.0) (2019-12-05)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.2.0...3.3.0)
+
+
+**Closed issues**
+- new release [\#86](https://github.com/auth0/jwt-auth-bundle/issues/86)
+- Remove SimplePreAuthenticatorInterface? [\#80](https://github.com/auth0/jwt-auth-bundle/issues/80)
+
+**Added**
+- Symfony 5 support [\#87](https://github.com/auth0/jwt-auth-bundle/pull/87) ([darthf1](https://github.com/darthf1))
+- Multiple authorized issuer [\#85](https://github.com/auth0/jwt-auth-bundle/pull/85) ([antzo](https://github.com/antzo))
+
+**Fixed**
+- Fix deprecation Treebuilder::root [\#79](https://github.com/auth0/jwt-auth-bundle/pull/79) ([darthf1](https://github.com/darthf1))
+
 ## [3.2.0](https://github.com/auth0/jwt-auth-bundle/tree/3.2.0) (2019-09-26)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.1.0...3.2.0)
 
