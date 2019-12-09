@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('api_identifier_array')
                 ->prototype('scalar')->end()
             ->end()
-            ->scalarNode('authorized_issuer')->defaultValue('')->end()
+            ->variableNode('authorized_issuer')->defaultValue([])->end()
             ->arrayNode('supported_algs')
                 ->addDefaultChildrenIfNoneSet(1)
                 ->prototype('scalar')
