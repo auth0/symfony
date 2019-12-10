@@ -1,5 +1,11 @@
 # Change Log
 
+## [3.3.1](https://github.com/auth0/jwt-auth-bundle/tree/3.3.1) (2019-12-10)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.3.0...3.3.1)
+
+**Fixed**
+- Configuration authorized_issuer string or array compatibility [\#89](https://github.com/auth0/jwt-auth-bundle/pull/89) ([antzo](https://github.com/antzo))
+
 ## [3.3.0](https://github.com/auth0/jwt-auth-bundle/tree/3.3.0) (2019-12-05)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.2.0...3.3.0)
 
