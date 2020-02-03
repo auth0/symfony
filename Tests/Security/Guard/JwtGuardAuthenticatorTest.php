@@ -4,6 +4,7 @@ namespace Auth0\JWTAuthBundle\Tests\Security\Guard;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
+use Auth0\JWTAuthBundle\Security\Core\RawTokenAwareJWTUserProviderInterface;
 use Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator;
 use Auth0\SDK\Exception\InvalidTokenException;
 use PHPUnit\Framework\TestCase;
@@ -141,6 +142,38 @@ class JwtGuardAuthenticatorTest extends TestCase
         $userProviderMock->expects($this->once())
             ->method('loadUserByJWT')
             ->with($jwt)
+            ->willReturn($user);
+
+        $returnedUser = $this->guardAuthenticator->getUser(
+            ['jwt' => 'validToken'],
+            $userProviderMock
+        );
+
+        $this->assertSame($user, $returnedUser);
+    }
+
+    /**
+     * Tests if JwtGuardAuthenticator::getUser calls the RawTokenAwareJWTUserProviderInterface::loadUserByJWT when the provided
+     * user provider implements the interface.
+     */
+    public function testGetUserReturnsUserThroughLoadUserByJWTWithRawToken()
+    {
+        $token = 'validToken';
+        $jwt = new stdClass();
+        $jwt->sub = 'authenticated-user';
+
+        $this->auth0Service->expects($this->once())
+            ->method('decodeJWT')
+            ->with('validToken')
+            ->willReturn($jwt);
+
+        $user = new User($jwt->sub, $jwt->token, ['ROLE_JWT_AUTHENTICATED']);
+
+        $userProviderMock = $this->getMockBuilder(RawTokenAwareJWTUserProviderInterface::class)
+            ->getMock();
+        $userProviderMock->expects($this->once())
+            ->method('loadUserByJWT')
+            ->with($jwt, $token)
             ->willReturn($user);
 
         $returnedUser = $this->guardAuthenticator->getUser(

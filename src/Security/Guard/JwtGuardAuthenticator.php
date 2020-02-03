@@ -86,7 +86,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
         }
 
         if ($userProvider instanceof JWTUserProviderInterface) {
-            return $userProvider->loadUserByJWT($jwt);
+            return $userProvider->loadUserByJWT($jwt, $credentials['jwt']);
         }
 
         return $userProvider->loadUserByUsername($jwt->sub);
