@@ -183,6 +183,8 @@ class JwtGuardAuthenticatorTest extends TestCase
     /**
      * Tests if JwtGuardAuthenticator::checkCredentials throws an AuthenticationException containing the information
      * from the exception thrown by the Auth0Service.
+     * @expectedException Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @expectedExceptionMessage Malformed token.
      */
     public function testCheckCredentialsThrowsAuthenticationExceptionWhenJwtDecodingFails()
     {
@@ -190,9 +192,6 @@ class JwtGuardAuthenticatorTest extends TestCase
             ->method('decodeJWT')
             ->with('invalidToken')
             ->willThrowException(new InvalidTokenException('Malformed token.'));
-
-        $this->expectException(AuthenticationException::class);
-        $this->expectExceptionMessage('Malformed token.');
 
         $this->guardAuthenticator->checkCredentials(
             ['jwt' => 'invalidToken'],

@@ -24,7 +24,7 @@ composer require auth0/jwt-auth-bundle:"~3.0"
 
 ## Resources
 
-Check out the [Symfony API QuickStart Guide](https://auth0.com/docs/quickstart/backend/symfony) to find out more about integrating the bunlde into an existing project or download a pre-configured project.
+Check out the [Symfony API QuickStart Guide](https://auth0.com/docs/quickstart/backend/symfony) to find out more about integrating the bundle into an existing project or download a pre-configured project.
 
 ## Demo
 
