@@ -15,7 +15,6 @@ use Auth0\SDK\API\Authentication;
 class Auth0Service {
 
     private $api_secret;
-    private $domain;
     private $api_identifier;
     private $authorized_issuer;
     private $secret_base64_encoded;
@@ -41,14 +40,13 @@ class Auth0Service {
     public function __construct($api_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs, CacheHandler $cache = null)
     {
         $this->api_secret = $api_secret;
-        $this->domain = $domain;
         $this->api_identifier = $api_identifier;
         $this->authorized_issuer = $authorized_issuer;
         $this->secret_base64_encoded = $secret_base64_encoded;
         $this->supported_algs = $supported_algs;
         $this->cache = $cache;
 
-        $this->authApi = new Authentication($this->domain);
+        $this->authApi = new Authentication($domain);
     }
 
     /**
@@ -58,7 +56,7 @@ class Auth0Service {
      *
      * @return array info as described in https://auth0.com/docs/users/concepts/overview-user-profile
      */
-    public function getUserProfileByA0UID($jwt, $a0UID)
+    public function getUserProfileByA0UID($jwt)
     {
         return $this->authApi->userinfo($jwt);
     }
