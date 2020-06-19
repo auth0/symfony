@@ -1,4 +1,5 @@
-composer.lock
+# Composer Lock file
+!composer.lock
 
 # Cache and logs (Symfony2)
 /example/app/cache/*
