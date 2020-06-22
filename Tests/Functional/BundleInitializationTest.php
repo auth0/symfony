@@ -27,6 +27,11 @@ class BundleInitializationTest extends BaseBundleTestCase
         $this->assertTrue($container->has('jwt_auth.auth0_service'));
         $service = $container->get('jwt_auth.auth0_service');
         $this->assertInstanceOf(Auth0Service::class, $service);
+
+        // Test if autowiring is working properly
+        $this->assertTrue($container->has(Auth0Service::class));
+        $service = $container->get(Auth0Service::class);
+        $this->assertInstanceOf(Auth0Service::class, $service);
     }
 
     public function testBundleWithCache()
