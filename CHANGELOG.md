@@ -1,5 +1,15 @@
 # Change Log
 
+## [3.4.0](https://github.com/auth0/jwt-auth-bundle/tree/3.4.0) (2020-06-22)
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.3.1...3.4.0)
+
+**Added**
+- Add support for autowiring [\#94](https://github.com/auth0/jwt-auth-bundle/pull/94) ([dunglas](https://github.com/dunglas))
+- Give access to the raw JWT in the user provider [\#97](https://github.com/auth0/jwt-auth-bundle/pull/97) ([dunglas](https://github.com/dunglas))
+
+**Changed**
+- Remove unused argument, and unused property [\#95](https://github.com/auth0/jwt-auth-bundle/pull/95) ([dunglas](https://github.com/dunglas))
+
 ## [3.3.1](https://github.com/auth0/jwt-auth-bundle/tree/3.3.1) (2019-12-10)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.3.0...3.3.1)
 
@@ -8,7 +18,6 @@
 
 ## [3.3.0](https://github.com/auth0/jwt-auth-bundle/tree/3.3.0) (2019-12-05)
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.2.0...3.3.0)
-
 
 **Closed issues**
 - new release [\#86](https://github.com/auth0/jwt-auth-bundle/issues/86)
