@@ -85,6 +85,10 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
             return new User('unknown', null, []);
         }
 
+        if (!isset($jwt->token)) {
+            $jwt->token = $credentials['jwt'];
+        }
+
         if ($userProvider instanceof JWTUserProviderInterface) {
             return $userProvider->loadUserByJWT($jwt);
         }
