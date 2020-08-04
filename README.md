@@ -22,10 +22,6 @@ composer require auth0/jwt-auth-bundle:"~3.0"
 
 > For more information about Composer usage, check [their official documentation](https://getcomposer.org/doc/00-intro.md).
 
-## Resources
-
-Check out the [Symfony API QuickStart Guide](https://auth0.com/docs/quickstart/backend/symfony) to find out more about integrating the bundle into an existing project or download a pre-configured project.
-
 ## Demo
 
 [Symfony API Samples](https://github.com/auth0-community/auth0-symfony-api-samples)
