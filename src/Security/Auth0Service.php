@@ -2,10 +2,9 @@
 
 namespace Auth0\JWTAuthBundle\Security;
 
-use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\JWTVerifier;
-use Auth0\SDK\Auth0Api;
 use Auth0\SDK\API\Authentication;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * @author german
@@ -22,7 +21,7 @@ class Auth0Service {
     private $authApi;
 
     /**
-     * @var CacheHandler|null
+     * @var CacheInterface|null
      */
     private $cache;
 
@@ -35,9 +34,9 @@ class Auth0Service {
      * @param array|string $authorized_issuer
      * @param boolean $secret_base64_encoded
      * @param array $supported_algs
-     * @param CacheHandler|null $cache
+     * @param CacheInterface|null $cache
      */
-    public function __construct($api_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs, CacheHandler $cache = null)
+    public function __construct($api_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs, CacheInterface $cache = null)
     {
         $this->api_secret = $api_secret;
         $this->api_identifier = $api_identifier;
@@ -46,7 +45,7 @@ class Auth0Service {
         $this->supported_algs = $supported_algs;
         $this->cache = $cache;
 
-        $this->authApi = new Authentication($domain);
+        $this->authApi = new Authentication($api_identifier, $domain);
     }
 
     /**
@@ -81,6 +80,7 @@ class Auth0Service {
             $config['cache'] = $this->cache;
         }
 
+        // TODO WIP this JWT Verifier does no more exist
         $verifier = new JWTVerifier($config);
 
         return $verifier->verifyAndDecode($encToken);

@@ -24,7 +24,7 @@
     "require": {
         "php": "^7.3",
         "symfony/framework-bundle": "^4.4 || ~5.1",
-        "auth0/auth0-php": "^5.2"
+        "auth0/auth0-php": "^7.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3",

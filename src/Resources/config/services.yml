@@ -14,7 +14,7 @@ services:
         class: Auth0\SDK\Helpers\Cache\NoCacheHandler
 
     jwt_auth.cache.file_system:
-        class: Auth0\SDK\Helpers\Cache\FileSystemCacheHandler
+        class: Auth0\SDK\Helpers\Cache\NoCacheHandler
 
     jwt_auth.security.guard.jwt_guard_authenticator:
         class: Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator
