@@ -6,10 +6,17 @@ namespace Auth0\JWTAuthBundle\Tests\Security;
 use Auth0\JWTAuthBundle\JWTAuthBundle;
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Nyholm\BundleTest\BaseBundleTestCase;
+use Nyholm\BundleTest\CompilerPass\PublicServicePass;
 
 
 class BundleInitializationTest extends BaseBundleTestCase
 {
+    protected function setUp(): void
+    {
+        // Make all services public
+        $this->addCompilerPass(new PublicServicePass());
+    }
+
     protected function getBundleClass()
     {
         return JWTAuthBundle::class;

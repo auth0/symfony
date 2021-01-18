@@ -20,7 +20,7 @@ class JWTAuthBundle extends Bundle
         if ($oldInfoHeaders) {
             $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
 
-            $infoHeaders->setEnvironment('Symfony', Kernel::VERSION);
+            $infoHeaders->setEnvProperty('Symfony', Kernel::VERSION);
             $infoHeaders->setPackage('jwt-auth-bundle', self::SDK_VERSION);
 
             ApiClient::setInfoHeadersData($infoHeaders);

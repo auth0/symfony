@@ -6,6 +6,7 @@ use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator;
 use Auth0\SDK\Exception\InvalidTokenException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use stdClass;
@@ -27,14 +28,15 @@ class JwtGuardAuthenticatorTest extends TestCase
     private $guardAuthenticator;
 
     /**
-     * @var Auth0Service|PHPUnit_Framework_MockObject_MockObject
+     * @var Auth0Service|MockObject
      */
     private $auth0Service;
+
 
     /**
      * Creates a JwtGuardAuthenticator instance for testing.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->auth0Service = $this->getMockBuilder(Auth0Service::class)
             ->disableOriginalConstructor()
@@ -183,11 +185,12 @@ class JwtGuardAuthenticatorTest extends TestCase
     /**
      * Tests if JwtGuardAuthenticator::checkCredentials throws an AuthenticationException containing the information
      * from the exception thrown by the Auth0Service.
-     * @expectedException Symfony\Component\Security\Core\Exception\AuthenticationException
-     * @expectedExceptionMessage Malformed token.
      */
     public function testCheckCredentialsThrowsAuthenticationExceptionWhenJwtDecodingFails()
     {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Malformed token.');
+
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('invalidToken')

@@ -14,32 +14,30 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.lock" }}
           paths:
             - vendor
-  run-tests:
+  run-unit-tests:
     steps:
-      - run: ./vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml
-      - run: 
-          command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
-          when: on_success
+      - run: ./vendor/bin/phpunit --coverage-text
+      - store_artifacts:
+          path: build/coverage.xml
 
-jobs: 
-  php_5: 
+jobs:
+  php_7_3:
     docker: 
-      - image: circleci/php:5.6
+      - image: circleci/php:7.3
     steps:
       - prepare
-      - run-tests
-  php_7: 
-    docker: 
-      - image: circleci/php:7.1
+      - run-unit-tests
+  php_7_4:
+    docker:
+      - image: circleci/php:7.4
     steps:
       - prepare
-      - run-tests
+      - run-unit-tests
 
 #Each workflow represents a Github check
 workflows:
-  build_php_5:
+  build-and-test:
     jobs:
-      - php_5
-  build_php_7:
-    jobs:
-      - php_7
+      - php_7_3
+      - php_7_4
+

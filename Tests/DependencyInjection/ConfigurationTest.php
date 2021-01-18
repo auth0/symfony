@@ -4,9 +4,10 @@ namespace Auth0\JWTAuthBundle\Tests\DependencyInjection;
 
 use Auth0\JWTAuthBundle\DependencyInjection\JWTAuthExtension;
 use Auth0\JWTAuthBundle\JWTAuthBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     /** @var JWTAuthBundle  */
     private $extension;
@@ -15,10 +16,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /** @var string  */
     private $rootNode;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->extension = new JWTAuthExtension();
         $this->container = new ContainerBuilder();
         $this->rootNode = 'jwt_auth';
