@@ -33,6 +33,12 @@ jobs:
     steps:
       - prepare
       - run-unit-tests
+  php_8_0:
+    docker:
+      - image: circleci/php:8.0
+    steps:
+      - prepare
+      - run-unit-tests
 
 #Each workflow represents a Github check
 workflows:
@@ -40,4 +46,5 @@ workflows:
     jobs:
       - php_7_3
       - php_7_4
+      - php_8_0
 
