@@ -3,7 +3,6 @@
 
 namespace Auth0\JWTAuthBundle\Security;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -71,7 +70,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
     {
         // The user provider should implement JWTUserProviderInterface
         if (!$userProvider instanceof JWTUserProviderInterface) {
-            throw new InvalidArgumentException('Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface');
+            throw new \InvalidArgumentException('Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface');
         }
 
         if ($token->getCredentials() === null) {
