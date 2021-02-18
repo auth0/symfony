@@ -34,6 +34,7 @@
   },
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 \"./vendor/bin/phpunit\" --coverage-text ",
+    "test-unit-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml",
     "analyze": "@php ./vendor/bin/phpstan analyze",
     "compat": "@php ./vendor/bin/phpcs --standard=.phpcs-compat.xml.dist",
     "format": "@php ./vendor/bin/phpcbf",

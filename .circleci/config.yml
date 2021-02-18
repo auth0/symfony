@@ -9,14 +9,24 @@ commands:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.lock" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer install --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: composer install -n --prefer-dist
+      - run: composer update --prefer-dist --no-interaction
+      - persist_to_workspace:
+          root: .
+          paths:
+            - composer.*
+            - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.lock" }}
           paths:
             - vendor
+  run-static-analysis:
+    steps:
+      - run: composer analyze
   run-unit-tests:
     steps:
-      - run: ./vendor/bin/phpunit --coverage-text
+      - run: composer test-unit-ci
       - store_artifacts:
           path: build/coverage.xml
 
@@ -26,6 +36,7 @@ jobs:
       - image: circleci/php:7.3
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -35,13 +46,35 @@ jobs:
       - image: circleci/php:7.4
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
   php_8_0:
     docker:
       - image: circleci/php:8.0
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  snyk:
+    docker:
+      - image: snyk/snyk-cli:composer
+    steps:
+      - attach_workspace:
+          at: .
+      - run: snyk test
+      - run:
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]
+            then
+            snyk monitor --org=auth0-sdks
+            fi
+          when: always
 
 #Each workflow represents a Github check
 workflows:
@@ -50,3 +83,8 @@ workflows:
       - php_7_3
       - php_7_4
       - php_8_0
+      - snyk:
+          # Must define SNYK_TOKEN env
+          context: snyk-env
+          requires:
+            - php_7_3
