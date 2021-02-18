@@ -154,11 +154,11 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      * Returns a response that directs the user to authenticate.
      *
      * @param Request                 $request
-     * @param AuthenticationException $authenticationException
+     * @param AuthenticationException $authException
      *
      * @return JsonResponse
      */
-    public function start(Request $request, AuthenticationException $authenticationException = null)
+    public function start(Request $request, AuthenticationException $authException = null)
     {
         $responseBody = [
             'message' => 'Authentication required.',
