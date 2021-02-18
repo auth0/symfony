@@ -11,11 +11,11 @@ use Auth0\JWTAuthBundle\DependencyInjection\Auth0Extension;
 
 class JWTAuthBundle extends Bundle
 {
-	const SDK_VERSION = "3.4.0";
+    const SDK_VERSION = '3.4.0';
 
-	public function __construct()
+    public function __construct()
     {
-		$oldInfoHeaders = ApiClient::getInfoHeadersData();
+        $oldInfoHeaders = ApiClient::getInfoHeadersData();
 
         if ($oldInfoHeaders) {
             $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
@@ -25,7 +25,7 @@ class JWTAuthBundle extends Bundle
 
             ApiClient::setInfoHeadersData($infoHeaders);
         }
-	}
+    }
 
     public function getAlias()
     {

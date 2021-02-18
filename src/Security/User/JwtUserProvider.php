@@ -102,7 +102,7 @@ class JwtUserProvider implements JWTUserProviderInterface
         }
 
         $scopes = explode(' ', $jwt->scope);
-        $roles = array_map(
+        $roles  = array_map(
             function ($scope) {
                 $roleSuffix = strtoupper(str_replace([':', '-'], '_', $scope));
 

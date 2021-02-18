@@ -11,13 +11,19 @@ use Psr\SimpleCache\CacheInterface;
  *
  * Service that provides access to the Auth0 SDK and JWT validation
  */
-class Auth0Service {
+class Auth0Service
+{
 
     private $api_secret;
+
     private $api_identifier;
+
     private $authorized_issuer;
+
     private $secret_base64_encoded;
+
     private $supported_algs;
+
     private $authApi;
 
     /**
@@ -28,22 +34,22 @@ class Auth0Service {
     /**
      * Auth0Service constructor.
      *
-     * @param string $api_secret
-     * @param string $domain
-     * @param array|string $api_identifier
-     * @param array|string $authorized_issuer
-     * @param boolean $secret_base64_encoded
-     * @param array $supported_algs
+     * @param string              $api_secret
+     * @param string              $domain
+     * @param array|string        $api_identifier
+     * @param array|string        $authorized_issuer
+     * @param boolean             $secret_base64_encoded
+     * @param array               $supported_algs
      * @param CacheInterface|null $cache
      */
     public function __construct($api_secret, $domain, $api_identifier, $authorized_issuer, $secret_base64_encoded, $supported_algs, CacheInterface $cache = null)
     {
-        $this->api_secret = $api_secret;
-        $this->api_identifier = $api_identifier;
-        $this->authorized_issuer = $authorized_issuer;
+        $this->api_secret            = $api_secret;
+        $this->api_identifier        = $api_identifier;
+        $this->authorized_issuer     = $authorized_issuer;
         $this->secret_base64_encoded = $secret_base64_encoded;
-        $this->supported_algs = $supported_algs;
-        $this->cache = $cache;
+        $this->supported_algs        = $supported_algs;
+        $this->cache                 = $cache;
 
         $this->authApi = new Authentication($api_identifier, $domain);
     }

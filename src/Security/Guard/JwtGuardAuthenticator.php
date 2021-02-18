@@ -19,6 +19,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class JwtGuardAuthenticator extends AbstractGuardAuthenticator
 {
+
     /**
      * @var Auth0Service
      */
@@ -85,7 +86,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
             return new User('unknown', null, []);
         }
 
-        if (!isset($jwt->token)) {
+        if (! isset($jwt->token)) {
             $jwt->token = $credentials['jwt'];
         }
 
@@ -102,7 +103,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      * @param array         $credentials
      * @param UserInterface $user
      *
-     * @return bool
+     * @return boolean
      *
      * @throws AuthenticationException when decoding and/or validation of the JSON Web Token fails
      */

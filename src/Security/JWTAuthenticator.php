@@ -16,9 +16,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 
-class JWTAuthenticator implements SimplePreAuthenticatorInterface,AuthenticationFailureHandlerInterface
+class JWTAuthenticator implements SimplePreAuthenticatorInterface, AuthenticationFailureHandlerInterface
 {
     use ContainerAwareTrait;
+
     protected $auth0Service;
 
     public function __construct(Auth0Service $auth0Service)
@@ -44,9 +45,9 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
 
         // decode and validate the JWT
         try {
-            $token = $this->auth0Service->decodeJWT($authToken);
+            $token        = $this->auth0Service->decodeJWT($authToken);
             $token->token = $authToken;
-        } catch(\UnexpectedValueException $ex) {
+        } catch (\UnexpectedValueException $ex) {
             throw new BadCredentialsException('Invalid token');
         }
 
@@ -60,7 +61,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
     /**
      * @param TokenInterface           $token
      * @param JWTUserProviderInterface $userProvider
-     * @param                          $providerKey
+     * @param $providerKey
      *
      * @return PreAuthenticatedToken
      *
@@ -69,7 +70,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         // The user provider should implement JWTUserProviderInterface
-        if (!$userProvider instanceof JWTUserProviderInterface) {
+        if (! $userProvider instanceof JWTUserProviderInterface) {
             throw new \InvalidArgumentException('Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface');
         }
 
@@ -79,7 +80,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface,Authentication
             // Get the user for the injected UserProvider
             $user = $userProvider->loadUserByJWT($token->getCredentials());
 
-            if (!$user) {
+            if (! $user) {
                 throw new AuthenticationException(sprintf('Invalid JWT.'));
             }
         }
