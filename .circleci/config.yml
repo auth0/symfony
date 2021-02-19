@@ -41,7 +41,7 @@ commands:
       - run: composer analyze
   run-unit-tests:
     steps:
-      - run: composer test
+      - run: composer test-unit-ci
       - store_artifacts:
           path: build/coverage.xml
 
