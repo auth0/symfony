@@ -4,7 +4,19 @@ commands:
   prepare:
     steps:
       - checkout
-      - run: sudo composer self-update
+      - run:
+          name: Configure PHP environment
+          command: |
+            sudo touch /usr/local/etc/php/php.ini
+            echo "memory_limit = -1" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "display_startup_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.mode = coverage" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.force_display_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.force_error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "detect_unicode = Off" | sudo tee -a /usr/local/etc/php/php.ini
+            sudo apt-get update
+            sudo composer self-update
       - restore_cache:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.lock" }}
