@@ -36,7 +36,6 @@ jobs:
       - image: circleci/php:7.3
     steps:
       - prepare
-      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -46,7 +45,6 @@ jobs:
       - image: circleci/php:7.4
     steps:
       - prepare
-      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -56,7 +54,6 @@ jobs:
       - image: circleci/php:8.0
     steps:
       - prepare
-      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
