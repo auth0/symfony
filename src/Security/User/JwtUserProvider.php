@@ -3,7 +3,6 @@
 namespace Auth0\JWTAuthBundle\Security\User;
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
-use stdClass;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\User;
@@ -29,6 +28,7 @@ class JwtUserProvider implements JWTUserProviderInterface
     public function loadUserByJWT($jwt)
     {
         $token = null;
+
         if (isset($jwt->token)) {
             $token = $jwt->token;
         }
@@ -37,10 +37,11 @@ class JwtUserProvider implements JWTUserProviderInterface
     }
 
     /**
-     * Unused by the @see JwtGuardAuthenticator.
+     * {@inheritdoc}
      */
     public function getAnonymousUser()
     {
+        return null;
     }
 
     /**
@@ -74,11 +75,11 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the roles for the user.
      *
-     * @param stdClass $jwt
+     * @param \stdClass $jwt
      *
-     * @return array
+     * @return array<string>
      */
-    private function getRoles(stdClass $jwt)
+    private function getRoles(\stdClass $jwt)
     {
         return array_merge(
             [
@@ -91,11 +92,11 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the scopes from the JSON Web Token as Symfony roles prefixed with 'ROLE_JWT_SCOPE_'.
      *
-     * @param stdClass $jwt
+     * @param \stdClass $jwt
      *
-     * @return array
+     * @return array<string>
      */
-    private function getScopesFromJwtAsRoles(stdClass $jwt)
+    private function getScopesFromJwtAsRoles(\stdClass $jwt)
     {
         if (isset($jwt->scope) === false) {
             return [];

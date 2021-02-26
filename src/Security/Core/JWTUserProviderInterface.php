@@ -34,7 +34,7 @@ interface JWTUserProviderInterface extends UserProviderInterface
      *
      * It is recommended to return a user with the role IS_AUTHENTICATED_ANONYMOUSLY
      *
-     * @return UserInterface
+     * @return null
      *
      * @throws AuthenticationException
      */

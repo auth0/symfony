@@ -27,7 +27,7 @@ class JWTAuthBundle extends Bundle
         }
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'jwt_auth';
     }

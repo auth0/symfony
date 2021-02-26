@@ -10,6 +10,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 class JWTInfoNotFoundException extends AuthenticationException
 {
 
+    /**
+     * @var string
+     */
     private $jwt;
 
     /**
@@ -21,21 +24,21 @@ class JWTInfoNotFoundException extends AuthenticationException
     }
 
     /**
-     * Get the username.
+     * Get the user jwt.
      *
      * @return string
      */
-    public function getJWT()
+    public function getJWT(): string
     {
         return $this->jwt;
     }
 
     /**
-     * Set the username.
+     * Set the user jwt.
      *
-     * @param string $username
+     * @param string $jwt
      */
-    public function setJWT($jwt)
+    public function setJWT($jwt): void
     {
         $this->jwt = $jwt;
     }
@@ -43,7 +46,7 @@ class JWTInfoNotFoundException extends AuthenticationException
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([
             $this->jwt,
@@ -53,6 +56,10 @@ class JWTInfoNotFoundException extends AuthenticationException
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $str
+     *
+     * @return void
      */
     public function unserialize($str)
     {
@@ -63,8 +70,10 @@ class JWTInfoNotFoundException extends AuthenticationException
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string,mixed>
      */
-    public function getMessageData()
+    public function getMessageData(): array
     {
         return ['{{ jwt }}' => $this->jwt];
     }
