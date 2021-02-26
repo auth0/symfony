@@ -15,24 +15,44 @@ use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterfa
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
+use Auth0\SDK\Exception\InvalidTokenException;
 
 class JWTAuthenticator implements SimplePreAuthenticatorInterface, AuthenticationFailureHandlerInterface
 {
     use ContainerAwareTrait;
 
+    /**
+     * @var Auth0Service
+     */
     protected $auth0Service;
 
+    /**
+     * JWTAuthenticator constructor
+     *
+     * @param Auth0Service $auth0Service Required. An instance of the Auth0Service class.
+     */
     public function __construct(Auth0Service $auth0Service)
     {
         $this->auth0Service = $auth0Service;
     }
 
+    /**
+     * Generate a pre-authenticated token.
+     *
+     * @param Request $request
+     * @param string  $providerKey
+     *
+     * @return PreAuthenticatedToken
+     *
+     * @throws BadCredentialsException
+     * @throws InvalidTokenException
+     */
     public function createToken(Request $request, $providerKey)
     {
-        // look for an authorization header
+        // Look for an authorization header
         $authorizationHeader = $request->headers->get('Authorization');
 
-        if ($authorizationHeader == null) {
+        if ($authorizationHeader === null) {
             return new PreAuthenticatedToken(
                 'anon.',
                 null,
@@ -40,13 +60,16 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
             );
         }
 
-        // extract the JWT
+        // Extract the JWT
         $authToken = str_replace('Bearer ', '', $authorizationHeader);
 
-        // decode and validate the JWT
+        // Decode and validate the JWT
         try {
-            $token        = $this->auth0Service->decodeJWT($authToken);
-            $token->token = $authToken;
+            $token = $this->auth0Service->decodeJWT($authToken);
+
+            if (null !== $token) {
+                $token->token = $authToken;
+            }
         } catch (\UnexpectedValueException $ex) {
             throw new BadCredentialsException('Invalid token');
         }
@@ -61,11 +84,11 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
     /**
      * @param TokenInterface           $token
      * @param JWTUserProviderInterface $userProvider
-     * @param $providerKey
+     * @param string                   $providerKey
      *
      * @return PreAuthenticatedToken
      *
-     * @throws \Symfony\Component\Security\Core\Exception\AuthenticationException
+     * @throws AuthenticationException
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
@@ -74,16 +97,18 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
             throw new \InvalidArgumentException('Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface');
         }
 
-        if ($token->getCredentials() === null) {
+        if (null === $token->getCredentials()) {
             $user = $userProvider->getAnonymousUser();
-        } else {
-            // Get the user for the injected UserProvider
-            $user = $userProvider->loadUserByJWT($token->getCredentials());
 
-            if (! $user) {
-                throw new AuthenticationException(sprintf('Invalid JWT.'));
-            }
+            return new PreAuthenticatedToken(
+                '',
+                $token,
+                $providerKey,
+                []
+            );
         }
+
+        $user = $userProvider->loadUserByJWT($token->getCredentials());
 
         return new PreAuthenticatedToken(
             $user,
@@ -93,6 +118,12 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
         );
     }
 
+    /**
+     * @param TokenInterface $token
+     * @param string         $providerKey
+     *
+     * @return boolean
+     */
     public function supportsToken(TokenInterface $token, $providerKey)
     {
         return $token instanceof PreAuthenticatedToken && $token->getProviderKey() === $providerKey;

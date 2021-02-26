@@ -1,25 +1,26 @@
 services:
-    jwt_auth.auth0_service:
-        class: Auth0\JWTAuthBundle\Security\Auth0Service
-        arguments: ["%jwt_auth.api_secret%","%jwt_auth.domain%","%jwt_auth.api_identifier%","%jwt_auth.authorized_issuer%","%jwt_auth.secret_base64_encoded%", "%jwt_auth.supported_algs%", ~]
+  jwt_auth.auth0_service:
+    class: Auth0\JWTAuthBundle\Security\Auth0Service
+    arguments:
+      [
+        "%jwt_auth.domain%",
+        "%jwt_auth.client_id%",
+        "%jwt_auth.audience%",
+        "%jwt_auth.authorized_issuer%",
+        ~,
+      ]
 
-    Auth0\JWTAuthBundle\Security\Auth0Service:
-        alias: jwt_auth.auth0_service
+  Auth0\JWTAuthBundle\Security\Auth0Service:
+    alias: jwt_auth.auth0_service
 
-    jwt_auth.jwt_authenticator:
-        class:     Auth0\JWTAuthBundle\Security\JWTAuthenticator
-        arguments: ["@jwt_auth.auth0_service"]
+  jwt_auth.jwt_authenticator:
+    class: Auth0\JWTAuthBundle\Security\JWTAuthenticator
+    arguments: ["@jwt_auth.auth0_service"]
 
-    jwt_auth.cache.null:
-        class: Auth0\SDK\Helpers\Cache\NoCacheHandler
+  jwt_auth.security.guard.jwt_guard_authenticator:
+    class: Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator
+    arguments:
+      - "@jwt_auth.auth0_service"
 
-    jwt_auth.cache.file_system:
-        class: Auth0\SDK\Helpers\Cache\NoCacheHandler
-
-    jwt_auth.security.guard.jwt_guard_authenticator:
-        class: Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator
-        arguments:
-            - "@jwt_auth.auth0_service"
-
-    jwt_auth.security.user.jwt_user_provider:
-        class: Auth0\JWTAuthBundle\Security\User\JwtUserProvider
+  jwt_auth.security.user.jwt_user_provider:
+    class: Auth0\JWTAuthBundle\Security\User\JwtUserProvider

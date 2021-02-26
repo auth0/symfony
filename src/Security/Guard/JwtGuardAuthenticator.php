@@ -40,8 +40,7 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has('Authorization') &&
-               strpos($request->headers->get('Authorization'), 'Bearer') === 0;
+        return true;
     }
 
     /**
@@ -49,15 +48,12 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      *
      * @param Request $request
      *
-     * @return array|null
+     * @return array<string,mixed>
      */
-    public function getCredentials(Request $request)
+    public function getCredentials(Request $request): ?array
     {
         // Removes the 'Bearer ' part from the Authorization header value.
         $jwt = str_replace('Bearer ', '', $request->headers->get('Authorization', ''));
-        if (empty($jwt)) {
-            return null;
-        }
 
         return [
             'jwt' => $jwt,
@@ -71,46 +67,53 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      * When the user provider does not implement the JWTUserProviderInterface it will attempt to load
      * the user by username with the 'sub' (subject) claim of the JSON Web Token.
      *
-     * @param array                 $credentials
+     * @param array<string,mixed>   $credentials
      * @param UserProviderInterface $userProvider
      *
      * @return UserInterface|null
      */
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
     {
-        try {
-            $jwt = $this->auth0Service->decodeJWT($credentials['jwt']);
-        } catch (CoreException $exception) {
-            // Skip JWT verification exceptions here.
-            // Verification will be done in checkCredentials().
-            return new User('unknown', null, []);
+        if ($credentials && isset($credentials['jwt']) && ! empty($credentials['jwt'])) {
+            if ($jwt = $this->auth0Service->decodeJWT($credentials['jwt'])) {
+                if (! isset($jwt->token)) {
+                    $jwt->token = $credentials['jwt'];
+                }
+
+                if ($userProvider instanceof JWTUserProviderInterface) {
+                    return $userProvider->loadUserByJWT($jwt);
+                }
+
+                return $userProvider->loadUserByUsername($jwt->sub);
+            }
         }
 
-        if (! isset($jwt->token)) {
-            $jwt->token = $credentials['jwt'];
-        }
-
-        if ($userProvider instanceof JWTUserProviderInterface) {
-            return $userProvider->loadUserByJWT($jwt);
-        }
-
-        return $userProvider->loadUserByUsername($jwt->sub);
+        // Skip JWT verification exceptions here.
+        // Verification will be done in checkCredentials().
+        // if ($userProvider instanceof JWTUserProviderInterface) {
+        // return $userProvider->getAnonymousUser();
+        // }
+        return new User('unknown', null, ['IS_AUTHENTICATED_ANONYMOUSLY']);
     }
 
     /**
      * Returns true when the provided JSON Web Token successfully decodes and validates.
      *
-     * @param array         $credentials
-     * @param UserInterface $user
+     * @param array<string,mixed> $credentials
+     * @param UserInterface       $user
      *
      * @return boolean
      *
      * @throws AuthenticationException when decoding and/or validation of the JSON Web Token fails
      */
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
         try {
-            $this->auth0Service->decodeJWT($credentials['jwt']);
+            if ($credentials && isset($credentials['jwt'])) {
+                if (! empty($credentials['jwt'])) {
+                    $this->auth0Service->decodeJWT($credentials['jwt']);
+                }
+            }
 
             return true;
         } catch (CoreException $exception) {
@@ -124,10 +127,13 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
      * @param Request        $request
      * @param TokenInterface $token
      * @param string         $providerKey
+     *
+     * @return null
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         // Continue with request.
+        return null;
     }
 
     /**
