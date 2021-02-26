@@ -40,20 +40,4 @@ class BundleInitializationTest extends BaseBundleTestCase
         $service = $container->get(Auth0Service::class);
         $this->assertInstanceOf(Auth0Service::class, $service);
     }
-
-    public function testBundleWithCache()
-    {
-        // Create a new Kernel
-        $kernel = $this->createKernel();
-
-        // Add some configuration
-        $kernel->addConfigFile(__DIR__.'/config/cache.yml');
-
-        // Boot the kernel as normal ...
-        $this->bootKernel();
-
-        $container = $this->getContainer();
-        $service = $container->get('jwt_auth.auth0_service');
-        $this->assertInstanceOf(Auth0Service::class, $service);
-    }
 }

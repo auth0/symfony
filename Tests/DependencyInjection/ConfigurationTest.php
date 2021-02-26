@@ -11,8 +11,10 @@ class ConfigurationTest extends TestCase
 {
     /** @var JWTAuthBundle  */
     private $extension;
+
     /** @var ContainerBuilder  */
     private $container;
+
     /** @var string  */
     private $rootNode;
 
@@ -23,71 +25,18 @@ class ConfigurationTest extends TestCase
         $this->rootNode = 'jwt_auth';
     }
 
-    public function testGetConfigWhenMultipleApiIdentifier()
+    public function testGetConfiguration()
     {
         $configs = [
-            'api_identifier_array' => [
-                'test identifier1',
-                'test identifier2'
-            ],
-            'api_client_id' => 'test client id'
+            'domain' => 'localhost.somewhere.auth0.com',
+            'audience' => 'test audience',
+            'client_id' => 'test client id'
         ];
 
         $this->extension->load([$configs], $this->container);
 
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.api_identifier'));
-        $this->assertEquals(
-            [
-                'test identifier1',
-                'test identifier2',
-                'test client id'
-            ],
-            $this->container->getParameter($this->rootNode . '.api_identifier')
-        );
-    }
-
-    public function testGetConfigWhenSingleApiIdentifier()
-    {
-        $configs = [
-            'api_identifier' => 'test identifier'
-        ];
-
-        $this->extension->load([$configs], $this->container);
-
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.api_identifier'));
-        $this->assertEquals('test identifier', $this->container->getParameter($this->rootNode . '.api_identifier'));
-    }
-
-    public function testGetConfigWhenMultipleAuthorizedIssuer()
-    {
-        $configs = [
-            'authorized_issuer' => [
-                'test authorized issuer1',
-                'test authorized issuer2'
-            ]
-        ];
-
-        $this->extension->load([$configs], $this->container);
-
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.authorized_issuer'));
-        $this->assertEquals(
-            [
-                'test authorized issuer1',
-                'test authorized issuer2'
-            ],
-            $this->container->getParameter($this->rootNode . '.authorized_issuer')
-        );
-    }
-
-    public function testGetConfigWhenSingleAuthorizedIssuer()
-    {
-        $configs = [
-            'authorized_issuer' => 'test authorized issuer'
-        ];
-
-        $this->extension->load([$configs], $this->container);
-
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.authorized_issuer'));
-        $this->assertEquals('test authorized issuer', $this->container->getParameter($this->rootNode . '.authorized_issuer'));
+        $this->assertEquals($configs['domain'], $this->container->getParameter($this->rootNode . '.domain'));
+        $this->assertEquals($configs['audience'], $this->container->getParameter($this->rootNode . '.audience'));
+        $this->assertEquals($configs['client_id'], $this->container->getParameter($this->rootNode . '.client_id'));
     }
 }

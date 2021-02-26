@@ -32,7 +32,6 @@ class JwtGuardAuthenticatorTest extends TestCase
      */
     private $auth0Service;
 
-
     /**
      * Creates a JwtGuardAuthenticator instance for testing.
      */
@@ -46,35 +45,17 @@ class JwtGuardAuthenticatorTest extends TestCase
     }
 
     /**
-     * Tests if JwtGuardAuthenticator::supports returns false when the Request does not contain an Authorization header.
-     */
-    public function testSupportsReturnsFalseWhenRequestDoesNotContainAuthorizationHeader()
-    {
-        $request = Request::create('/');
-
-        $this->assertFalse($this->guardAuthenticator->supports($request));
-    }
-
-    /**
-     * Tests if JwtGuardAuthenticator::supports returns true when the Request contains an Authorization header.
-     */
-    public function testSupportsReturnsTrueWhenRequestContainsAuthorizationHeader()
-    {
-        $request = Request::create('/');
-        $request->headers->set('Authorization', 'Bearer token');
-
-        $this->assertTrue($this->guardAuthenticator->supports($request));
-    }
-
-    /**
      * Tests if JwtGuardAuthenticator::getCredentials returns null when the Request does not contain
      * an Authorization header.
      */
-    public function testGetCredentialsReturnsNullWhenRequestDoesNotContainAuthorizationHeader()
+    public function testGetCredentialsReturnsEmptyJwtArrayWhenRequestDoesNotContainAuthorizationHeader()
     {
         $request = Request::create('/');
 
-        $this->assertNull($this->guardAuthenticator->getCredentials($request));
+        $this->assertSame(
+            ['jwt' => ''],
+            $this->guardAuthenticator->getCredentials($request)
+        );
     }
 
     /**
@@ -100,8 +81,7 @@ class JwtGuardAuthenticatorTest extends TestCase
     {
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
-            ->with('invalidToken')
-            ->willThrowException(new InvalidTokenException('Malformed token.'));
+            ->with('invalidToken');
 
         $userProviderMock = $this->getMockBuilder(JWTUserProviderInterface::class)
             ->getMock();
@@ -118,7 +98,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
         $this->assertSame('unknown', $user->getUsername());
         $this->assertNull($user->getPassword());
-        $this->assertSame([], $user->getRoles());
+        $this->assertSame(['IS_AUTHENTICATED_ANONYMOUSLY'], $user->getRoles());
     }
 
     /**
