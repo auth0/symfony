@@ -1,27 +1,22 @@
-[![CircleCI](https://circleci.com/gh/auth0/jwt-auth-bundle.svg?style=svg)](https://circleci.com/gh/auth0/jwt-auth-bundle)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle?ref=badge_shield)
-
 # jwt-auth-bundle
 
 JWT Authentication bundle for Symfony
 
+[![Build Status](https://img.shields.io/circleci/project/github/auth0/jwt-auth-bundle/master.svg)](https://circleci.com/gh/auth0/jwt-auth-bundle) [![Total Downloads](https://img.shields.io/packagist/dt/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/jwt-auth-bundle?label=stable)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![PHP Support](https://img.shields.io/packagist/php-v/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![Code Coverage](https://codecov.io/gh/auth0/jwt-auth-bundle/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/jwt-auth-bundle) [![License](https://img.shields.io/packagist/l/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![FOSSA](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle?ref=badge_shield)
+
 ## Requirements
 
-- [PHP](http://php.net/) 5.5+
-- [Symfony](https://symfony.com/) 2.8+
-- [Auth0 PHP](https://github.com/auth0/auth0-PHP) 5.0+
-
-> For Symfony < 2.8 please see [v1](https://github.com/auth0/jwt-auth-bundle/tree/1.x.x-dev)
+- [PHP](http://php.net/) 7.3+
+- [Symfony](https://symfony.com/) 4.4+
+- [Auth0 PHP](https://github.com/auth0/auth0-PHP) 7.6+
 
 ## Installation
 
-To install the dependency, run the following:
+Using [Composer](https://getcomposer.org/doc/00-intro.md):
 
 ```bash
 composer require auth0/jwt-auth-bundle:"~3.0"
 ```
-
-> For more information about Composer usage, check [their official documentation](https://getcomposer.org/doc/00-intro.md).
 
 ## Demo
 
@@ -29,19 +24,43 @@ composer require auth0/jwt-auth-bundle:"~3.0"
 
 ## Auth0 integration
 
-The Auth0 PHP SDK is used to decode the JWT and if you are woking with Auth0 you can inject to your `UserProvider` to get the user profile, [example code](https://github.com/auth0-community/auth0-symfony-api-samples/blob/master/01-Authorization-RS256/src/AppBundle/Security/A0UserProvider.php).
+The [Auth0 PHP SDK](https://github.com/auth0/auth0-PHP) is included in this bundle to handle the processing of JWTs. You can inject to your `UserProvider` to get the user profile, [example code](https://github.com/auth0-community/auth0-symfony-api-samples/blob/master/01-Authorization-RS256/src/AppBundle/Security/A0UserProvider.php).
 
-## Issue Reporting
+## Contributing
 
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+We appreciate your feedback and contributions to the project! Before you get started, please review the following:
 
-## Author
+- [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
+- [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+- [The Auth0 PHP SDK contribution guide](CONTRIBUTING.md)
 
-[Auth0](https://auth0.com)
+## Support + Feedback
+
+- The [Auth0 Community](https://community.auth0.com/) is a valuable resource for asking questions and finding answers, staffed by the Auth0 team and a community of enthusiastic developers
+- For code-level support (such as feature requests and bug reports) we encourage you to [open issues](https://github.com/auth0/auth0-PHP/issues) here on our repo
+- For customers on [paid plans](https://auth0.com/pricing/), our [support center](https://support.auth0.com/) is available for opening tickets with our knowledgeable support specialists
+
+Further details about our support solutions are [available on our website.](https://auth0.com/docs/support)
+
+## Vulnerability Reporting
+
+Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+
+## What is Auth0?
+
+Auth0 helps you to:
+
+- Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, Box, Salesforce (amongst others), or enterprise identity systems like Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider.
+- Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
+- Add support for [passwordless](https://auth0.com/passwordless) and [multi-factor authentication](https://auth0.com/docs/mfa).
+- Add support for [linking different user accounts](https://docs.auth0.com/link-accounts) with the same user.
+- Analytics of how, when and where users are logging in.
+- Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
+
+[Why Auth0?](https://auth0.com/why-auth0)
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
-
+This project is open source software licensed under [the MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file for more info.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle?ref=badge_large)
