@@ -1,18 +1,27 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * @author german
+ * Dependency injection extension for JWTAuthBundle.
+ *
+ * @package Auth0\JWTAuthBundle\DependencyInjection
  */
 class JWTAuthExtension extends Extension
 {
+    /**
+     * Loads the configuration for JWTAuthBundle.
+     *
+     * @param array<mixed>     $configs   Array containing the configuration values.
+     * @param ContainerBuilder $container DI container for the bundle.
+     *
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();

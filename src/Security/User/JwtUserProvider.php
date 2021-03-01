@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\User;
 
+use stdClass;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -16,6 +17,10 @@ class JwtUserProvider implements JWTUserProviderInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $class A user class type.
+     *
+     * @return boolean
      */
     public function supportsClass($class)
     {
@@ -24,8 +29,12 @@ class JwtUserProvider implements JWTUserProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param stdClass $jwt An encoded JWT.
+     *
+     * @return User
      */
-    public function loadUserByJWT($jwt)
+    public function loadUserByJWT(stdClass $jwt)
     {
         $token = null;
 
@@ -38,6 +47,8 @@ class JwtUserProvider implements JWTUserProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return null
      */
     public function getAnonymousUser()
     {
@@ -46,6 +57,12 @@ class JwtUserProvider implements JWTUserProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $username A string representing the username of a user.
+     *
+     * @return UserInterface|void
+     *
+     * @throws UsernameNotFoundException When attempting to load a user by username. Use the loadUserByJWT instead.
      */
     public function loadUserByUsername($username)
     {
@@ -60,6 +77,12 @@ class JwtUserProvider implements JWTUserProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param UserInterface $user An instance of a User.
+     *
+     * @return UserInterface
+     *
+     * @throws UnsupportedUserException When provided an incompatible User instance.
      */
     public function refreshUser(UserInterface $user)
     {
@@ -75,11 +98,11 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the roles for the user.
      *
-     * @param \stdClass $jwt
+     * @param stdClass $jwt An encoded JWT.
      *
      * @return array<string>
      */
-    private function getRoles(\stdClass $jwt)
+    private function getRoles(stdClass $jwt)
     {
         return array_merge(
             [
@@ -92,11 +115,11 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the scopes from the JSON Web Token as Symfony roles prefixed with 'ROLE_JWT_SCOPE_'.
      *
-     * @param \stdClass $jwt
+     * @param stdClass $jwt An encoded JWT.
      *
      * @return array<string>
      */
-    private function getScopesFromJwtAsRoles(\stdClass $jwt)
+    private function getScopesFromJwtAsRoles(stdClass $jwt)
     {
         if (isset($jwt->scope) === false) {
             return [];

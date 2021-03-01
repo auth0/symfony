@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security;
 
@@ -15,13 +14,22 @@ use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterfa
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
-use Auth0\SDK\Exception\InvalidTokenException;
+use InvalidArgumentException;
 
+/**
+ * A SimplePreAuthenticator interface for securing your Symfony application.
+ *
+ * @deprecated As of Symfony 4.2, you should switch to using JwtGuardAuthenticator instead.
+ *
+ * @package Auth0\JWTAuthBundle\Security
+ */
 class JWTAuthenticator implements SimplePreAuthenticatorInterface, AuthenticationFailureHandlerInterface
 {
     use ContainerAwareTrait;
 
     /**
+     * Reference to an instance of Auth0Service.
+     *
      * @var Auth0Service
      */
     protected $auth0Service;
@@ -39,17 +47,16 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
     /**
      * Generate a pre-authenticated token.
      *
-     * @param Request $request
-     * @param string  $providerKey
+     * @param Request $request     Symfony representation of the HTTP request message.
+     * @param string  $providerKey String representation of the provider.
      *
      * @return PreAuthenticatedToken
      *
-     * @throws BadCredentialsException
-     * @throws InvalidTokenException
+     * @throws BadCredentialsException When an invalid token is provided.
      */
     public function createToken(Request $request, $providerKey)
     {
-        // Look for an authorization header
+        // Look for an authorization header.
         $authorizationHeader = $request->headers->get('Authorization');
 
         if ($authorizationHeader === null) {
@@ -60,10 +67,10 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
             );
         }
 
-        // Extract the JWT
+        // Extract the JWT.
         $authToken = str_replace('Bearer ', '', $authorizationHeader);
 
-        // Decode and validate the JWT
+        // Decode and validate the JWT.
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
 
@@ -82,19 +89,24 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
     }
 
     /**
-     * @param TokenInterface           $token
-     * @param JWTUserProviderInterface $userProvider
-     * @param string                   $providerKey
+     * Authenticate a provided token.
+     *
+     * @param TokenInterface           $token        Symfony authentication token.
+     * @param JWTUserProviderInterface $userProvider A UserProviderInterface instance.
+     * @param string                   $providerKey  String representation of the provider.
      *
      * @return PreAuthenticatedToken
      *
-     * @throws AuthenticationException
+     * @throws InvalidArgumentException When an invalid provider interface is passed.
+     * @throws AuthenticationException  When an authentication failure occurs.
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
-        // The user provider should implement JWTUserProviderInterface
+        // The user provider should implement JWTUserProviderInterface.
         if (! $userProvider instanceof JWTUserProviderInterface) {
-            throw new \InvalidArgumentException('Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface');
+            throw new InvalidArgumentException(
+                'Argument must implement interface Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface'
+            );
         }
 
         if (null === $token->getCredentials()) {
@@ -114,13 +126,17 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
             $user,
             $token,
             $providerKey,
-            $user->getRoles()
+            array_map(function ($role) {
+                return (string) $role;
+            }, $user->getRoles())
         );
     }
 
     /**
-     * @param TokenInterface $token
-     * @param string         $providerKey
+     * Check if $token is compatible and provider keys match before handing off to authenticateToken().
+     *
+     * @param TokenInterface $token       Symfony authentication token.
+     * @param string         $providerKey String representation of the provider.
      *
      * @return boolean
      */
@@ -129,9 +145,17 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
         return $token instanceof PreAuthenticatedToken && $token->getProviderKey() === $providerKey;
     }
 
+    /**
+     * Event raised when an authentication error occurs.
+     *
+     * @param Request                 $request   Symfony representation of the HTTP request message.
+     * @param AuthenticationException $exception A object representing the error.
+     *
+     * @return Response
+     */
+    // phpcs:ignore
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new Response("Authentication Failed: {$exception->getMessage()}", 403);
+        return new Response('Authentication Failed: '.$exception->getMessage(), 403);
     }
-
 }

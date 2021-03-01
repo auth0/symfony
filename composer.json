@@ -31,8 +31,8 @@
     "phpcompatibility/php-compatibility": "^8.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "phpstan/phpstan": "^0.12.64",
-    "phpstan/phpstan-symfony": "^0.12.20",
-    "phpstan/extension-installer": "^1.1"
+    "phpstan/extension-installer": "^1.1",
+    "phpstan/phpstan-symfony": "^0.12.20"
   },
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 \"./vendor/bin/phpunit\" --coverage-text ",

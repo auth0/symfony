@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Core;
 
@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * @author german
+ * An UserProviderInterface adapter for our JWT users.
  */
 interface JWTUserProviderInterface extends UserProviderInterface
 {
@@ -18,13 +18,13 @@ interface JWTUserProviderInterface extends UserProviderInterface
      * This method must throw JWTInfoNotFoundException if the user is not
      * found.
      *
-     * @param stdClass $jwt The decoded Json Web Token
+     * @param stdClass $jwt The decoded Json Web Token.
      *
      * @return UserInterface
      *
-     * @throws AuthenticationException if the user is not found
+     * @throws AuthenticationException If the user is not found.
      */
-    public function loadUserByJWT($jwt);
+    public function loadUserByJWT(stdClass $jwt);
 
     /**
      * Returns an anonymous user.
@@ -35,8 +35,6 @@ interface JWTUserProviderInterface extends UserProviderInterface
      * It is recommended to return a user with the role IS_AUTHENTICATED_ANONYMOUSLY
      *
      * @return null
-     *
-     * @throws AuthenticationException
      */
     public function getAnonymousUser();
 }

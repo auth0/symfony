@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security;
 
+use stdClass;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
@@ -14,36 +15,50 @@ class Auth0Service
 {
 
     /**
+     * Stores an instance of Auth0\SDK\API\Authentication.
+     *
      * @var Authentication
      */
     protected $a0;
 
     /**
+     * Stores the configured tenant domain.
+     *
      * @var string
      */
     protected $domain;
 
     /**
+     * Stores the configured client id.
+     *
      * @var string
      */
     protected $clientId;
 
     /**
+     * Stores the configured API audience.
+     *
      * @var string
      */
     protected $audience;
 
     /**
+     * Stores the configured authorized issuer.
+     *
      * @var string
      */
     protected $issuer;
 
     /**
+     * Stores a provided JWT, set during decodeJWT().
+     *
      * @var string
      */
     protected $token;
 
     /**
+     * Stores information about a provided JWT, updated with decodeJWT().
+     *
      * @var array<string,mixed>
      */
     protected $tokenInfo;
@@ -56,9 +71,9 @@ class Auth0Service
      * @param string $audience          Required. Your Auth0 API identifier.
      * @param string $authorized_issuer Optional. This will be generated from $domain if not provided.
      */
-    public function __construct(string $domain, string $clientId, string $audience, ?string $authorized_issuer)
+    public function __construct(string $domain, string $clientId, string $audience, string $authorized_issuer)
     {
-        $this->issuer = strlen($authorized_issuer) ? $authorized_issuer : "https://{$domain}/";
+        $this->issuer = strlen($authorized_issuer) ? $authorized_issuer : 'https://'.$domain.'/';
 
         $this->domain   = $domain;
         $this->clientId = $clientId;
@@ -70,7 +85,7 @@ class Auth0Service
     /**
      * Get the Auth0 User Profile based on the JWT (and validate it).
      *
-     * @param string $jwt The encoded JWT token
+     * @param string $jwt The encoded JWT token.
      *
      * @return array<string,mixed>
      */
@@ -80,11 +95,13 @@ class Auth0Service
     }
 
     /**
-     * Decodes the JWT and validate it
+     * Decodes the JWT and validate it.
      *
-     * @return \stdClass
+     * @param string $token An encoded JWT token.
+     *
+     * @return stdClass
      */
-    public function decodeJWT(string $token): ?\stdClass
+    public function decodeJWT(string $token): ?stdClass
     {
         $jwksUri = $this->issuer.'.well-known/jwks.json';
 

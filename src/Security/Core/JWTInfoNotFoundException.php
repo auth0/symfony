@@ -1,24 +1,28 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Core;
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * @author german
+ * AuthenticationException extension for JWT token handling.
  */
 class JWTInfoNotFoundException extends AuthenticationException
 {
 
     /**
+     * Store for our JWT.
+     *
      * @var string
      */
     private $jwt;
 
     /**
      * {@inheritdoc}
+     *
+     * @return string;
      */
-    public function getMessageKey()
+    public function getMessageKey(): string
     {
         return 'JWT could not be found.';
     }
@@ -36,7 +40,9 @@ class JWTInfoNotFoundException extends AuthenticationException
     /**
      * Set the user jwt.
      *
-     * @param string $jwt
+     * @param string $jwt A valid JWT object.
+     *
+     * @return void
      */
     public function setJWT($jwt): void
     {
@@ -45,6 +51,8 @@ class JWTInfoNotFoundException extends AuthenticationException
 
     /**
      * {@inheritdoc}
+     *
+     * @return string The string representing the serialized JWT.
      */
     public function serialize(): string
     {
@@ -57,7 +65,7 @@ class JWTInfoNotFoundException extends AuthenticationException
     /**
      * {@inheritdoc}
      *
-     * @param string $str
+     * @param string $str A string representing a serialized JWT.
      *
      * @return void
      */
