@@ -6,6 +6,7 @@ use stdClass;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
+use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
 
 /**
@@ -36,6 +37,13 @@ class Auth0Service
     protected $clientId;
 
     /**
+     * Stores the configured client secret.
+     *
+     * @var string
+     */
+    protected $clientSecret;
+
+    /**
      * Stores the configured API audience.
      *
      * @var string
@@ -48,6 +56,13 @@ class Auth0Service
      * @var string
      */
     protected $issuer;
+
+    /**
+     * Stores the configured token algorithm; either RS256 or HS256.
+     *
+     * @var string
+     */
+    protected $algorithm;
 
     /**
      * Stores a provided JWT, set during decodeJWT().
@@ -66,18 +81,28 @@ class Auth0Service
     /**
      * Auth0Service constructor.
      *
-     * @param string $domain            Required. Auth0 domain for your tenant.
-     * @param string $clientId          Required. Your Auth0 Client ID.
-     * @param string $audience          Required. Your Auth0 API identifier.
-     * @param string $authorized_issuer Optional. This will be generated from $domain if not provided.
+     * @param string $domain           Required. Auth0 domain for your tenant.
+     * @param string $clientId         Required. Your Auth0 Client ID.
+     * @param string $clientSecret     Optional. Your Auth0 Client secret.
+     * @param string $audience         Optional. Your Auth0 API identifier.
+     * @param string $authorizedIssuer Optional. This will be generated from $domain if not provided.
+     * @param string $algorithm        Optional. Must be either 'RS256' (default) or 'HS256'.
      */
-    public function __construct(string $domain, string $clientId, string $audience, string $authorized_issuer)
+    public function __construct(
+        string $domain,
+        string $clientId,
+        string $clientSecret,
+        string $audience,
+        string $authorizedIssuer,
+        string $algorithm
+    )
     {
-        $this->issuer = strlen($authorized_issuer) ? $authorized_issuer : 'https://'.$domain.'/';
-
-        $this->domain   = $domain;
-        $this->clientId = $clientId;
-        $this->audience = $audience;
+        $this->domain       = $domain;
+        $this->clientId     = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->audience     = $audience;
+        $this->issuer       = strlen($authorizedIssuer) ? $authorizedIssuer : 'https://'.$domain.'/';
+        $this->algorithm    = (mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256');
 
         $this->a0 = new Authentication($domain, $clientId);
     }
@@ -103,10 +128,16 @@ class Auth0Service
      */
     public function decodeJWT(string $token): ?stdClass
     {
-        $jwksUri = $this->issuer.'.well-known/jwks.json';
+        $jwksUri     = $this->issuer.'.well-known/jwks.json';
+        $sigVerifier = null;
 
-        $jwksFetcher   = new JWKFetcher(null, [ 'base_uri' => $jwksUri ]);
-        $sigVerifier   = new AsymmetricVerifier($jwksFetcher);
+        if ('HS256' === $this->algorithm) {
+            $sigVerifier = new SymmetricVerifier($this->clientSecret);
+        } else {
+            $jwksFetcher = new JWKFetcher(null, [ 'base_uri' => $jwksUri ]);
+            $sigVerifier = new AsymmetricVerifier($jwksFetcher);
+        }
+
         $tokenVerifier = new TokenVerifier($this->issuer, $this->audience, $sigVerifier);
 
         $this->tokenInfo = $tokenVerifier->verify($token);

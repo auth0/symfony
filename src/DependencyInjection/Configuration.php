@@ -23,10 +23,13 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-            ->scalarNode('domain')->defaultValue('')->end()
-            ->scalarNode('client_id')->defaultValue('')->end()
-            ->scalarNode('audience')->defaultValue('')->end()
-            ->scalarNode('authorized_issuer')->defaultValue('')->end();
+                ->scalarNode('domain')->defaultValue('')->end()
+                ->scalarNode('client_id')->defaultValue('')->end()
+                ->scalarNode('client_secret')->defaultValue('')->end()
+                ->scalarNode('audience')->defaultValue('')->end()
+                ->scalarNode('authorized_issuer')->defaultValue('')->end()
+                ->enumNode('algorithm')->defaultValue('RS256')->values(['RS256', 'HS256'])->end()
+            ->end();
 
         return $treeBuilder;
     }

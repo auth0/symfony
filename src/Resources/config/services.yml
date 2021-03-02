@@ -5,8 +5,10 @@ services:
       [
         "%jwt_auth.domain%",
         "%jwt_auth.client_id%",
+        "%jwt_auth.client_secret%",
         "%jwt_auth.audience%",
         "%jwt_auth.authorized_issuer%",
+        "%jwt_auth.algorithm%",
         ~,
       ]
 
