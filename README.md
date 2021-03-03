@@ -18,6 +18,26 @@ Using [Composer](https://getcomposer.org/doc/00-intro.md):
 composer require auth0/jwt-auth-bundle:"~3.0"
 ```
 
+## Configuration
+
+After installing the bundle in your project you should find a new file located at `config/packages/jwt_auth.yaml`. These values should read from variables set in your `.env` file. Available configuration options are:
+
+```yaml
+jwt_auth:
+  # Required. The domain of your registered Auth0 tenant.
+  domain: "%env(AUTH0_DOMAIN)%"
+  # Required. The client ID string of your registered Auth0 application.
+  client_id: "%env(AUTH0_CLIENT_ID)%"
+
+  # Optional. The audience/identifier string of your registered Auth0 API.
+  audience: "%env(AUTH0_API_AUDIENCE)%"
+
+  # Optional. Defaults to RS256. Supported options are RS256 or HS256.
+  algorithm: "RS256"
+  # Optional. If you're using HS256, you need to provide the client secret for your registered Auth0 application.
+  client_secret: "%env(AUTH0_CLIENT_SECRET)%"
+```
+
 ## Demo
 
 [Symfony API Samples](https://github.com/auth0-community/auth0-symfony-api-samples)
