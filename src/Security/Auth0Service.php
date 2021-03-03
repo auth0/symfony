@@ -116,6 +116,12 @@ class Auth0Service
      */
     public function getUserProfileByA0UID(string $jwt): ?array
     {
+        // The /userinfo endpoint is only accessible with RS256.
+        // Return details from JWT instead, in this case.
+        if ('HS256' === $this->algorithm) {
+            return (array) $this->tokenInfo;
+        }
+
         return $this->a0->userinfo($jwt);
     }
 
