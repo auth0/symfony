@@ -4,6 +4,7 @@ namespace Auth0\JWTAuthBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -36,5 +37,12 @@ class JWTAuthExtension extends Extension
         $container->setParameter('jwt_auth.audience', $config['audience']);
         $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
         $container->setParameter('jwt_auth.algorithm', $config['algorithm']);
+
+        if (! empty($config['cache'])) {
+            $cache = new Reference($config['cache']);
+
+            $container->getDefinition('jwt_auth.auth0_service')
+                      ->replaceArgument(6, $cache);
+        }
     }
 }

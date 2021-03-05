@@ -8,6 +8,9 @@ use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
+use Auth0\JWTAuthBundle\Security\Helpers\Auth0Psr16Adapter;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Service that provides access to the Auth0 SDK and JWT validation
@@ -65,6 +68,13 @@ class Auth0Service
     protected $algorithm;
 
     /**
+     * Instance of a PSR-16 compatible caching interface.
+     *
+     * @var CacheInterface|null
+     */
+    protected $cache;
+
+    /**
      * Stores a provided JWT, set during decodeJWT().
      *
      * @var string
@@ -81,12 +91,13 @@ class Auth0Service
     /**
      * Auth0Service constructor.
      *
-     * @param string $domain           Required. Auth0 domain for your tenant.
-     * @param string $clientId         Required. Your Auth0 Client ID.
-     * @param string $clientSecret     Optional. Your Auth0 Client secret.
-     * @param string $audience         Optional. Your Auth0 API identifier.
-     * @param string $authorizedIssuer Optional. This will be generated from $domain if not provided.
-     * @param string $algorithm        Optional. Must be either 'RS256' (default) or 'HS256'.
+     * @param string                 $domain           Required. Auth0 domain for your tenant.
+     * @param string                 $clientId         Required. Your Auth0 Client ID.
+     * @param string                 $clientSecret     Optional. Your Auth0 Client secret.
+     * @param string                 $audience         Optional. Your Auth0 API identifier.
+     * @param string                 $authorizedIssuer Optional. This will be generated from $domain if not provided.
+     * @param string                 $algorithm        Optional. Must be either 'RS256' (default) or 'HS256'.
+     * @param CacheItemPoolInterface $cache            Optional. A PSR-6 or PSR-16 compatible cache interface.
      */
     public function __construct(
         string $domain,
@@ -94,7 +105,8 @@ class Auth0Service
         string $clientSecret,
         string $audience,
         string $authorizedIssuer,
-        string $algorithm
+        string $algorithm,
+        ?CacheItemPoolInterface $cache
     )
     {
         $this->domain       = $domain;
@@ -103,6 +115,7 @@ class Auth0Service
         $this->audience     = $audience;
         $this->issuer       = strlen($authorizedIssuer) ? $authorizedIssuer : 'https://'.$domain.'/';
         $this->algorithm    = (mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256');
+        $this->cache        = $cache ? new Auth0Psr16Adapter($cache) : null;
 
         $this->a0 = new Authentication($domain, $clientId);
     }
@@ -140,7 +153,7 @@ class Auth0Service
         if ('HS256' === $this->algorithm) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         } else {
-            $jwksFetcher = new JWKFetcher(null, [ 'base_uri' => $jwksUri ]);
+            $jwksFetcher = new JWKFetcher($this->cache, [ 'base_uri' => $jwksUri ]);
             $sigVerifier = new AsymmetricVerifier($jwksFetcher);
         }
 

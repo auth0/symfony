@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('client_secret')->defaultValue('')->end()
                 ->scalarNode('audience')->defaultValue('')->end()
                 ->scalarNode('authorized_issuer')->defaultValue('')->end()
+                ->scalarNode('cache')->defaultNull()->end()
                 ->enumNode('algorithm')->defaultValue('RS256')->values(['RS256', 'HS256'])->end()
             ->end();
 

@@ -36,6 +36,10 @@ jwt_auth:
   algorithm: "RS256"
   # Optional. If you're using HS256, you need to provide the client secret for your registered Auth0 application.
   client_secret: "%env(AUTH0_CLIENT_SECRET)%"
+
+  # Optional, but recommended. A PSR-6 or PSR-16 compatible cache.
+  # See: https://symfony.com/doc/current/components/cache.html
+  cache: "cache.app"
 ```
 
 ## Demo
