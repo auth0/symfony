@@ -120,10 +120,6 @@ class Auth0Psr16Adapter implements CacheInterface
     // phpcs:ignore
     public function getMultiple($keys, $default = null)
     {
-        if (! is_array($keys)) {
-            $keys = iterator_to_array($keys, false);
-        }
-
         $items    = $this->cache->getItems($keys);
         $response = [];
 
@@ -163,16 +159,20 @@ class Auth0Psr16Adapter implements CacheInterface
             $arrayValues[$key] = $value;
         }
 
-        $items   = $this->cache->getItems($keys);
-        $success = true;
+        try {
+            $items   = $this->cache->getItems($keys);
+            $success = true;
 
-        foreach ($items as $key => $item) {
-            $item->set($arrayValues[$key]);
-            $item->expiresAfter($ttl);
+            foreach ($items as $key => $item) {
+                $item->set($arrayValues[$key]);
+                $item->expiresAfter($ttl);
 
-            if ($success) {
-                $success = $this->cache->saveDeferred($item);
+                if ($success) {
+                    $success = $this->cache->saveDeferred($item);
+                }
             }
+        } catch (\Throwable $th) {
+            $success = false;
         }
 
         if ($success) {
@@ -192,10 +192,6 @@ class Auth0Psr16Adapter implements CacheInterface
     // phpcs:ignore
     public function deleteMultiple($keys)
     {
-        if (! is_array($keys)) {
-            $keys = iterator_to_array($keys, false);
-        }
-
         return $this->cache->deleteItems($keys);
     }
 
