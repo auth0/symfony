@@ -24,20 +24,19 @@ After installing the bundle in your project you should find a new file located a
 
 ```yaml
 jwt_auth:
-  # Required. The domain of your registered Auth0 tenant.
+  #  The domain of your registered Auth0 tenant.
   domain: "%env(AUTH0_DOMAIN)%"
-  # Required. The client ID string of your registered Auth0 application.
+  # The client ID string of your registered Auth0 application.
   client_id: "%env(AUTH0_CLIENT_ID)%"
-
-  # Optional. The audience/identifier string of your registered Auth0 API.
+  # The audience/identifier string of your registered Auth0 API.
   audience: "%env(AUTH0_API_AUDIENCE)%"
 
-  # Optional. Defaults to RS256. Supported options are RS256 or HS256.
+  # Defaults to RS256. Supported options are RS256 or HS256.
   algorithm: "RS256"
-  # Optional. If you're using HS256, you need to provide the client secret for your registered Auth0 application.
+  # If you're using HS256, you need to provide the client secret for your registered Auth0 application.
   client_secret: "%env(AUTH0_CLIENT_SECRET)%"
 
-  # Optional, but recommended. A PSR-6 or PSR-16 compatible cache.
+  # Recommended. A PSR-6 or PSR-16 compatible cache.
   # See: https://symfony.com/doc/current/components/cache.html
   cache: "cache.app"
 ```

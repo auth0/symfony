@@ -92,12 +92,12 @@ class Auth0Service
      * Auth0Service constructor.
      *
      * @param string                 $domain           Required. Auth0 domain for your tenant.
-     * @param string                 $clientId         Optional. Your Auth0 Client ID.
-     * @param string                 $clientSecret     Optional. Your Auth0 Client secret.
-     * @param string                 $audience         Optional. Your Auth0 API identifier.
-     * @param string                 $authorizedIssuer Optional. This will be generated from $domain if not provided.
-     * @param string                 $algorithm        Optional. Must be either 'RS256' (default) or 'HS256'.
-     * @param CacheItemPoolInterface $cache            Optional. A PSR-6 or PSR-16 compatible cache interface.
+     * @param string                 $clientId         Your Auth0 Client ID.
+     * @param string                 $clientSecret     Your Auth0 Client secret.
+     * @param string                 $audience         Your Auth0 API identifier.
+     * @param string                 $authorizedIssuer This will be generated from $domain if not provided.
+     * @param string                 $algorithm        Must be either 'RS256' (default) or 'HS256'.
+     * @param CacheItemPoolInterface $cache            A PSR-6 or PSR-16 compatible cache interface.
      */
     public function __construct(
         string $domain,
