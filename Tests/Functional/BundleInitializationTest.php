@@ -30,7 +30,7 @@ class BundleInitializationTest extends BaseBundleTestCase
         // Get the container
         $container = $this->getContainer();
 
-        // Test if you services exists
+        // Test if services exist
         $this->assertTrue($container->has('jwt_auth.auth0_service'));
         $service = $container->get('jwt_auth.auth0_service');
         $this->assertInstanceOf(Auth0Service::class, $service);

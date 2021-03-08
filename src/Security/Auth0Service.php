@@ -92,7 +92,7 @@ class Auth0Service
      * Auth0Service constructor.
      *
      * @param string                 $domain           Required. Auth0 domain for your tenant.
-     * @param string                 $clientId         Required. Your Auth0 Client ID.
+     * @param string                 $clientId         Optional. Your Auth0 Client ID.
      * @param string                 $clientSecret     Optional. Your Auth0 Client secret.
      * @param string                 $audience         Optional. Your Auth0 API identifier.
      * @param string                 $authorizedIssuer Optional. This will be generated from $domain if not provided.
@@ -101,23 +101,27 @@ class Auth0Service
      */
     public function __construct(
         string $domain,
-        string $clientId,
-        string $clientSecret,
-        string $audience,
-        string $authorizedIssuer,
-        string $algorithm,
-        ?CacheItemPoolInterface $cache
+        ?string $clientId = '',
+        ?string $clientSecret = '',
+        ?string $audience = '',
+        ?string $authorizedIssuer = '',
+        ?string $algorithm = 'RS256',
+        ?CacheItemPoolInterface $cache = null
     )
     {
         $this->domain       = $domain;
-        $this->clientId     = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->audience     = $audience;
-        $this->issuer       = strlen($authorizedIssuer) ? $authorizedIssuer : 'https://'.$domain.'/';
-        $this->algorithm    = (mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256');
+        $this->clientId     = $clientId ?? '';
+        $this->clientSecret = $clientSecret ?? '';
+        $this->audience     = $audience ?? '';
+        $this->issuer       = 'https://'.$this->domain.'/';
+        $this->algorithm    = (null !== $algorithm && mb_strtoupper($algorithm) === 'HS256') ? 'HS256' : 'RS256';
         $this->cache        = $cache ? new Auth0Psr16Adapter($cache) : null;
 
-        $this->a0 = new Authentication($domain, $clientId);
+        if (null !== $authorizedIssuer && strlen($authorizedIssuer)) {
+            $this->issuer = $authorizedIssuer;
+        }
+
+        $this->a0 = new Authentication($this->domain, $this->clientId);
     }
 
     /**

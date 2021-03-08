@@ -44,15 +44,15 @@ class Auth0Psr16Adapter implements CacheInterface
 
         try {
             $item = $this->cache->getItem($key);
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             $item = null;
         }
 
-        if (! $item || ! $item->isHit()) {
-            return $default;
+        if ($item && $item->isHit()) {
+            return $item->get();
         }
 
-        return $item->get();
+        return $default;
     }
 
     /**
@@ -68,18 +68,19 @@ class Auth0Psr16Adapter implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        $item = null;
-
         try {
             $item = $this->cache->getItem($key);
-            $item->expiresAfter($ttl);
-        } catch (\Exception $e) {
-            return false;
+        } catch (\Throwable $th) {
+            $item = null;
         }
 
-        $item->set($value);
+        if ($item) {
+            $item->expiresAfter($ttl);
+            $item->set($value);
+            return $this->cache->save($item);
+        }
 
-        return $this->cache->save($item);
+        return false;
     }
 
     /**
