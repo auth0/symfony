@@ -39,6 +39,17 @@ jwt_auth:
   # Recommended. A PSR-6 or PSR-16 compatible cache.
   # See: https://symfony.com/doc/current/components/cache.html
   cache: "cache.app"
+
+  # Token validations to run during JWT decoding:
+  validations:
+    # The AZP claim is checked against the value of jwt_auth.client_id by default. Set to false to skip.
+    azp: "%env(AUTH0_CLIENT_ID)%"
+    # The AUD claim is checked against the value of jwt_auth.audience by default. Set to false to skip.
+    aud: "%env(AUTH0_API_AUDIENCE)%"
+    # Maximum age (in seconds) since the auth_time of the token. Set to false to skip.
+    max_age: null
+    # Clock tolerance (in seconds) for the token age checks. Defaults to 60. Must be an integer value.
+    leeway: 60
 ```
 
 ## Demo
