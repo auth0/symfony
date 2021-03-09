@@ -155,20 +155,20 @@ class Auth0Service
     }
 
     /**
-     * Decodes the JWT and validate it.
+     * Decodes the JWT and validates it. Throws an exception if invalid.
      *
-     * @param string              $token            An encoded JWT token.
-     * @param array<string,mixed> $claimsToValidate A key => value pair of JWT claims to validate.
-     * @param array<string,mixed> $options          Options to adjust the verification.
-     *               - "nonce" to check the nonce contained in the token (recommended).
-     *               - "max_age" to check the auth_time of the token.
-     *               - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
+     * @param string                   $token            An encoded JWT token.
+     * @param null|array<string,mixed> $claimsToValidate A key => value pair of JWT claims to validate. If null will use defaults configured.
+     * @param array<string,mixed>      $options          Options to adjust the verification.
+     *                    - "nonce" to check the nonce contained in the token (recommended).
+     *                    - "max_age" to check the auth_time of the token.
+     *                    - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
      *
      * @return stdClass
      *
      * @throws InvalidTokenException Thrown if token fails to validate.
      */
-    public function decodeJWT(string $token, array $claimsToValidate = [], array $options = []): ?stdClass
+    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): ?stdClass
     {
         $nonce             = $options['nonce'] ?? null;
         $now               = $options['now'] ?? time();
@@ -187,7 +187,7 @@ class Auth0Service
         $tokenVerifier = new TokenVerifier($this->issuer, $this->audience, $signatureVerifier);
         $verifiedToken = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
 
-        if (empty($claimsToValidate)) {
+        if ($claimsToValidate === null) {
             $claimsToValidate = $this->validations;
         }
 

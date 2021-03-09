@@ -37,7 +37,6 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('leeway')->defaultValue(60)->end()
                     ->scalarNode('max_age')->defaultValue('')->end()
                 ->end()
-            ->end()
             ->end();
 
         return $treeBuilder;
