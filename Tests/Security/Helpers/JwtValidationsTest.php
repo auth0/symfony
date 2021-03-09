@@ -121,6 +121,11 @@ class JwtValidationsTest extends TestCase
     public function testValidateClaimAudMissingAud() {
       $this->assertTrue(JwtValidations::validateClaimAud(null, $this->token));
     }
+    public function testValidateClaimAudMatchingTokenStringAud() {
+      $token = $this->token;
+      $token['aud'] = 'string_audience';
+      $this->assertTrue(JwtValidations::validateClaimAud('string_audience', $token));
+    }
 
     /*
     Age Validations
