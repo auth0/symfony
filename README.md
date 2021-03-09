@@ -42,13 +42,13 @@ jwt_auth:
 
   # Token validations to run during JWT decoding:
   validations:
-    # The AZP claim is checked against the value of jwt_auth.client_id by default. Set to false to skip.
-    azp: "%env(AUTH0_CLIENT_ID)%"
-    # The AUD claim is checked against the value of jwt_auth.audience by default. Set to false to skip.
+    # Validate AUD claim against a value, such as an API identifier. Set to false to skip. Defaults to jwt_auth.audience.
     aud: "%env(AUTH0_API_AUDIENCE)%"
-    # Maximum age (in seconds) since the auth_time of the token. Set to false to skip.
-    max_age: null
-    # Clock tolerance (in seconds) for the token age checks. Defaults to 60. Must be an integer value.
+    # Validate the AZP claim against a value, such as a client ID. Set to false to skip. Defaults to false.
+    azp: "%env(AUTH0_CLIENT_ID)%"
+    # Maximum age (in seconds) since the auth_time of the token. Set to false to skip. Defaults to false.
+    max_age: 3600
+    # Clock tolerance (in seconds) for token expiration checks. Requires an integer value. Defaults to 60 seconds.
     leeway: 60
 ```
 

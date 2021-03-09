@@ -46,7 +46,7 @@ class JWTAuthExtension extends Extension
         }
 
         $validations = [
-            'azp' => $config['client_id'],
+            'azp' => null,
             'aud' => $config['audience'],
             'leeway' => 60,
             'max_age' => null
@@ -55,7 +55,9 @@ class JWTAuthExtension extends Extension
         if (isset($config['validations'])) {
             if (array_key_exists('azp', $config['validations'])) {
                 if (! empty($config['validations']['azp'])) {
-                    if (true !== $config['validations']['azp']) {
+                    if (true === $config['validations']['azp']) {
+                        $validations['azp'] = $config['client_id'];
+                    } else {
                         $validations['azp'] = $config['validations']['azp'];
                     }
                 } else {
