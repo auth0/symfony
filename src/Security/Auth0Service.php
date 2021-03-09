@@ -9,6 +9,7 @@ use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
 use Auth0\SDK\Exception\InvalidTokenException;
+use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 use Auth0\JWTAuthBundle\Security\Helpers\Auth0Psr16Adapter;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -146,21 +147,25 @@ class Auth0Service
     /**
      * Decodes the JWT and validate it.
      *
-     * @param string              $token   An encoded JWT token.
-     * @param array<string,mixed> $options Options to adjust the verification.
-     *      - "nonce" to check the nonce contained in the token (recommended).
-     *      - "max_age" to check the auth_time of the token.
-     *      - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
+     * @param string              $token            An encoded JWT token.
+     * @param array<string,mixed> $claimsToValidate A key => value pair of JWT claims to validate.
+     * @param array<string,mixed> $options          Options to adjust the verification.
+     *               - "nonce" to check the nonce contained in the token (recommended).
+     *               - "max_age" to check the auth_time of the token.
+     *               - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
      *
      * @return stdClass
      *
      * @throws InvalidTokenException Thrown if token fails to validate.
      */
-    public function decodeJWT(string $token, array $options = []): ?stdClass
+    public function decodeJWT(string $token, array $claimsToValidate = [], array $options = []): ?stdClass
     {
+        $nonce             = $options['nonce'] ?? null;
+        $now               = $options['now'] ?? time();
+        $maxAge            = $options['max_age'] ?? null;
         $leeway            = $options['leeway'] ?? 60;
         $signatureVerifier = null;
-        $tokenInfo         = null;
+        $verifiedToken     = null;
 
         if ('HS256' === $this->algorithm) {
             $signatureVerifier = new SymmetricVerifier($this->clientSecret);
@@ -170,77 +175,19 @@ class Auth0Service
         }
 
         $tokenVerifier = new TokenVerifier($this->issuer, $this->audience, $signatureVerifier);
-        $tokenInfo     = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
+        $verifiedToken = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
 
-        if (! empty($options['nonce'])) {
-            $tokenNonce = $tokenInfo['nonce'] ?? null;
-
-            if (! $tokenNonce || ! is_string($tokenNonce)) {
-                throw new InvalidTokenException('Nonce (nonce) claim must be a string present in the ID token');
-            }
-
-            if ($tokenNonce !== $options['nonce']) {
-                throw new InvalidTokenException( sprintf(
-                    'Nonce (nonce) claim mismatch in the ID token; expected "%s", found "%s"',
-                    $options['nonce'],
-                    $tokenNonce
-                ) );
-            }
+        if (empty($claimsToValidate)) {
+            $claimsToValidate = [
+                'azp' => $this->clientId,
+                'aud' => $this->audience
+            ];
         }
 
-        if ($this->clientId) {
-            $tokenAzp = $tokenInfo['azp'] ?? null;
+        JwtValidations::validateClaims($claimsToValidate, $verifiedToken);
+        JwtValidations::validateAge($maxAge, $verifiedToken, $leeway, $now);
 
-            if (! $tokenAzp || ! is_string($tokenAzp)) {
-                throw new InvalidTokenException(
-                    'Authorized Party (azp) claim must be a string present in the ID token when Audience (aud) claim has multiple values'
-                );
-            }
-
-            if ($tokenAzp !== $this->clientId) {
-                throw new InvalidTokenException( sprintf(
-                    'Authorized Party (azp) claim mismatch in the ID token; expected "%s", found "%s"',
-                    $this->clientId,
-                    $tokenAzp
-                ) );
-            }
-        }
-
-        if ($this->audience) {
-            $tokenAud = $tokenInfo['aud'] ?? null;
-
-            if (is_array($tokenAud) && count($tokenAud) > 1) {
-                if (! in_array($this->audience, $tokenAud)) {
-                    throw new InvalidTokenException( sprintf(
-                        'Audience (aud) claim missing expected "%s"',
-                        $this->audience
-                    ) );
-                }
-            }
-        }
-
-        if (! empty($options['max_age'])) {
-            $now           = $options['time'] ?? time();
-            $tokenAuthTime = $tokenInfo['auth_time'] ?? null;
-
-            if (! $tokenAuthTime || ! is_int($tokenAuthTime)) {
-                throw new InvalidTokenException(
-                    'Authentication Time (auth_time) claim must be a number present in the ID token when Max Age (max_age) is specified'
-                );
-            }
-
-            $authValidUntil = $tokenAuthTime + $options['max_age'] + $leeway;
-
-            if ($now > $authValidUntil) {
-                throw new InvalidTokenException( sprintf(
-                    'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed since the last end-user authentication. Current time (%d) is after last auth at %d',
-                    $now,
-                    $authValidUntil
-                ) );
-            }
-        }
-
-        $this->tokenInfo = $tokenInfo;
+        $this->tokenInfo = $verifiedToken;
         $this->token     = $token;
 
         return (object) $this->tokenInfo;

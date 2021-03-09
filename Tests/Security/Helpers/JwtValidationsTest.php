@@ -1,0 +1,210 @@
+<?php
+
+namespace Auth0\JWTAuthBundle\Tests\Helpers;
+
+use PHPUnit\Framework\TestCase;
+use Mockery;
+use Auth0\SDK\Exception\InvalidTokenException;
+use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
+
+class JwtValidationsTest extends TestCase
+{
+    private $token;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->token = [
+          'nonce'     => 'test_nonce',
+          'azp'       => 'test_azp',
+          'aud'       => [
+            'first_audience',
+            'second_audience'
+          ],
+          'auth_time' => time()
+        ];
+    }
+
+    /*
+    Nonce Validations
+    */
+
+    public function testValidateClaimNonceMatchingNonce() {
+      $this->assertTrue(JwtValidations::validateClaimNonce('test_nonce', $this->token));
+    }
+    public function testValidateClaimNonceUnmatchedNonce() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Nonce (nonce) claim mismatch; expected "invalid_nonce", found "test_nonce"');
+
+      JwtValidations::validateClaimNonce('invalid_nonce', $this->token);
+    }
+    public function testValidateClaimNonceMissingTokenNonce() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Nonce (nonce) claim must be a string present');
+
+      $token = $this->token;
+      unset($token['nonce']);
+
+      JwtValidations::validateClaimNonce('test_nonce', $token);
+    }
+    public function testValidateClaimNonceMissingToken() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Nonce (nonce) claim must be a string present');
+
+      JwtValidations::validateClaimNonce('test_nonce', []);
+    }
+    public function testValidateClaimNonceMissingNonce() {
+      $this->assertTrue(JwtValidations::validateClaimNonce(null, $this->token));
+    }
+
+    /*
+    Azp Validations
+    */
+
+    public function testValidateClaimAzpMatchingAzp() {
+      $this->assertTrue(JwtValidations::validateClaimAzp('test_azp', $this->token));
+    }
+    public function testValidateClaimAzpUnmatchedAzp() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Authorized Party (azp) claim mismatch; expected "invalid_azp", found "test_azp"');
+
+      JwtValidations::validateClaimAzp('invalid_azp', $this->token);
+    }
+    public function testValidateClaimAzpMissingTokenAzp() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Authorized Party (azp) claim must be a string present');
+
+      $token = $this->token;
+      unset($token['azp']);
+
+      JwtValidations::validateClaimAzp('test_azp', $token);
+    }
+    public function testValidateClaimAzpMissingToken() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Authorized Party (azp) claim must be a string present');
+
+      JwtValidations::validateClaimAzp('test_azp', []);
+    }
+    public function testValidateClaimAzpMissingAzp() {
+      $this->assertTrue(JwtValidations::validateClaimAzp(null, $this->token));
+    }
+
+    /*
+    Aud Validations
+    */
+
+    public function testValidateClaimAudMatchingAud() {
+      $this->assertTrue(JwtValidations::validateClaimAud('first_audience', $this->token));
+    }
+    public function testValidateClaimAudUnmatchedAud() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Audience (aud) claim mismatch; expected "missing_audience"');
+
+      JwtValidations::validateClaimAud('missing_audience', $this->token);
+    }
+    public function testValidateClaimAudMissingTokenAud() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Audience (aud) claim must be a string or array of strings present');
+
+      $token = $this->token;
+      unset($token['aud']);
+
+      JwtValidations::validateClaimAud('missing_audience', $token);
+    }
+    public function testValidateClaimAudMissingToken() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Audience (aud) claim must be a string or array of strings present');
+
+      JwtValidations::validateClaimAud('missing_audience', []);
+    }
+    public function testValidateClaimAudMissingAud() {
+      $this->assertTrue(JwtValidations::validateClaimAud(null, $this->token));
+    }
+
+    /*
+    Age Validations
+    */
+
+    public function testValidationAgeMissingMaxAge() {
+      $this->assertTrue(JwtValidations::validateAge(null, $this->token));
+    }
+    public function testValidationAgeMissingTokenAuthTime() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Authentication Time (auth_time) claim must be a number present when Max Age (max_age) is specified');
+
+      $token = $this->token;
+      unset($token['auth_time']);
+
+      $this->assertTrue(JwtValidations::validateAge(30, $token));
+    }
+    public function testValidationAgeHit() {
+      $this->assertTrue(JwtValidations::validateAge(30, $this->token));
+    }
+    public function testValidationAgeHitWithLeeway() {
+      $this->assertTrue(JwtValidations::validateAge(30, $this->token, 30));
+    }
+    public function testValidationAgeHitWithLeewayAndNowAssigned() {
+      $this->assertTrue(JwtValidations::validateAge(30, $this->token, 30, time()));
+    }
+    public function testValidationAgeMissed() {
+      $this->expectException(InvalidTokenException::class);
+
+      $token = $this->token;
+      $token['auth_time'] = time() - 9999;
+
+      JwtValidations::validateAge(30, $token);
+    }
+    public function testValidationAgeMissedWithLeeway() {
+      $this->expectException(InvalidTokenException::class);
+
+      $token = $this->token;
+      $token['auth_time'] = time() - 9999;
+
+      JwtValidations::validateAge(30, $token, 120);
+    }
+    public function testValidationAgeMissedWithLeewayWithNowAssigned() {
+      $this->expectException(InvalidTokenException::class);
+
+      $token = $this->token;
+      $token['auth_time'] = time() - 86400;
+
+      $this->assertTrue(JwtValidations::validateAge(30, $token, 120, time() + 86400));
+    }
+
+    /*
+    Claims Validations Helper
+    */
+
+    public function testValidateClaimsNone() {
+      $this->assertTrue(JwtValidations::validateClaims());
+    }
+    public function testValidateClaimsMatchesNonce() {
+      $this->assertTrue(JwtValidations::validateClaims(['nonce' => 'test_nonce'], $this->token));
+    }
+    public function testValidateClaimsMatchesAzp() {
+      $this->assertTrue(JwtValidations::validateClaims(['azp' => 'test_azp'], $this->token));
+    }
+    public function testValidateClaimsMatchesAud() {
+      $this->assertTrue(JwtValidations::validateClaims(['aud' => 'first_audience'], $this->token));
+    }
+    public function testValidateClaimsMatchesMultiple() {
+      $this->assertTrue(JwtValidations::validateClaims(['nonce' => 'test_nonce', 'azp' => 'test_azp'], $this->token));
+    }
+    public function testValidateClaimsMissesNonce() {
+      $this->expectException(InvalidTokenException::class);
+      JwtValidations::validateClaims(['nonce' => 'bad_nonce'], $this->token);
+    }
+    public function testValidateClaimsMissesAzp() {
+      $this->expectException(InvalidTokenException::class);
+      JwtValidations::validateClaims(['azp' => 'bad_azp'], $this->token);
+    }
+    public function testValidateClaimsMissesAud() {
+      $this->expectException(InvalidTokenException::class);
+      JwtValidations::validateClaims(['aud' => 'missing_audience'], $this->token);
+    }
+    public function testValidateClaimsMissesMultiple() {
+      $this->expectException(InvalidTokenException::class);
+      JwtValidations::validateClaims(['nonce' => 'test_nonce', 'aud' => 'missing_audience'], $this->token);
+    }
+}
