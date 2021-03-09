@@ -42,7 +42,50 @@ class JWTAuthExtension extends Extension
             $cache = new Reference($config['cache']);
 
             $container->getDefinition('jwt_auth.auth0_service')
-                      ->replaceArgument(6, $cache);
+                      ->replaceArgument(7, $cache);
         }
+
+        $validations = [
+            'azp' => $config['client_id'],
+            'aud' => $config['audience'],
+            'leeway' => 60,
+            'max_age' => null
+        ];
+
+        if (isset($config['validations'])) {
+            if (array_key_exists('azp', $config['validations'])) {
+                if (! empty($config['validations']['azp'])) {
+                    $validations['azp'] = $config['validations']['azp'];
+                } else {
+                    $validations['azp'] = null;
+                }
+            }
+
+            if (array_key_exists('aud', $config['validations'])) {
+                if (! empty($config['validations']['aud'])) {
+                    $validations['aud'] = $config['validations']['aud'];
+                } else {
+                    $validations['aud'] = null;
+                }
+            }
+
+            if (array_key_exists('max_age', $config['validations'])) {
+                if (! empty($config['validations']['max_age']) && is_int($config['validations']['max_age'])) {
+                    $validations['max_age'] = $config['validations']['max_age'];
+                } else {
+                    $validations['max_age'] = null;
+                }
+            }
+
+            if (array_key_exists('leeway', $config['validations'])) {
+                if (! empty($config['validations']['leeway']) && is_int($config['validations']['leeway'])) {
+                    $validations['leeway'] = $config['validations']['leeway'];
+                } else {
+                    $validations['leeway'] = 60;
+                }
+            }
+        }
+
+        $container->setParameter('jwt_auth.validations', $validations);
     }
 }

@@ -70,6 +70,13 @@ class Auth0Service
     protected $algorithm;
 
     /**
+     * A key-value pair representing validations to run on tokens during decoding.
+     *
+     * @var array<string,mixed>
+     */
+    protected $validations;
+
+    /**
      * Instance of a PSR-16 compatible caching interface.
      *
      * @var CacheInterface|null
@@ -99,6 +106,7 @@ class Auth0Service
      * @param string                 $audience         Your Auth0 API identifier.
      * @param string                 $authorizedIssuer This will be generated from $domain if not provided.
      * @param string                 $algorithm        Must be either 'RS256' (default) or 'HS256'.
+     * @param array<string,mixed>    $validations      A key-value pair representing validations to run on tokens during decoding.
      * @param CacheItemPoolInterface $cache            A PSR-6 or PSR-16 compatible cache interface.
      */
     public function __construct(
@@ -108,6 +116,7 @@ class Auth0Service
         ?string $audience = '',
         ?string $authorizedIssuer = '',
         ?string $algorithm = 'RS256',
+        ?array $validations = [],
         ?CacheItemPoolInterface $cache = null
     )
     {
@@ -117,6 +126,7 @@ class Auth0Service
         $this->audience     = $audience ?? '';
         $this->issuer       = 'https://'.$this->domain.'/';
         $this->algorithm    = (null !== $algorithm && mb_strtoupper($algorithm) === 'HS256') ? 'HS256' : 'RS256';
+        $this->validations  = $validations ?? [];
         $this->cache        = $cache ? new Auth0Psr16Adapter($cache) : null;
 
         if (null !== $authorizedIssuer && strlen($authorizedIssuer)) {
@@ -178,10 +188,7 @@ class Auth0Service
         $verifiedToken = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
 
         if (empty($claimsToValidate)) {
-            $claimsToValidate = [
-                'azp' => $this->clientId,
-                'aud' => $this->audience
-            ];
+            $claimsToValidate = $this->validations;
         }
 
         JwtValidations::validateClaims($claimsToValidate, $verifiedToken);

@@ -30,6 +30,14 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('authorized_issuer')->defaultValue('')->end()
                 ->scalarNode('cache')->defaultNull()->end()
                 ->enumNode('algorithm')->defaultValue('RS256')->values(['RS256', 'HS256'])->end()
+                ->arrayNode('validations')
+                ->children()
+                    ->scalarNode('azp')->defaultValue(true)->end()
+                    ->scalarNode('aud')->defaultValue(true)->end()
+                    ->scalarNode('leeway')->defaultValue(60)->end()
+                    ->scalarNode('max_age')->defaultValue('')->end()
+                ->end()
+            ->end()
             ->end();
 
         return $treeBuilder;

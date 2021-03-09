@@ -9,6 +9,7 @@ services:
         "%jwt_auth.audience%",
         "%jwt_auth.authorized_issuer%",
         "%jwt_auth.algorithm%",
+        "%jwt_auth.validations%",
         ~,
       ]
 
