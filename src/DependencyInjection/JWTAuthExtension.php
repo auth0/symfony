@@ -55,7 +55,9 @@ class JWTAuthExtension extends Extension
         if (isset($config['validations'])) {
             if (array_key_exists('azp', $config['validations'])) {
                 if (! empty($config['validations']['azp'])) {
-                    $validations['azp'] = $config['validations']['azp'];
+                    if (true !== $config['validations']['azp']) {
+                        $validations['azp'] = $config['validations']['azp'];
+                    }
                 } else {
                     $validations['azp'] = null;
                 }
@@ -63,7 +65,9 @@ class JWTAuthExtension extends Extension
 
             if (array_key_exists('aud', $config['validations'])) {
                 if (! empty($config['validations']['aud'])) {
-                    $validations['aud'] = $config['validations']['aud'];
+                    if (true !== $config['validations']['aud']) {
+                        $validations['aud'] = $config['validations']['aud'];
+                    }
                 } else {
                     $validations['aud'] = null;
                 }
