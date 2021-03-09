@@ -39,12 +39,7 @@
     <rule ref="Generic.Files">
         <exclude name="Generic.Files.EndFileNoNewline"/>
         <exclude name="Generic.Files.LowercasedFilename"/>
-    </rule>
-    <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="lineLimit" value="120"/>
-            <property name="absoluteLineLimit" value="120"/>
-        </properties>
+        <exclude name="Generic.Files.LineLength"/>
     </rule>
     <rule ref="Generic.Formatting">
         <exclude name="Generic.Formatting.NoSpaceAfterCast"/>
@@ -52,7 +47,9 @@
     <rule ref="Generic.Functions">
         <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
     </rule>
-    <rule ref="Generic.Metrics"/>
+    <rule ref="Generic.Metrics">
+        <exclude name="Generic.Metrics.CyclomaticComplexity.TooHigh"/>
+    </rule>
     <rule ref="Generic.NamingConventions">
         <exclude name="Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps"/>
     </rule>
