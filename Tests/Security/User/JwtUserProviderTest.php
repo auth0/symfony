@@ -22,7 +22,7 @@ class JwtUserProviderTest extends TestCase
     /**
      * Creates a JwtUserProvider instance for testing.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->userProvider = new JwtUserProvider();
     }
@@ -107,11 +107,12 @@ class JwtUserProviderTest extends TestCase
     /**
      * Tests if JwtUserProvider::loadUserByUsername throws a UsernameNotFoundException with a message that
      * the method should not be used.
-     * @expectedException Symfony\Component\Security\Core\Exception\UsernameNotFoundException
-     * @expectedExceptionMessage Auth0\JWTAuthBundle\Security\User\JwtUserProvider cannot load user "john.doe" by username. Use Auth0\JWTAuthBundle\Security\User\JwtUserProvider::loadUserByJWT instead.
      */
     public function testLoadUserByUsername()
     {
+        $this->expectException(UsernameNotFoundException::class);
+        $this->expectExceptionMessage('Auth0\JWTAuthBundle\Security\User\JwtUserProvider cannot load user "john.doe" by username. Use Auth0\JWTAuthBundle\Security\User\JwtUserProvider::loadUserByJWT instead.');
+
         $this->userProvider->loadUserByUsername('john.doe');
     }
 
@@ -131,11 +132,12 @@ class JwtUserProviderTest extends TestCase
     /**
      * Tests if JwtUserProvider::refreshUser throws an UnsupportedUserException when the provided instance
      * is not of the class User.
-     * @expectedException Symfony\Component\Security\Core\Exception\UnsupportedUserException
-     * @expectedExceptionMessage Instances of "UnsupportedUser" are not supported.
      */
     public function testRefreshUserThrowsUnsupportedUserException()
     {
+        $this->expectException(UnsupportedUserException::class);
+        $this->expectExceptionMessage('Instances of "UnsupportedUser" are not supported.');
+
         $userMock = $this->getMockBuilder(UserInterface::class)
             ->setMockClassName('UnsupportedUser')
             ->getMock();

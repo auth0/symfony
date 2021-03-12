@@ -4,91 +4,57 @@ namespace Auth0\JWTAuthBundle\Tests\DependencyInjection;
 
 use Auth0\JWTAuthBundle\DependencyInjection\JWTAuthExtension;
 use Auth0\JWTAuthBundle\JWTAuthBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     /** @var JWTAuthBundle  */
     private $extension;
+
     /** @var ContainerBuilder  */
     private $container;
+
     /** @var string  */
     private $rootNode;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->extension = new JWTAuthExtension();
         $this->container = new ContainerBuilder();
         $this->rootNode = 'jwt_auth';
     }
 
-    public function testGetConfigWhenMultipleApiIdentifier()
+    public function testGetConfiguration()
     {
         $configs = [
-            'api_identifier_array' => [
-                'test identifier1',
-                'test identifier2'
-            ],
-            'api_client_id' => 'test client id'
+            'domain' => 'localhost.somewhere.auth0.com',
+            'audience' => 'test audience',
+            'client_id' => 'test client id',
+            'client_secret' => 'test client secret',
+            'authorized_issuer' => 'test.authorized.issuer',
+            'algorithm' => 'RS256',
         ];
 
         $this->extension->load([$configs], $this->container);
 
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.api_identifier'));
-        $this->assertEquals(
-            [
-                'test identifier1',
-                'test identifier2',
-                'test client id'
-            ],
-            $this->container->getParameter($this->rootNode . '.api_identifier')
-        );
+        $this->assertEquals($configs['domain'], $this->container->getParameter($this->rootNode . '.domain'));
+        $this->assertEquals($configs['audience'], $this->container->getParameter($this->rootNode . '.audience'));
+        $this->assertEquals($configs['client_id'], $this->container->getParameter($this->rootNode . '.client_id'));
+        $this->assertEquals($configs['client_secret'], $this->container->getParameter($this->rootNode . '.client_secret'));
+        $this->assertEquals($configs['authorized_issuer'], $this->container->getParameter($this->rootNode . '.authorized_issuer'));
+        $this->assertEquals($configs['algorithm'], $this->container->getParameter($this->rootNode . '.algorithm'));
     }
 
-    public function testGetConfigWhenSingleApiIdentifier()
+    public function testRejectInvalidAlgorithms()
     {
         $configs = [
-            'api_identifier' => 'test identifier'
+            'algorithm' => 'XS256',
         ];
 
-        $this->extension->load([$configs], $this->container);
-
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.api_identifier'));
-        $this->assertEquals('test identifier', $this->container->getParameter($this->rootNode . '.api_identifier'));
-    }
-
-    public function testGetConfigWhenMultipleAuthorizedIssuer()
-    {
-        $configs = [
-            'authorized_issuer' => [
-                'test authorized issuer1',
-                'test authorized issuer2'
-            ]
-        ];
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value "XS256" is not allowed for path "jwt_auth.algorithm". Permissible values: "RS256", "HS256"');
 
         $this->extension->load([$configs], $this->container);
-
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.authorized_issuer'));
-        $this->assertEquals(
-            [
-                'test authorized issuer1',
-                'test authorized issuer2'
-            ],
-            $this->container->getParameter($this->rootNode . '.authorized_issuer')
-        );
-    }
-
-    public function testGetConfigWhenSingleAuthorizedIssuer()
-    {
-        $configs = [
-            'authorized_issuer' => 'test authorized issuer'
-        ];
-
-        $this->extension->load([$configs], $this->container);
-
-        $this->assertTrue($this->container->hasParameter($this->rootNode . '.authorized_issuer'));
-        $this->assertEquals('test authorized issuer', $this->container->getParameter($this->rootNode . '.authorized_issuer'));
     }
 }

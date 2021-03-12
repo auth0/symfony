@@ -6,8 +6,8 @@ use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator;
 use Auth0\SDK\Exception\InvalidTokenException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,14 +27,14 @@ class JwtGuardAuthenticatorTest extends TestCase
     private $guardAuthenticator;
 
     /**
-     * @var Auth0Service|PHPUnit_Framework_MockObject_MockObject
+     * @var Auth0Service|MockObject
      */
     private $auth0Service;
 
     /**
      * Creates a JwtGuardAuthenticator instance for testing.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->auth0Service = $this->getMockBuilder(Auth0Service::class)
             ->disableOriginalConstructor()
@@ -44,35 +44,17 @@ class JwtGuardAuthenticatorTest extends TestCase
     }
 
     /**
-     * Tests if JwtGuardAuthenticator::supports returns false when the Request does not contain an Authorization header.
-     */
-    public function testSupportsReturnsFalseWhenRequestDoesNotContainAuthorizationHeader()
-    {
-        $request = Request::create('/');
-
-        $this->assertFalse($this->guardAuthenticator->supports($request));
-    }
-
-    /**
-     * Tests if JwtGuardAuthenticator::supports returns true when the Request contains an Authorization header.
-     */
-    public function testSupportsReturnsTrueWhenRequestContainsAuthorizationHeader()
-    {
-        $request = Request::create('/');
-        $request->headers->set('Authorization', 'Bearer token');
-
-        $this->assertTrue($this->guardAuthenticator->supports($request));
-    }
-
-    /**
      * Tests if JwtGuardAuthenticator::getCredentials returns null when the Request does not contain
      * an Authorization header.
      */
-    public function testGetCredentialsReturnsNullWhenRequestDoesNotContainAuthorizationHeader()
+    public function testGetCredentialsReturnsEmptyJwtArrayWhenRequestDoesNotContainAuthorizationHeader()
     {
         $request = Request::create('/');
 
-        $this->assertNull($this->guardAuthenticator->getCredentials($request));
+        $this->assertSame(
+            ['jwt' => ''],
+            $this->guardAuthenticator->getCredentials($request)
+        );
     }
 
     /**
@@ -98,8 +80,7 @@ class JwtGuardAuthenticatorTest extends TestCase
     {
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
-            ->with('invalidToken')
-            ->willThrowException(new InvalidTokenException('Malformed token.'));
+            ->with('invalidToken');
 
         $userProviderMock = $this->getMockBuilder(JWTUserProviderInterface::class)
             ->getMock();
@@ -116,7 +97,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
         $this->assertSame('unknown', $user->getUsername());
         $this->assertNull($user->getPassword());
-        $this->assertSame([], $user->getRoles());
+        $this->assertSame(['IS_AUTHENTICATED_ANONYMOUSLY'], $user->getRoles());
     }
 
     /**
@@ -183,11 +164,12 @@ class JwtGuardAuthenticatorTest extends TestCase
     /**
      * Tests if JwtGuardAuthenticator::checkCredentials throws an AuthenticationException containing the information
      * from the exception thrown by the Auth0Service.
-     * @expectedException Symfony\Component\Security\Core\Exception\AuthenticationException
-     * @expectedExceptionMessage Malformed token.
      */
     public function testCheckCredentialsThrowsAuthenticationExceptionWhenJwtDecodingFails()
     {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Malformed token.');
+
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('invalidToken')

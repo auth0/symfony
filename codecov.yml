@@ -7,7 +7,7 @@ coverage:
       default:
         enabled: true
         target: auto
-        threshold: 5%
+        threshold: 10%
         if_no_uploads: error
     patch:
       default:

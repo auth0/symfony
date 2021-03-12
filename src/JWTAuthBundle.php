@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle;
 
@@ -7,27 +7,41 @@ use Symfony\Component\HttpKernel\Kernel;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\JWTAuthBundle\DependencyInjection\Auth0Extension;
 
+/**
+ * A simple JWT Authentication Bundle for Symfony REST APIs.
+ *
+ * @package Auth0\JWTAuthBundle
+ */
 class JWTAuthBundle extends Bundle
 {
-	const SDK_VERSION = "3.4.0";
+    const SDK_VERSION = '3.4.0';
 
-	public function __construct()
+    /**
+     * JWTAuthBundle constructor.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-		$oldInfoHeaders = ApiClient::getInfoHeadersData();
+        $oldInfoHeaders = ApiClient::getInfoHeadersData();
 
         if ($oldInfoHeaders) {
             $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
 
-            $infoHeaders->setEnvironment('Symfony', Kernel::VERSION);
+            $infoHeaders->setEnvProperty('Symfony', Kernel::VERSION);
             $infoHeaders->setPackage('jwt-auth-bundle', self::SDK_VERSION);
 
             ApiClient::setInfoHeadersData($infoHeaders);
         }
-	}
+    }
 
-    public function getAlias()
+    /**
+     * Returns an alias for the JWTAuthBundle
+     *
+     * @return string
+     */
+    public function getAlias(): string
     {
         return 'jwt_auth';
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\DependencyInjection;
 
@@ -9,43 +9,89 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
- * @author german
+ * Dependency injection extension for JWTAuthBundle.
+ *
+ * @package Auth0\JWTAuthBundle\DependencyInjection
  */
 class JWTAuthExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    /**
+     * Loads the configuration for JWTAuthBundle.
+     *
+     * @param array<mixed>     $configs   Array containing the configuration values.
+     * @param ContainerBuilder $container DI container for the bundle.
+     *
+     * @return void
+     */
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $config        = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        $container->setParameter('jwt_auth.api_secret', $config['api_secret']);
+
         $container->setParameter('jwt_auth.domain', $config['domain']);
-
-        $api_identifier = !empty($config['api_identifier_array']) ?
-            // If we have an array of API identifiers, use that.
-            $config['api_identifier_array'] :
-            // Otherwise, use the original string value.
-            $config['api_identifier'];
-
-        // If we have a Client ID defined, add that to the API identifiers used.
-        if (!empty($config['api_client_id'])) {
-            $api_identifier = array_merge(
-                is_array($api_identifier) ? $api_identifier : [$api_identifier],
-                [$config['api_client_id']]
-            );
-        }
-        $container->setParameter('jwt_auth.api_identifier', $api_identifier);
-
+        $container->setParameter('jwt_auth.client_id', $config['client_id']);
+        $container->setParameter('jwt_auth.client_secret', $config['client_secret']);
+        $container->setParameter('jwt_auth.audience', $config['audience']);
         $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
-        $container->setParameter('jwt_auth.secret_base64_encoded', $config['secret_base64_encoded']);
-        $container->setParameter('jwt_auth.supported_algs', $config['supported_algs']);
+        $container->setParameter('jwt_auth.algorithm', $config['algorithm']);
 
-        if (!empty($config['cache'])) {
-            $ref = new Reference($config['cache']);
+        if (! empty($config['cache'])) {
+            $cache = new Reference($config['cache']);
+
             $container->getDefinition('jwt_auth.auth0_service')
-                ->replaceArgument(6, $ref);
+                      ->replaceArgument(7, $cache);
         }
+
+        $validations = [
+            'azp' => null,
+            'aud' => $config['audience'],
+            'leeway' => 60,
+            'max_age' => null
+        ];
+
+        if (isset($config['validations'])) {
+            if (array_key_exists('azp', $config['validations'])) {
+                if (! empty($config['validations']['azp'])) {
+                    if (true === $config['validations']['azp']) {
+                        $validations['azp'] = $config['client_id'];
+                    } else {
+                        $validations['azp'] = $config['validations']['azp'];
+                    }
+                } else {
+                    $validations['azp'] = null;
+                }
+            }
+
+            if (array_key_exists('aud', $config['validations'])) {
+                if (! empty($config['validations']['aud'])) {
+                    if (true !== $config['validations']['aud']) {
+                        $validations['aud'] = $config['validations']['aud'];
+                    }
+                } else {
+                    $validations['aud'] = null;
+                }
+            }
+
+            if (array_key_exists('max_age', $config['validations'])) {
+                if (! empty($config['validations']['max_age']) && is_int($config['validations']['max_age'])) {
+                    $validations['max_age'] = $config['validations']['max_age'];
+                } else {
+                    $validations['max_age'] = null;
+                }
+            }
+
+            if (array_key_exists('leeway', $config['validations'])) {
+                if (! empty($config['validations']['leeway']) && is_int($config['validations']['leeway'])) {
+                    $validations['leeway'] = $config['validations']['leeway'];
+                } else {
+                    $validations['leeway'] = 60;
+                }
+            }
+        }
+
+        $container->setParameter('jwt_auth.validations', $validations);
     }
 }

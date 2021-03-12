@@ -4,42 +4,98 @@ commands:
   prepare:
     steps:
       - checkout
-      - run: sudo composer self-update
+      - run:
+          name: Configure PHP environment
+          command: |
+            sudo touch /usr/local/etc/php/php.ini
+            echo "memory_limit = -1" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "display_startup_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.mode = coverage" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.force_display_errors = On" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "xdebug.force_error_reporting = E_ALL ^ E_DEPRECATED" | sudo tee -a /usr/local/etc/php/php.ini
+            echo "detect_unicode = Off" | sudo tee -a /usr/local/etc/php/php.ini
+            sudo apt-get update
+            sudo composer self-update
       - restore_cache:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.lock" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer install --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: composer install -n --prefer-dist
+      - run: composer update --prefer-dist --no-interaction
+      - persist_to_workspace:
+          root: .
+          paths:
+            - composer.*
+            - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.lock" }}
           paths:
             - vendor
-  run-tests:
+  run-php-compatibility:
     steps:
-      - run: ./vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml
-      - run: 
-          command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
+      - run: composer compat
+  run-static-analysis:
+    steps:
+      - run: composer analyze
+  run-unit-tests:
+    steps:
+      - run: composer test-unit-ci
+      - store_artifacts:
+          path: build/coverage.xml
+
+jobs:
+  php_7_3:
+    docker:
+      - image: circleci/php:7.3
+    steps:
+      - prepare
+      - run-php-compatibility
+      - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
           when: on_success
-
-jobs: 
-  php_5: 
-    docker: 
-      - image: circleci/php:5.6
+  php_7_4:
+    docker:
+      - image: circleci/php:7.4
     steps:
       - prepare
-      - run-tests
-  php_7: 
-    docker: 
-      - image: circleci/php:7.1
+      - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  php_8_0:
+    docker:
+      - image: circleci/php:8.0
     steps:
       - prepare
-      - run-tests
+      - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  snyk:
+    docker:
+      - image: snyk/snyk-cli:composer
+    steps:
+      - attach_workspace:
+          at: .
+      - run: snyk test
+      - run:
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]
+            then
+            snyk monitor --org=auth0-sdks
+            fi
+          when: always
 
-#Each workflow represents a Github check
 workflows:
-  build_php_5:
+  build-and-test:
     jobs:
-      - php_5
-  build_php_7:
-    jobs:
-      - php_7
+      - php_7_3
+      - php_7_4
+      - php_8_0
+      - snyk:
+          context: snyk-env
+          requires:
+            - php_7_3

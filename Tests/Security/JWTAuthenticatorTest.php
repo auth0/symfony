@@ -2,20 +2,22 @@
 
 namespace Auth0\JWTAuthBundle\Tests\Security;
 
+use stdClass;
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\JWTAuthenticator;
+use PHPUnit\Framework\TestCase;
 
-class JWTAuthenticatorTest extends \PHPUnit_Framework_TestCase
+class JWTAuthenticatorTest extends TestCase
 {
     public function testTokenCreation()
     {
-        $mockAuth0 = $this->getMockBuilder('Auth0\JWTAuthBundle\Security\Auth0Service')
+        $mockAuth0 = $this->getMockBuilder(Auth0Service::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $mockAuth0->expects($this->once())
             ->method('decodeJWT')
-            ->will($this->returnValue(new \stdClass()));
+            ->will($this->returnValue(new stdClass()));
 
         $authenticator = new JWTAuthenticator($mockAuth0);
         $providerKey = 'providerKey';
