@@ -32,7 +32,7 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @param stdClass $jwt An encoded JWT.
      *
-     * @return User
+     * @return UserInterface
      */
     public function loadUserByJWT(stdClass $jwt)
     {
