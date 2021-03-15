@@ -10,9 +10,9 @@ use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
-use Auth0\JWTAuthBundle\Security\Helpers\Auth0Psr16Adapter;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * Service that provides access to the Auth0 SDK and JWT validation
@@ -127,7 +127,7 @@ class Auth0Service
         $this->issuer       = 'https://'.$this->domain.'/';
         $this->algorithm    = (null !== $algorithm && mb_strtoupper($algorithm) === 'HS256') ? 'HS256' : 'RS256';
         $this->validations  = $validations ?? [];
-        $this->cache        = $cache ? new Auth0Psr16Adapter($cache) : null;
+        $this->cache        = $cache ? new Psr16Cache($cache) : null;
 
         if (null !== $authorizedIssuer && strlen($authorizedIssuer)) {
             $this->issuer = $authorizedIssuer;
