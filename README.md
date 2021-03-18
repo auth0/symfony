@@ -46,6 +46,8 @@ jwt_auth:
     aud: "%env(AUTH0_API_AUDIENCE)%"
     # Validate the AZP claim against a value, such as a client ID. Set to false to skip. Defaults to false.
     azp: "%env(AUTH0_CLIENT_ID)%"
+    # Validate ORG_ID claim against a value, such as the Auth0 Organization. Set to false to skip. Defaults to false.
+    org_id: "%env(AUTH0_ORGANIZATION)%"
     # Maximum age (in seconds) since the auth_time of the token. Set to false to skip. Defaults to false.
     max_age: 3600
     # Clock tolerance (in seconds) for token expiration checks. Requires an integer value. Defaults to 60 seconds.

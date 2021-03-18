@@ -46,6 +46,7 @@ class JWTAuthExtension extends Extension
         }
 
         $validations = [
+            'org_id' => null,
             'azp' => null,
             'aud' => $config['audience'],
             'leeway' => 60,
@@ -72,6 +73,16 @@ class JWTAuthExtension extends Extension
                     }
                 } else {
                     $validations['aud'] = null;
+                }
+            }
+
+            if (array_key_exists('org_id', $config['validations'])) {
+                if (! empty($config['validations']['org_id'])) {
+                    if (true !== $config['validations']['org_id']) {
+                        $validations['org_id'] = $config['validations']['org_id'];
+                    }
+                } else {
+                    $validations['org_id'] = null;
                 }
             }
 
