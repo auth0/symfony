@@ -18,6 +18,7 @@ class JwtValidationsTest extends TestCase
         $this->token = [
           'nonce'     => 'test_nonce',
           'azp'       => 'test_azp',
+          'org_id'    => 'test_org',
           'aud'       => [
             'first_audience',
             'second_audience'
@@ -125,6 +126,29 @@ class JwtValidationsTest extends TestCase
       $token = $this->token;
       $token['aud'] = 'string_audience';
       $this->assertTrue(JwtValidations::validateClaimAud('string_audience', $token));
+    }
+
+    /*
+    Org_id Validations
+    */
+
+    public function testValidateClaimOrgIdMatching() {
+      $this->assertTrue(JwtValidations::validateClaimOrgId('test_org', $this->token));
+    }
+    public function testValidateClaimOrgIdMismatch() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the ID token; expected "invalid_org", found "test_org"');
+
+      JwtValidations::validateClaimOrgId('invalid_org', $this->token);
+    }
+    public function testValidateClaimOrgIdMissing() {
+      $this->expectException(InvalidTokenException::class);
+      $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the ID token');
+
+      $token = $this->token;
+      unset($token['org_id']);
+
+      JwtValidations::validateClaimOrgId('test_org', $token);
     }
 
     /*

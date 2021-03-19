@@ -26,6 +26,7 @@ class JwtValidations
         self::validateClaimNonce($claims['nonce'] ?? null, $token);
         self::validateClaimAzp($claims['azp'] ?? null, $token);
         self::validateClaimAud($claims['aud'] ?? null, $token);
+        self::validateClaimAud($claims['org_id'] ?? null, $token);
 
         return true;
     }
@@ -123,6 +124,37 @@ class JwtValidations
                 throw new InvalidTokenException( sprintf(
                   'Audience (aud) claim mismatch; expected "%s"',
                   $aud
+                ));
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if a token includes a org_id claim and that it contains an expected value.
+     *
+     * @param null|string         $aud   A value expected inside the token audience.
+     * @param array<string,mixed> $token An array representing data from a decoded JWT.
+     *
+     * @return boolean
+     *
+     * @throws InvalidTokenException When token claim validation fails.
+     */
+    public static function validateClaimOrgId(?string $orgId = null, array $token = []): bool
+    {
+        if (null !== $orgId) {
+            $tokenOrgId = $token['org_id'] ?? null;
+
+            if (! $tokenOrgId || ! is_string($tokenOrgId)) {
+                throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
+            }
+
+            if ($tokenOrgId !== $orgId) {
+                throw new InvalidTokenException(sprintf(
+                    'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
+                    $orgId,
+                    $tokenOrgId
                 ));
             }
         }
