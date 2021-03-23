@@ -4,7 +4,7 @@
 
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/3.4.0...4.0.0)
 
-This release introduces PHP 8.0 support, upgrades the bundle to use Auth0's PHP SDK 7.x branch. It also includes expanded JWT validation options, upgraded caching support, a simplified configuration format, and other improvements.
+This release introduces PHP 8.0 support and upgrades the bundle to use Auth0's PHP SDK 7.x branch. It also includes expanded JWT validation options, upgraded caching support, a simplified configuration format, and other improvements.
 
 This release includes potential breaking changes that may require minor changes to host applications to support. Please review [UPGRADING.md](UPGRADING.md) for guidance on updating your application.
 
