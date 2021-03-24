@@ -15,7 +15,7 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
  */
 class JWTAuthBundle extends Bundle
 {
-    const SDK_VERSION = '3.4.0';
+    const SDK_VERSION = '4.0.0';
 
     /**
      * JWTAuthBundle constructor.
