@@ -15,7 +15,7 @@ JWT Authentication bundle for Symfony
 Using [Composer](https://getcomposer.org/doc/00-intro.md):
 
 ```bash
-composer require auth0/jwt-auth-bundle:"~3.0"
+composer require auth0/jwt-auth-bundle:"~4.0"
 ```
 
 ## Configuration
