@@ -1,0 +1,42 @@
+name: Unit tests and static analysis
+
+on:
+  pull_request:
+
+jobs:
+  tests:
+    name: "PHP ${{ matrix.php-version }}"
+
+    runs-on: ubuntu-latest
+
+    continue-on-error: ${{ matrix.experimental }}
+
+    strategy:
+      matrix:
+        php-version:
+          - '7.4'
+          - '8.0'
+        composer-options: ['']
+        experimental: [false]
+        include:
+          - { php-version: '8.1', experimental: true, composer-options: '--ignore-platform-req=php' }
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.3
+
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@2.7.0
+        with:
+          coverage: "none"
+          php-version: ${{ matrix.php-version }}
+          ini-values: memory_limit=-1
+          tools: composer:v2
+
+      - run: composer install ${{ matrix.composer-options }}
+
+      - name: Run static analysis
+        run: vendor/bin/phpstan analyze
+
+      - name: Run tests
+        run: vendor/bin/phpunit -c phpunit.xml.dist
