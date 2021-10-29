@@ -54,6 +54,25 @@ jwt_auth:
     leeway: 60
 ```
 
+Sample for `config/security.yaml`
+```
+security:
+    # The option below is required if you want to use the jwt_auth.security.guard.jwt_authenticator service (Sf >= 5.1)
+    enable_authenticator_manager: true
+    firewalls:
+        main:
+            pattern:   ^/
+            provider: web_service_user_provider
+            # For Symfony >= 5.1
+            custom_authenticators:
+                - jwt_auth.security.guard.jwt_authenticator  
+            # For Symfony < 5.1
+            guard:
+                authenticators:
+                    - jwt_auth.security.guard.jwt_guard_authenticator
+            
+```
+
 ## Demo
 
 [Symfony API Samples](https://github.com/auth0-community/auth0-symfony-api-samples)

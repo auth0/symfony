@@ -21,6 +21,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
  */
 class JwtGuardAuthenticator extends AbstractGuardAuthenticator
 {
+    use AuthenticatorTrait;
 
     /**
      * Reference to an instance of Auth0Service.
@@ -39,19 +40,6 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
         $this->auth0Service = $auth0Service;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param Request $request Symfony representation of the HTTP request message.
-     *
-     * @return boolean
-     */
-    // phpcs:ignore
-    public function supports(Request $request)
-    {
-        return $request->headers->has('Authorization') &&
-               strpos($request->headers->get('Authorization'), 'Bearer') === 0;
-    }
 
     /**
      * Retrieves the authentication credentials from the 'Authorization' request header.
@@ -87,7 +75,6 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
     {
         if ($credentials && isset($credentials['jwt']) && ! empty($credentials['jwt'])) {
             $jwt = $this->auth0Service->decodeJWT($credentials['jwt']);
-
             if ($jwt) {
                 if (! isset($jwt->token)) {
                     $jwt->token = $credentials['jwt'];
@@ -130,43 +117,6 @@ class JwtGuardAuthenticator extends AbstractGuardAuthenticator
         } catch (CoreException $exception) {
             throw new AuthenticationException($exception->getMessage(), $exception->getCode(), $exception);
         }
-    }
-
-    /**
-     * Returns nothing to continue the request when authenticated.
-     *
-     * @param Request        $request     Symfony representation of the HTTP request message.
-     * @param TokenInterface $token       Symfony authentication token.
-     * @param string         $providerKey String representation of the provider.
-     *
-     * @return null
-     */
-    // phpcs:ignore
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
-    {
-        // Continue with request.
-        return null;
-    }
-
-    /**
-     * Returns the 'Authentication failed' response.
-     *
-     * @param Request                 $request   Symfony representation of the HTTP request message.
-     * @param AuthenticationException $exception Exception instance to generate error for.
-     *
-     * @return JsonResponse
-     */
-    // phpcs:ignore
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
-        $responseBody = [
-            'message' => sprintf(
-                'Authentication failed: %s.',
-                rtrim($exception->getMessage(), '.')
-            ),
-        ];
-
-        return new JsonResponse($responseBody, JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     /**
