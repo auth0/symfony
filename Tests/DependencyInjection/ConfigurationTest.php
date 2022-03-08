@@ -29,7 +29,7 @@ class ConfigurationTest extends TestCase
     {
         $configs = [
             'domain' => 'localhost.somewhere.auth0.com',
-            'audience' => 'test audience',
+            'audience' => ['test audience'],
             'client_id' => 'test client id',
             'client_secret' => 'test client secret',
             'authorized_issuer' => 'test.authorized.issuer',

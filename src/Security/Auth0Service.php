@@ -51,7 +51,7 @@ class Auth0Service
     /**
      * Stores the configured API audience.
      *
-     * @var string
+     * @var array
      */
     protected $audience;
 
@@ -103,7 +103,7 @@ class Auth0Service
      * @param string                 $domain           Required. Auth0 domain for your tenant.
      * @param string                 $clientId         Your Auth0 Client ID.
      * @param string                 $clientSecret     Your Auth0 Client secret.
-     * @param string                 $audience         Your Auth0 API identifier.
+     * @param array                  $audience         Your Auth0 API identifier.
      * @param string                 $authorizedIssuer This will be generated from $domain if not provided.
      * @param string                 $algorithm        Must be either 'RS256' (default) or 'HS256'.
      * @param array<string,mixed>    $validations      A key-value pair representing validations to run on tokens during decoding.
@@ -113,7 +113,7 @@ class Auth0Service
         string $domain,
         ?string $clientId = '',
         ?string $clientSecret = '',
-        ?string $audience = '',
+        ?array $audience = [],
         ?string $authorizedIssuer = '',
         ?string $algorithm = 'RS256',
         ?array $validations = [],
@@ -123,7 +123,7 @@ class Auth0Service
         $this->domain       = $domain;
         $this->clientId     = $clientId ?? '';
         $this->clientSecret = $clientSecret ?? '';
-        $this->audience     = $audience ?? '';
+        $this->audience     = $audience ?? [];
         $this->issuer       = 'https://'.$this->domain.'/';
         $this->algorithm    = (null !== $algorithm && mb_strtoupper($algorithm) === 'HS256') ? 'HS256' : 'RS256';
         $this->validations  = $validations ?? [];
