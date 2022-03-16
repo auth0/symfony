@@ -108,6 +108,10 @@ class JwtAuthenticatorTest extends TestCase
             public function getRoles(): array { return []; }
             public function eraseCredentials(): void {}
             public function getUserIdentifier(): string { return ''; }
+            // Symfony <6.0
+            public function getPassword() {}
+            public function getSalt() {}
+            public function getUsername() {}
         };
 
         $userProviderHasBeenCalled = false;
