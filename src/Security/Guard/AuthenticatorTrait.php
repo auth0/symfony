@@ -15,7 +15,7 @@ trait AuthenticatorTrait
     public function supports(Request $request): ?bool
     {
         return $request->headers->has('Authorization') &&
-            strpos($request->headers->get('Authorization'), 'Bearer') === 0;
+            strpos((string) $request->headers->get('Authorization'), 'Bearer') === 0;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
