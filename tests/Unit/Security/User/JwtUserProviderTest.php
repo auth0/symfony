@@ -2,10 +2,11 @@
 
 namespace Auth0\Tests\Unit\Security\User;
 
+use Auth0\JWTAuthBundle\Security\Auth0Service;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -23,7 +24,10 @@ class JwtUserProviderTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->userProvider = new JwtUserProvider();
+        $auth0Service = $this->getMockBuilder(Auth0Service::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->userProvider = new JwtUserProvider($auth0Service);
     }
 
     /**
@@ -31,7 +35,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testSupportsClass()
     {
-        $this->assertTrue($this->userProvider->supportsClass(User::class));
+        $this->assertTrue($this->userProvider->supportsClass(InMemoryUser::class));
     }
 
     /**
@@ -44,7 +48,7 @@ class JwtUserProviderTest extends TestCase
         $jwt->sub = 'username';
         $jwt->token = 'validToken';
 
-        $expectedUser = new User('username', 'validToken', ['ROLE_JWT_AUTHENTICATED']);
+        $expectedUser = new InMemoryUser('username', 'validToken', ['ROLE_JWT_AUTHENTICATED']);
 
         $this->assertEquals(
             $expectedUser,
@@ -61,7 +65,7 @@ class JwtUserProviderTest extends TestCase
         $jwt = new \stdClass();
         $jwt->sub = 'username';
 
-        $expectedUser = new User('username', null, ['ROLE_JWT_AUTHENTICATED']);
+        $expectedUser = new InMemoryUser('username', null, ['ROLE_JWT_AUTHENTICATED']);
 
         $this->assertEquals(
             $expectedUser,
@@ -82,7 +86,7 @@ class JwtUserProviderTest extends TestCase
         $jwt->scope = 'read:messages write:messages';
         $jwt->token = 'validToken';
 
-        $expectedUser = new User(
+        $expectedUser = new InMemoryUser(
             'username',
             'validToken',
             ['ROLE_JWT_AUTHENTICATED', 'ROLE_JWT_SCOPE_READ_MESSAGES', 'ROLE_JWT_SCOPE_WRITE_MESSAGES']
@@ -109,7 +113,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testLoadUserByUsername()
     {
-        $this->expectException(UsernameNotFoundException::class);
+        $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('Auth0\JWTAuthBundle\Security\User\JwtUserProvider cannot load user "john.doe" by username. Use Auth0\JWTAuthBundle\Security\User\JwtUserProvider::loadUserByJWT instead.');
 
         $this->userProvider->loadUserByUsername('john.doe');
@@ -120,7 +124,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testRefreshUser()
     {
-        $user = new User('john.doe', 'validToken', ['ROLE_JWT_AUTHENTICATED']);
+        $user = new InMemoryUser('john.doe', 'validToken', ['ROLE_JWT_AUTHENTICATED']);
 
         $returnedUser = $this->userProvider->refreshUser($user);
 
