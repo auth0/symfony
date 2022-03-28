@@ -8,7 +8,6 @@ use Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator;
 use Auth0\SDK\Exception\InvalidTokenException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -106,7 +105,7 @@ class JwtGuardAuthenticatorTest extends TestCase
      */
     public function testGetUserReturnsUserThroughLoadUserByJWT()
     {
-        $jwt = new stdClass();
+        $jwt = new \stdClass();
         $jwt->sub = 'authenticated-user';
         $jwt->token = 'validToken';
 
@@ -138,7 +137,7 @@ class JwtGuardAuthenticatorTest extends TestCase
      */
     public function testGetUserReturnsUserThroughLoadUserByUsername()
     {
-        $jwt = new stdClass();
+        $jwt = new \stdClass();
         $jwt->sub = 'authenticated-user';
         $jwt->token = 'validToken';
 
@@ -189,7 +188,7 @@ class JwtGuardAuthenticatorTest extends TestCase
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('validToken')
-            ->willReturn(new stdClass());
+            ->willReturn(new \stdClass());
 
         $this->assertTrue(
             $this->guardAuthenticator->checkCredentials(

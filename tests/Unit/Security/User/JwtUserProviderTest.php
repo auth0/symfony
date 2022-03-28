@@ -3,10 +3,9 @@
 namespace Auth0\Tests\Unit\Security\User;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -41,7 +40,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testLoadUserByJWT()
     {
-        $jwt = new stdClass();
+        $jwt = new \stdClass();
         $jwt->sub = 'username';
         $jwt->token = 'validToken';
 
@@ -59,7 +58,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testLoadUserByJWTWithoutTokenProperty()
     {
-        $jwt = new stdClass();
+        $jwt = new \stdClass();
         $jwt->sub = 'username';
 
         $expectedUser = new User('username', null, ['ROLE_JWT_AUTHENTICATED']);
@@ -78,7 +77,7 @@ class JwtUserProviderTest extends TestCase
      */
     public function testLoadUserByJWTWithScopeProperty()
     {
-        $jwt = new stdClass();
+        $jwt = new \stdClass();
         $jwt->sub = 'username';
         $jwt->scope = 'read:messages write:messages';
         $jwt->token = 'validToken';

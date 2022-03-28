@@ -43,16 +43,11 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @param \stdClass $jwt An encoded JWT.
      *
-     * @return User
+     * @return UserInterface
      */
     public function loadUserByJWT(\stdClass $jwt): UserInterface
     {
-        $token = null;
-
-        if (isset($jwt->token)) {
-            $token = $jwt->token;
-        }
-
+        $token = isset($jwt->token) ? $jwt->token : null;
         return new InMemoryUser($jwt->sub, $token, $this->getRoles($jwt));
     }
 
@@ -71,9 +66,9 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @param string $username A string representing the username of a user.
      *
-     * @return UserInterface|void
+     * @return UserInterface
      *
-     * @throws UsernameNotFoundException When attempting to load a user by username. Use the loadUserByJWT instead.
+     * @throws UserNotFoundException When attempting to load a user by username. Use the loadUserByJWT instead.
      */
     public function loadUserByUsername($username): UserInterface
     {
