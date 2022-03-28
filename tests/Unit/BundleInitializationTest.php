@@ -15,12 +15,12 @@ class BundleInitializationTest extends BaseBundleTestCase
         $this->addCompilerPass(new PublicServicePass());
     }
 
-    protected function getBundleClass()
+    protected function getBundleClass(): string
     {
         return JWTAuthBundle::class;
     }
 
-    public function testInitBundle()
+    public function testInitBundle(): void
     {
         // Boot the kernel.
         $this->bootKernel();

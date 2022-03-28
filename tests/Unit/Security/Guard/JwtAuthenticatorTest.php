@@ -30,13 +30,13 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator = new JwtAuthenticator($this->auth0Service);
     }
 
-    public function testJwtAuthenticatorDontSupportWithoutAuthorizationHeader()
+    public function testJwtAuthenticatorDontSupportWithoutAuthorizationHeader(): void
     {
         $request = Request::create('/');
         $this->assertFalse($this->authenticator->supports($request));
     }
 
-    public function testAuthenticateMethodFailIfNoAuthorizationHeaderInRequest()
+    public function testAuthenticateMethodFailIfNoAuthorizationHeaderInRequest(): void
     {
         $request = Request::create('/');
         $this->expectExceptionMessage('JWT is missing in the request Authorization header');
@@ -44,7 +44,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfAuthorizationHeaderIsNotABearer()
+    public function testAuthenticateFailsIfAuthorizationHeaderIsNotABearer(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'someInvalidStuff');
@@ -53,7 +53,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfJwtDecodeFails()
+    public function testAuthenticateFailsIfJwtDecodeFails(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer invalidToken');
@@ -69,7 +69,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfDecodedJwtIsEmpty()
+    public function testAuthenticateFailsIfDecodedJwtIsEmpty(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer token');
@@ -86,7 +86,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateCanSuccess()
+    public function testAuthenticateCanSuccess(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer amazingToken');

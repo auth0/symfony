@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class BundleConfigurationTest extends TestCase
 {
-    /** @var JWTAuthBundle  */
+    /** @var JWTAuthExtension  */
     private $extension;
 
     /** @var ContainerBuilder  */
@@ -25,7 +25,7 @@ class BundleConfigurationTest extends TestCase
         $this->rootNode = 'jwt_auth';
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $configs = [
             'domain' => 'localhost.somewhere.auth0.com',
@@ -46,7 +46,7 @@ class BundleConfigurationTest extends TestCase
         $this->assertEquals($configs['algorithm'], $this->container->getParameter($this->rootNode . '.algorithm'));
     }
 
-    public function testRejectInvalidAlgorithms()
+    public function testRejectInvalidAlgorithms(): void
     {
         $configs = [
             'algorithm' => 'XS256',

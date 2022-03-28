@@ -9,7 +9,7 @@ use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 
 class JwtValidationsTest extends TestCase
 {
-    private $token;
+    private array $token;
 
     protected function setUp(): void
     {
@@ -26,10 +26,6 @@ class JwtValidationsTest extends TestCase
           'auth_time' => time()
         ];
     }
-
-    /*
-    Nonce Validations
-    */
 
     public function testValidateClaimNonceMatchingNonce() {
       $this->assertTrue(JwtValidations::validateClaimNonce('test_nonce', $this->token));
@@ -59,10 +55,6 @@ class JwtValidationsTest extends TestCase
       $this->assertTrue(JwtValidations::validateClaimNonce(null, $this->token));
     }
 
-    /*
-    Azp Validations
-    */
-
     public function testValidateClaimAzpMatchingAzp() {
       $this->assertTrue(JwtValidations::validateClaimAzp('test_azp', $this->token));
     }
@@ -90,10 +82,6 @@ class JwtValidationsTest extends TestCase
     public function testValidateClaimAzpMissingAzp() {
       $this->assertTrue(JwtValidations::validateClaimAzp(null, $this->token));
     }
-
-    /*
-    Aud Validations
-    */
 
     public function testValidateClaimAudMatchingAud() {
       $this->assertTrue(JwtValidations::validateClaimAud('first_audience', $this->token));
@@ -128,10 +116,6 @@ class JwtValidationsTest extends TestCase
       $this->assertTrue(JwtValidations::validateClaimAud('string_audience', $token));
     }
 
-    /*
-    Org_id Validations
-    */
-
     public function testValidateClaimOrgIdMatching() {
       $this->assertTrue(JwtValidations::validateClaimOrgId('test_org', $this->token));
     }
@@ -150,10 +134,6 @@ class JwtValidationsTest extends TestCase
 
       JwtValidations::validateClaimOrgId('test_org', $token);
     }
-
-    /*
-    Age Validations
-    */
 
     public function testValidationAgeMissingMaxAge() {
       $this->assertTrue(JwtValidations::validateAge(null, $this->token));
@@ -200,10 +180,6 @@ class JwtValidationsTest extends TestCase
 
       $this->assertTrue(JwtValidations::validateAge(30, $token, 120, time() + 86400));
     }
-
-    /*
-    Claims Validations Helper
-    */
 
     public function testValidateClaimsNone() {
       $this->assertTrue(JwtValidations::validateClaims());
