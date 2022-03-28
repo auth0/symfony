@@ -73,10 +73,6 @@ security:
             
 ```
 
-## Demo
-
-[Symfony API Samples](https://github.com/auth0-community/auth0-symfony-api-samples)
-
 ## Auth0 integration
 
 The [Auth0 PHP SDK](https://github.com/auth0/auth0-PHP) is included in this bundle to handle the processing of JWTs. You can inject to your `UserProvider` to get the user profile, [example code](https://github.com/auth0-community/auth0-symfony-api-samples/blob/master/01-Authorization-RS256/src/AppBundle/Security/A0UserProvider.php).
