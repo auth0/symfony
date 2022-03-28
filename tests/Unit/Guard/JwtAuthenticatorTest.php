@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\Tests\Unit\Security\Guard;
+namespace Auth0\Tests\Unit\Guard;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Guard\JwtAuthenticator;

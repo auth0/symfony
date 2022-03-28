@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\Tests\Unit\Security\User;
+namespace Auth0\Tests\Unit\User;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use PHPUnit\Framework\TestCase;

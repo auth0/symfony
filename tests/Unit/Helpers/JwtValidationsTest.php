@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\Tests\Unit\Security\Helpers;
+namespace Auth0\Tests\Unit\Helpers;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;
