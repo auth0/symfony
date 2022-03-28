@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\User;
 
-use stdClass;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
+use stdClass;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\User;
@@ -20,7 +22,7 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @param mixed $class A user class type.
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsClass($class)
     {
@@ -69,7 +71,7 @@ class JwtUserProvider implements JWTUserProviderInterface
         throw new UsernameNotFoundException(
             sprintf(
                 '%1$s cannot load user "%2$s" by username. Use %1$s::loadUserByJWT instead.',
-                __CLASS__,
+                self::class,
                 $username
             )
         );
@@ -88,7 +90,7 @@ class JwtUserProvider implements JWTUserProviderInterface
     {
         if ($user instanceof User === false) {
             throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
+                sprintf('Instances of "%s" are not supported.', $user::class)
             );
         }
 
@@ -102,7 +104,7 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @return array<string>
      */
-    private function getRoles(stdClass $jwt)
+    private function getRoles(stdClass $jwt): array
     {
         return array_merge(
             [
@@ -119,22 +121,20 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @return array<string>
      */
-    private function getScopesFromJwtAsRoles(stdClass $jwt)
+    private function getScopesFromJwtAsRoles(stdClass $jwt): array
     {
         if (isset($jwt->scope) === false) {
             return [];
         }
 
         $scopes = explode(' ', $jwt->scope);
-        $roles  = array_map(
-            function ($scope) {
+        return array_map(
+            static function ($scope) {
                 $roleSuffix = strtoupper(str_replace([':', '-'], '_', $scope));
 
                 return sprintf('ROLE_JWT_SCOPE_%s', $roleSuffix);
             },
             $scopes
         );
-
-        return $roles;
     }
 }

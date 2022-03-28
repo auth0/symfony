@@ -1,12 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
 
 /**
  * Dependency injection extension for JWTAuthBundle.
@@ -20,13 +22,11 @@ class JWTAuthExtension extends Extension
      *
      * @param array<mixed>     $configs   Array containing the configuration values.
      * @param ContainerBuilder $container DI container for the bundle.
-     *
-     * @return void
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
-        $config        = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
@@ -42,7 +42,7 @@ class JWTAuthExtension extends Extension
             $cache = new Reference($config['cache']);
 
             $container->getDefinition('jwt_auth.auth0_service')
-                      ->replaceArgument(7, $cache);
+                ->replaceArgument(7, $cache);
         }
 
         $validations = [
@@ -50,13 +50,13 @@ class JWTAuthExtension extends Extension
             'azp' => null,
             'aud' => $config['audience'],
             'leeway' => 60,
-            'max_age' => null
+            'max_age' => null,
         ];
 
         if (isset($config['validations'])) {
             if (array_key_exists('azp', $config['validations'])) {
                 if (! empty($config['validations']['azp'])) {
-                    if (true === $config['validations']['azp']) {
+                    if ($config['validations']['azp'] === true) {
                         $validations['azp'] = $config['client_id'];
                     } else {
                         $validations['azp'] = $config['validations']['azp'];
@@ -68,7 +68,7 @@ class JWTAuthExtension extends Extension
 
             if (array_key_exists('aud', $config['validations'])) {
                 if (! empty($config['validations']['aud'])) {
-                    if (true !== $config['validations']['aud']) {
+                    if ($config['validations']['aud'] !== true) {
                         $validations['aud'] = $config['validations']['aud'];
                     }
                 } else {
@@ -78,7 +78,7 @@ class JWTAuthExtension extends Extension
 
             if (array_key_exists('org_id', $config['validations'])) {
                 if (! empty($config['validations']['org_id'])) {
-                    if (true !== $config['validations']['org_id']) {
+                    if ($config['validations']['org_id'] !== true) {
                         $validations['org_id'] = $config['validations']['org_id'];
                     }
                 } else {

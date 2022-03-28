@@ -1,20 +1,21 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
+use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
-
-use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 
 /**
  * A SimplePreAuthenticator interface for securing your Symfony application.
@@ -29,10 +30,8 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
 
     /**
      * Reference to an instance of Auth0Service.
-     *
-     * @var Auth0Service
      */
-    protected $auth0Service;
+    protected Auth0Service $auth0Service;
 
     /**
      * JWTAuthenticator constructor
@@ -50,11 +49,9 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
      * @param Request $request     Symfony representation of the HTTP request message.
      * @param string  $providerKey String representation of the provider.
      *
-     * @return PreAuthenticatedToken
-     *
      * @throws BadCredentialsException When an invalid token is provided.
      */
-    public function createToken(Request $request, $providerKey)
+    public function createToken(Request $request, string $providerKey): PreAuthenticatedToken
     {
         // Look for an authorization header.
         $authorizationHeader = $request->headers->get('Authorization');
@@ -74,7 +71,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
         try {
             $token = $this->auth0Service->decodeJWT($authToken);
 
-            if (null !== $token) {
+            if ($token !== null) {
                 $token->token = $authToken;
             }
         } catch (\UnexpectedValueException $ex) {
@@ -95,12 +92,10 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
      * @param JWTUserProviderInterface $userProvider A UserProviderInterface instance.
      * @param string                   $providerKey  String representation of the provider.
      *
-     * @return PreAuthenticatedToken
-     *
      * @throws InvalidArgumentException When an invalid provider interface is passed.
      * @throws AuthenticationException  When an authentication failure occurs.
      */
-    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
+    public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, string $providerKey): PreAuthenticatedToken
     {
         // The user provider should implement JWTUserProviderInterface.
         if (! $userProvider instanceof JWTUserProviderInterface) {
@@ -109,7 +104,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
             );
         }
 
-        if (null === $token->getCredentials()) {
+        if ($token->getCredentials() === null) {
             $user = $userProvider->getAnonymousUser();
 
             return new PreAuthenticatedToken(
@@ -126,7 +121,7 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
             $user,
             $token,
             $providerKey,
-            array_map(function ($role) {
+            array_map(static function ($role) {
                 return (string) $role;
             }, $user->getRoles())
         );
@@ -137,10 +132,8 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
      *
      * @param TokenInterface $token       Symfony authentication token.
      * @param string         $providerKey String representation of the provider.
-     *
-     * @return boolean
      */
-    public function supportsToken(TokenInterface $token, $providerKey)
+    public function supportsToken(TokenInterface $token, string $providerKey): bool
     {
         return $token instanceof PreAuthenticatedToken && $token->getProviderKey() === $providerKey;
     }
@@ -150,11 +143,9 @@ class JWTAuthenticator implements SimplePreAuthenticatorInterface, Authenticatio
      *
      * @param Request                 $request   Symfony representation of the HTTP request message.
      * @param AuthenticationException $exception A object representing the error.
-     *
-     * @return Response
      */
     // phpcs:ignore
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         return new Response('Authentication Failed: '.$exception->getMessage(), 403);
     }

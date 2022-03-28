@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Core;
 
@@ -20,11 +22,9 @@ interface JWTUserProviderInterface extends UserProviderInterface
      *
      * @param stdClass $jwt The decoded Json Web Token.
      *
-     * @return UserInterface
-     *
      * @throws AuthenticationException If the user is not found.
      */
-    public function loadUserByJWT(stdClass $jwt);
+    public function loadUserByJWT(stdClass $jwt): UserInterface;
 
     /**
      * Returns an anonymous user.

@@ -1,13 +1,11 @@
 <?php
 
-namespace Auth0\JWTAuthBundle\Tests\Security;
-
+namespace Auth0\Tests\Unit;
 
 use Auth0\JWTAuthBundle\JWTAuthBundle;
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Nyholm\BundleTest\BaseBundleTestCase;
 use Nyholm\BundleTest\CompilerPass\PublicServicePass;
-
 
 class BundleInitializationTest extends BaseBundleTestCase
 {

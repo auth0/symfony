@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\DependencyInjection;
 
@@ -23,20 +25,20 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-                ->scalarNode('domain')->defaultValue('')->end()
-                ->scalarNode('client_id')->defaultValue('')->end()
-                ->scalarNode('client_secret')->defaultValue('')->end()
-                ->scalarNode('audience')->defaultValue('')->end()
-                ->scalarNode('authorized_issuer')->defaultValue('')->end()
-                ->scalarNode('cache')->defaultNull()->end()
-                ->enumNode('algorithm')->defaultValue('RS256')->values(['RS256', 'HS256'])->end()
-                ->arrayNode('validations')
-                ->children()
-                    ->scalarNode('azp')->defaultValue(false)->end()
-                    ->scalarNode('aud')->defaultValue(true)->end()
-                    ->scalarNode('leeway')->defaultValue(60)->end()
-                    ->scalarNode('max_age')->defaultValue('')->end()
-                ->end()
+            ->scalarNode('domain')->defaultValue('')->end()
+            ->scalarNode('client_id')->defaultValue('')->end()
+            ->scalarNode('client_secret')->defaultValue('')->end()
+            ->scalarNode('audience')->defaultValue('')->end()
+            ->scalarNode('authorized_issuer')->defaultValue('')->end()
+            ->scalarNode('cache')->defaultNull()->end()
+            ->enumNode('algorithm')->defaultValue('RS256')->values(['RS256', 'HS256'])->end()
+            ->arrayNode('validations')
+            ->children()
+            ->scalarNode('azp')->defaultValue(false)->end()
+            ->scalarNode('aud')->defaultValue(true)->end()
+            ->scalarNode('leeway')->defaultValue(60)->end()
+            ->scalarNode('max_age')->defaultValue('')->end()
+            ->end()
             ->end();
 
         return $treeBuilder;

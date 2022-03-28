@@ -1,13 +1,13 @@
 <?php
 
-namespace Auth0\JWTAuthBundle\Tests\DependencyInjection;
+namespace Auth0\Tests\Unit;
 
 use Auth0\JWTAuthBundle\DependencyInjection\JWTAuthExtension;
 use Auth0\JWTAuthBundle\JWTAuthBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ConfigurationTest extends TestCase
+class BundleConfigurationTest extends TestCase
 {
     /** @var JWTAuthBundle  */
     private $extension;

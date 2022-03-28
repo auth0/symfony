@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\JWTAuthBundle\Security\User;
+namespace Auth0\Tests\Unit\Security\User;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;

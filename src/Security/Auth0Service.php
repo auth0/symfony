@@ -1,17 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security;
 
-use stdClass;
+use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
-use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
+use stdClass;
 use Symfony\Component\Cache\Psr16Cache;
 
 /**
@@ -19,83 +21,64 @@ use Symfony\Component\Cache\Psr16Cache;
  */
 class Auth0Service
 {
-
     /**
      * Stores an instance of Auth0\SDK\API\Authentication.
-     *
-     * @var Authentication
      */
-    protected $a0;
+    protected Authentication $a0;
 
     /**
      * Stores the configured tenant domain.
-     *
-     * @var string
      */
-    protected $domain;
+    protected string $domain;
 
     /**
      * Stores the configured client id.
-     *
-     * @var string
      */
-    protected $clientId;
+    protected string $clientId;
 
     /**
      * Stores the configured client secret.
-     *
-     * @var string
      */
-    protected $clientSecret;
+    protected string $clientSecret;
 
     /**
      * Stores the configured API audience.
-     *
-     * @var string
      */
-    protected $audience;
+    protected string $audience;
 
     /**
      * Stores the configured authorized issuer.
-     *
-     * @var string
      */
-    protected $issuer;
+    protected string $issuer;
 
     /**
      * Stores the configured token algorithm; either RS256 or HS256.
-     *
-     * @var string
      */
-    protected $algorithm;
+    protected string $algorithm;
 
     /**
      * A key-value pair representing validations to run on tokens during decoding.
      *
      * @var array<string,mixed>
      */
-    protected $validations;
+    protected array $validations;
 
     /**
      * Instance of a PSR-16 compatible caching interface.
-     *
-     * @var CacheInterface|null
      */
-    protected $cache;
+    protected ?CacheInterface $cache = null;
 
     /**
      * Stores a provided JWT, set during decodeJWT().
-     *
-     * @var string
      */
-    protected $token;
+    protected string $token;
 
     /**
      * Stores information about a provided JWT, updated with decodeJWT().
      *
      * @var array<string,mixed>
      */
-    protected $tokenInfo;
+    protected array $tokenInfo;
 
     /**
      * Auth0Service constructor.
@@ -118,18 +101,17 @@ class Auth0Service
         ?string $algorithm = 'RS256',
         ?array $validations = [],
         ?CacheItemPoolInterface $cache = null
-    )
-    {
-        $this->domain       = $domain;
-        $this->clientId     = $clientId ?? '';
+    ) {
+        $this->domain = $domain;
+        $this->clientId = $clientId ?? '';
         $this->clientSecret = $clientSecret ?? '';
-        $this->audience     = $audience ?? '';
-        $this->issuer       = 'https://'.$this->domain.'/';
-        $this->algorithm    = (null !== $algorithm && mb_strtoupper($algorithm) === 'HS256') ? 'HS256' : 'RS256';
-        $this->validations  = $validations ?? [];
-        $this->cache        = $cache ? new Psr16Cache($cache) : null;
+        $this->audience = $audience ?? '';
+        $this->issuer = 'https://'.$this->domain.'/';
+        $this->algorithm = $algorithm !== null && mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256';
+        $this->validations = $validations ?? [];
+        $this->cache = $cache ? new Psr16Cache($cache) : null;
 
-        if (null !== $authorizedIssuer && strlen($authorizedIssuer)) {
+        if ($authorizedIssuer !== null && strlen($authorizedIssuer)) {
             $this->issuer = $authorizedIssuer;
         }
 
@@ -147,7 +129,7 @@ class Auth0Service
     {
         // The /userinfo endpoint is only accessible with RS256.
         // Return details from JWT instead, in this case.
-        if ('HS256' === $this->algorithm) {
+        if ($this->algorithm === 'HS256') {
             return (array) $this->tokenInfo;
         }
 
@@ -158,29 +140,27 @@ class Auth0Service
      * Decodes the JWT and validates it. Throws an exception if invalid.
      *
      * @param string                   $token            An encoded JWT token.
-     * @param null|array<string,mixed> $claimsToValidate A key => value pair of JWT claims to validate. If null will use defaults configured.
+     * @param array<string, mixed>|null $claimsToValidate A key => value pair of JWT claims to validate. If null will use defaults configured.
      * @param array<string,mixed>      $options          Options to adjust the verification.
      *                    - "nonce" to check the nonce contained in the token (recommended).
      *                    - "max_age" to check the auth_time of the token.
      *                    - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
      *
-     * @return stdClass
-     *
      * @throws InvalidTokenException Thrown if token fails to validate.
      */
     public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): ?stdClass
     {
-        $nonce             = $options['nonce'] ?? null;
-        $now               = $options['now'] ?? time();
-        $maxAge            = $options['max_age'] ?? null;
-        $leeway            = $options['leeway'] ?? 60;
+        $nonce = $options['nonce'] ?? null;
+        $now = $options['now'] ?? time();
+        $maxAge = $options['max_age'] ?? null;
+        $leeway = $options['leeway'] ?? 60;
         $signatureVerifier = null;
-        $verifiedToken     = null;
+        $verifiedToken = null;
 
-        if ('HS256' === $this->algorithm) {
+        if ($this->algorithm === 'HS256') {
             $signatureVerifier = new SymmetricVerifier($this->clientSecret);
         } else {
-            $jwksFetcher       = new JWKFetcher($this->cache, [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
+            $jwksFetcher = new JWKFetcher($this->cache, [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
             $signatureVerifier = new AsymmetricVerifier($jwksFetcher);
         }
 
@@ -195,7 +175,7 @@ class Auth0Service
         JwtValidations::validateAge($maxAge, $verifiedToken, $leeway, $now);
 
         $this->tokenInfo = $verifiedToken;
-        $this->token     = $token;
+        $this->token = $token;
 
         return (object) $this->tokenInfo;
     }

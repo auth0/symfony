@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Helpers;
 
@@ -17,8 +19,6 @@ class JwtValidations
      * @param array<string,mixed> $claims A key => value pair of JWT claims to validate.
      * @param array<string,mixed> $token  An array representing data from a decoded JWT.
      *
-     * @return boolean
-     *
      * @throws InvalidTokenException When a token claim validation fails.
      */
     public static function validateClaims(array $claims = [], array $token = []): bool
@@ -34,16 +34,14 @@ class JwtValidations
     /**
      * Check if a token includes a nonce claim and that it matches.
      *
-     * @param null|string         $nonce The expected nonce value.
+     * @param string|null $nonce The expected nonce value.
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
-     *
-     * @return boolean
      *
      * @throws InvalidTokenException When token claim validation fails.
      */
     public static function validateClaimNonce(?string $nonce = null, array $token = []): bool
     {
-        if (null !== $nonce) {
+        if ($nonce !== null) {
             $tokenNonce = $token['nonce'] ?? null;
 
             if (! $tokenNonce || ! is_string($tokenNonce)) {
@@ -51,11 +49,11 @@ class JwtValidations
             }
 
             if ($tokenNonce !== $nonce) {
-                throw new InvalidTokenException( sprintf(
+                throw new InvalidTokenException(sprintf(
                     'Nonce (nonce) claim mismatch; expected "%s", found "%s"',
                     $nonce,
                     $tokenNonce
-                ) );
+                ));
             }
         }
 
@@ -65,16 +63,14 @@ class JwtValidations
     /**
      * Check if a token includes a azp claim and that it matches.
      *
-     * @param null|string         $azp   The expected azp value.
+     * @param string|null $azp The expected azp value.
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
-     *
-     * @return boolean
      *
      * @throws InvalidTokenException When token claim validation fails.
      */
     public static function validateClaimAzp(?string $azp = null, array $token = []): bool
     {
-        if (null !== $azp) {
+        if ($azp !== null) {
             $tokenAzp = $token['azp'] ?? null;
 
             if (! $tokenAzp || ! is_string($tokenAzp)) {
@@ -84,11 +80,11 @@ class JwtValidations
             }
 
             if ($tokenAzp !== $azp) {
-                throw new InvalidTokenException( sprintf(
+                throw new InvalidTokenException(sprintf(
                     'Authorized Party (azp) claim mismatch; expected "%s", found "%s"',
                     $azp,
                     $tokenAzp
-                ) );
+                ));
             }
         }
 
@@ -98,21 +94,19 @@ class JwtValidations
     /**
      * Check if a token includes a audience claim and that it contains an expected value.
      *
-     * @param null|string         $aud   A value expected inside the token audience.
+     * @param string|null $aud A value expected inside the token audience.
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
-     *
-     * @return boolean
      *
      * @throws InvalidTokenException When token claim validation fails.
      */
     public static function validateClaimAud(?string $aud = null, array $token = []): bool
     {
-        if (null !== $aud) {
+        if ($aud !== null) {
             $tokenAud = $token['aud'] ?? [];
 
             if (! isset($token['aud'])) {
                 throw new InvalidTokenException(
-                'Audience (aud) claim must be a string or array of strings present'
+                    'Audience (aud) claim must be a string or array of strings present'
                 );
             }
 
@@ -121,9 +115,9 @@ class JwtValidations
             }
 
             if (! in_array($aud, $tokenAud)) {
-                throw new InvalidTokenException( sprintf(
-                  'Audience (aud) claim mismatch; expected "%s"',
-                  $aud
+                throw new InvalidTokenException(sprintf(
+                    'Audience (aud) claim mismatch; expected "%s"',
+                    $aud
                 ));
             }
         }
@@ -134,16 +128,14 @@ class JwtValidations
     /**
      * Check if a token includes a org_id claim and that it contains an expected value.
      *
-     * @param null|string         $aud   A value expected inside the token audience.
+     * @param string|null $aud A value expected inside the token audience.
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
-     *
-     * @return boolean
      *
      * @throws InvalidTokenException When token claim validation fails.
      */
     public static function validateClaimOrgId(?string $orgId = null, array $token = []): bool
     {
-        if (null !== $orgId) {
+        if ($orgId !== null) {
             $tokenOrgId = $token['org_id'] ?? null;
 
             if (! $tokenOrgId || ! is_string($tokenOrgId)) {
@@ -165,18 +157,16 @@ class JwtValidations
     /**
      * Check if a token includes a audience claim and that it contains an expected value.
      *
-     * @param null|integer        $maxAge The maximum age (in seconds) after auth_time to consider a token valid.
+     * @param int|null $maxAge The maximum age (in seconds) after auth_time to consider a token valid.
      * @param array<string,mixed> $token  An array representing data from a decoded JWT.
-     * @param integer             $leeway Extra leeway (in seconds) to allow after a token's auth_time + the provided maxAge.
-     * @param null|integer        $now    Starting point (in seconds since Unix Epoch) to calculate maxAge + leeway differences from token.
-     *
-     * @return boolean
+     * @param int $leeway Extra leeway (in seconds) to allow after a token's auth_time + the provided maxAge.
+     * @param int|null $now Starting point (in seconds since Unix Epoch) to calculate maxAge + leeway differences from token.
      *
      * @throws InvalidTokenException When token claim validation fails.
      */
     public static function validateAge(?int $maxAge = null, array $token = [], ?int $leeway = 60, ?int $now = null): bool
     {
-        if (null !== $maxAge) {
+        if ($maxAge !== null) {
             $tokenAuthTime = $token['auth_time'] ?? null;
 
             if (! $tokenAuthTime || ! is_int($token['auth_time'])) {
@@ -185,16 +175,16 @@ class JwtValidations
                 );
             }
 
-            $now             = $now ?? time();
-            $leeway          = $leeway ?? 60;
+            $now = $now ?? time();
+            $leeway = $leeway ?? 60;
             $tokenValidUntil = $tokenAuthTime + $maxAge + $leeway;
 
             if ($now > $tokenValidUntil) {
-                throw new InvalidTokenException( sprintf(
+                throw new InvalidTokenException(sprintf(
                     'Authentication Time (auth_time) claim indicates that too much time has passed since the last end-user authentication. Current time (%d) is after last auth at %d',
                     $now,
                     $tokenValidUntil
-                ) );
+                ));
             }
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\JWTAuthBundle\Tests\Helpers;
+namespace Auth0\Tests\Unit\Security\Helpers;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;

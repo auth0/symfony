@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Guard;
@@ -19,10 +20,8 @@ class JwtAuthenticator extends AbstractAuthenticator
 
     /**
      * Reference to an instance of Auth0Service.
-     *
-     * @var Auth0Service
      */
-    private $auth0Service;
+    private Auth0Service $auth0Service;
 
     public function __construct(Auth0Service $auth0Service)
     {
@@ -32,11 +31,11 @@ class JwtAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): PassportInterface
     {
         $jwtString = $request->headers->get('Authorization');
-        if (!$jwtString) {
+        if (! $jwtString) {
             throw new JWTInfoNotFoundException('JWT is missing in the request Authorization header');
         }
 
-        if (0 !== strpos(strtolower($jwtString), 'bearer ')) {
+        if (strpos(strtolower($jwtString), 'bearer ') !== 0) {
             throw new JWTInfoNotFoundException('JWT is not a bearer token');
         }
 
@@ -47,7 +46,7 @@ class JwtAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException($exception->getMessage(), $exception->getCode(), $exception);
         }
 
-        if (!$jwt) {
+        if (! $jwt) {
             throw new AuthenticationException('Your JWT seems invalid');
         }
 
