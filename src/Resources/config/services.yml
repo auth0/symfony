@@ -16,17 +16,6 @@ services:
   Auth0\JWTAuthBundle\Security\Auth0Service:
     alias: jwt_auth.auth0_service
 
-  # Authenticators
-  jwt_auth.jwt_authenticator:
-    class: Auth0\JWTAuthBundle\Security\JWTAuthenticator
-    arguments: ["@jwt_auth.auth0_service"]
-
-  jwt_auth.security.guard.jwt_guard_authenticator:
-    class: Auth0\JWTAuthBundle\Security\Guard\JwtGuardAuthenticator
-    arguments:
-      - "@jwt_auth.auth0_service"
-
-  # SF >=5.3
   jwt_auth.security.guard.jwt_authenticator:
     class: Auth0\JWTAuthBundle\Security\Guard\JwtAuthenticator
     arguments:

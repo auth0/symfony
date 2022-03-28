@@ -23,10 +23,20 @@ class JwtValidations
      */
     public static function validateClaims(array $claims = [], array $token = []): bool
     {
-        self::validateClaimNonce($claims['nonce'] ?? null, $token);
-        self::validateClaimAzp($claims['azp'] ?? null, $token);
-        self::validateClaimAud($claims['aud'] ?? null, $token);
-        self::validateClaimAud($claims['org_id'] ?? null, $token);
+        $nonce = $claims['nonce'] ?? null;
+        $azp = $claims['azp'] ?? null;
+        $aud = $claims['aud'] ?? null;
+        $orgId = $claims['org_id'] ?? null;
+
+        $nonce = $nonce !== null ? strval($nonce) : null;
+        $azp = $azp !== null ? strval($azp) : null;
+        $aud = $aud !== null ? strval($aud) : null;
+        $orgId = $orgId !== null ? strval($orgId) : null;
+
+        self::validateClaimNonce($nonce, $token);
+        self::validateClaimAzp($azp, $token);
+        self::validateClaimAud($aud, $token);
+        self::validateClaimAud($orgId, $token);
 
         return true;
     }
@@ -44,7 +54,7 @@ class JwtValidations
         if ($nonce !== null) {
             $tokenNonce = $token['nonce'] ?? null;
 
-            if (! $tokenNonce || ! is_string($tokenNonce)) {
+            if ($tokenNonce === null || ! is_string($tokenNonce)) {
                 throw new InvalidTokenException('Nonce (nonce) claim must be a string present');
             }
 
@@ -73,7 +83,7 @@ class JwtValidations
         if ($azp !== null) {
             $tokenAzp = $token['azp'] ?? null;
 
-            if (! $tokenAzp || ! is_string($tokenAzp)) {
+            if ($tokenAzp === null || ! is_string($tokenAzp)) {
                 throw new InvalidTokenException(
                     'Authorized Party (azp) claim must be a string present'
                 );
@@ -111,10 +121,10 @@ class JwtValidations
             }
 
             if (! is_array($tokenAud)) {
-                $tokenAud = [ (string) $tokenAud ];
+                $tokenAud = [ strval($tokenAud) ];
             }
 
-            if (! in_array($aud, $tokenAud)) {
+            if (! in_array($aud, $tokenAud, true)) {
                 throw new InvalidTokenException(sprintf(
                     'Audience (aud) claim mismatch; expected "%s"',
                     $aud
@@ -128,7 +138,7 @@ class JwtValidations
     /**
      * Check if a token includes a org_id claim and that it contains an expected value.
      *
-     * @param string|null $aud A value expected inside the token audience.
+     * @param string|null $orgId A value expected inside the org_id claim.
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
      *
      * @throws InvalidTokenException When token claim validation fails.
@@ -138,7 +148,7 @@ class JwtValidations
         if ($orgId !== null) {
             $tokenOrgId = $token['org_id'] ?? null;
 
-            if (! $tokenOrgId || ! is_string($tokenOrgId)) {
+            if ($tokenOrgId === null || ! is_string($tokenOrgId)) {
                 throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
             }
 
@@ -169,7 +179,7 @@ class JwtValidations
         if ($maxAge !== null) {
             $tokenAuthTime = $token['auth_time'] ?? null;
 
-            if (! $tokenAuthTime || ! is_int($token['auth_time'])) {
+            if ($tokenAuthTime === null || ! is_int($token['auth_time'])) {
                 throw new InvalidTokenException(
                     'Authentication Time (auth_time) claim must be a number present when Max Age (max_age) is specified'
                 );

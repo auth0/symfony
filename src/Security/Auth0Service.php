@@ -13,7 +13,6 @@ use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
-use stdClass;
 use Symfony\Component\Cache\Psr16Cache;
 
 /**
@@ -64,6 +63,11 @@ class Auth0Service
     protected array $validations;
 
     /**
+     * Instance of a PSR-6 compatible caching interface.
+     */
+    protected ?CacheItemPoolInterface $configuredCache = null;
+
+    /**
      * Instance of a PSR-16 compatible caching interface.
      */
     protected ?CacheInterface $cache = null;
@@ -109,9 +113,9 @@ class Auth0Service
         $this->issuer = 'https://'.$this->domain.'/';
         $this->algorithm = $algorithm !== null && mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256';
         $this->validations = $validations ?? [];
-        $this->cache = $cache ? new Psr16Cache($cache) : null;
+        $this->configuredCache = $cache;
 
-        if ($authorizedIssuer !== null && strlen($authorizedIssuer)) {
+        if ($authorizedIssuer !== null && strlen($authorizedIssuer) !== 0) {
             $this->issuer = $authorizedIssuer;
         }
 
@@ -130,7 +134,7 @@ class Auth0Service
         // The /userinfo endpoint is only accessible with RS256.
         // Return details from JWT instead, in this case.
         if ($this->algorithm === 'HS256') {
-            return (array) $this->tokenInfo;
+            return $this->tokenInfo;
         }
 
         return $this->a0->userinfo($jwt);
@@ -148,7 +152,7 @@ class Auth0Service
      *
      * @throws InvalidTokenException Thrown if token fails to validate.
      */
-    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): ?stdClass
+    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): ?\stdClass
     {
         $nonce = $options['nonce'] ?? null;
         $now = $options['now'] ?? time();
@@ -157,10 +161,14 @@ class Auth0Service
         $signatureVerifier = null;
         $verifiedToken = null;
 
+        $maxAge = is_numeric($maxAge) ? intval($maxAge) : null;
+        $leeway = is_numeric($leeway) ? intval($leeway) : null;
+        $now = is_numeric($now) ? intval($now) : null;
+
         if ($this->algorithm === 'HS256') {
             $signatureVerifier = new SymmetricVerifier($this->clientSecret);
         } else {
-            $jwksFetcher = new JWKFetcher($this->cache, [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
+            $jwksFetcher = new JWKFetcher($this->getCache(), [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
             $signatureVerifier = new AsymmetricVerifier($jwksFetcher);
         }
 
@@ -178,5 +186,18 @@ class Auth0Service
         $this->token = $token;
 
         return (object) $this->tokenInfo;
+    }
+
+    private function getCache(): ?CacheInterface
+    {
+        if ($this->cache instanceof CacheInterface) {
+            return $this->cache;
+        }
+
+        if ($this->configuredCache !== null) {
+            return $this->cache = new Psr16Cache($this->configuredCache);
+        }
+
+        return null;
     }
 }

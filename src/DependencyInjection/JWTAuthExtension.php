@@ -38,7 +38,7 @@ class JWTAuthExtension extends Extension
         $container->setParameter('jwt_auth.authorized_issuer', $config['authorized_issuer']);
         $container->setParameter('jwt_auth.algorithm', $config['algorithm']);
 
-        if (! empty($config['cache'])) {
+        if (isset($config['cache'])) {
             $cache = new Reference($config['cache']);
 
             $container->getDefinition('jwt_auth.auth0_service')
@@ -55,7 +55,7 @@ class JWTAuthExtension extends Extension
 
         if (isset($config['validations'])) {
             if (array_key_exists('azp', $config['validations'])) {
-                if (! empty($config['validations']['azp'])) {
+                if (isset($config['validations']['azp'])) {
                     if ($config['validations']['azp'] === true) {
                         $validations['azp'] = $config['client_id'];
                     } else {
@@ -67,7 +67,7 @@ class JWTAuthExtension extends Extension
             }
 
             if (array_key_exists('aud', $config['validations'])) {
-                if (! empty($config['validations']['aud'])) {
+                if (isset($config['validations']['aud'])) {
                     if ($config['validations']['aud'] !== true) {
                         $validations['aud'] = $config['validations']['aud'];
                     }
@@ -77,7 +77,7 @@ class JWTAuthExtension extends Extension
             }
 
             if (array_key_exists('org_id', $config['validations'])) {
-                if (! empty($config['validations']['org_id'])) {
+                if (isset($config['validations']['org_id'])) {
                     if ($config['validations']['org_id'] !== true) {
                         $validations['org_id'] = $config['validations']['org_id'];
                     }
@@ -87,7 +87,7 @@ class JWTAuthExtension extends Extension
             }
 
             if (array_key_exists('max_age', $config['validations'])) {
-                if (! empty($config['validations']['max_age']) && is_int($config['validations']['max_age'])) {
+                if (isset($config['validations']['max_age']) && is_int($config['validations']['max_age'])) {
                     $validations['max_age'] = $config['validations']['max_age'];
                 } else {
                     $validations['max_age'] = null;
@@ -95,7 +95,7 @@ class JWTAuthExtension extends Extension
             }
 
             if (array_key_exists('leeway', $config['validations'])) {
-                if (! empty($config['validations']['leeway']) && is_int($config['validations']['leeway'])) {
+                if (isset($config['validations']['leeway']) && is_int($config['validations']['leeway'])) {
                     $validations['leeway'] = $config['validations']['leeway'];
                 } else {
                     $validations['leeway'] = 60;

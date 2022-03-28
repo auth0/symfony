@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\User;
 
+use Auth0\JWTAuthBundle\Security\Auth0Service;
+use Auth0\SDK\Exception\CoreException;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
-use stdClass;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -17,6 +19,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class JwtUserProvider implements JWTUserProviderInterface
 {
+    private Auth0Service $auth0Service;
+
+    public function __construct(Auth0Service $auth0Service)
+    {
+        $this->auth0Service = $auth0Service;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -26,17 +35,17 @@ class JwtUserProvider implements JWTUserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === User::class;
+        return $class === InMemoryUser::class;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param stdClass $jwt An encoded JWT.
+     * @param \stdClass $jwt An encoded JWT.
      *
      * @return User
      */
-    public function loadUserByJWT(stdClass $jwt)
+    public function loadUserByJWT(\stdClass $jwt): UserInterface
     {
         $token = null;
 
@@ -44,7 +53,7 @@ class JwtUserProvider implements JWTUserProviderInterface
             $token = $jwt->token;
         }
 
-        return new User($jwt->sub, $token, $this->getRoles($jwt));
+        return new InMemoryUser($jwt->sub, $token, $this->getRoles($jwt));
     }
 
     /**
@@ -66,9 +75,9 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @throws UsernameNotFoundException When attempting to load a user by username. Use the loadUserByJWT instead.
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): UserInterface
     {
-        throw new UsernameNotFoundException(
+        throw new UserNotFoundException(
             sprintf(
                 '%1$s cannot load user "%2$s" by username. Use %1$s::loadUserByJWT instead.',
                 self::class,
@@ -88,23 +97,34 @@ class JwtUserProvider implements JWTUserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if ($user instanceof User === false) {
+        if ($user instanceof InMemoryUser === false) {
             throw new UnsupportedUserException(
                 sprintf('Instances of "%s" are not supported.', $user::class)
             );
         }
 
-        return new User($user->getUsername(), $user->getPassword(), $user->getRoles());
+        return new InMemoryUser($user->getUserIdentifier(), $user->getPassword(), $user->getRoles());
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $jwt = $this->auth0Service->decodeJWT($identifier);
+
+        if ($jwt === null) {
+            throw new AuthenticationException('Your JWT seems invalid');
+        }
+
+        return $this->loadUserByJWT($jwt);
     }
 
     /**
      * Returns the roles for the user.
      *
-     * @param stdClass $jwt An encoded JWT.
+     * @param \stdClass $jwt An encoded JWT.
      *
      * @return array<string>
      */
-    private function getRoles(stdClass $jwt): array
+    private function getRoles(\stdClass $jwt): array
     {
         return array_merge(
             [
@@ -117,11 +137,11 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the scopes from the JSON Web Token as Symfony roles prefixed with 'ROLE_JWT_SCOPE_'.
      *
-     * @param stdClass $jwt An encoded JWT.
+     * @param \stdClass $jwt An encoded JWT.
      *
      * @return array<string>
      */
-    private function getScopesFromJwtAsRoles(stdClass $jwt): array
+    private function getScopesFromJwtAsRoles(\stdClass $jwt): array
     {
         if (isset($jwt->scope) === false) {
             return [];
