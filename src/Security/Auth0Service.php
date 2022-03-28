@@ -20,20 +20,7 @@ use Symfony\Component\Cache\Psr16Cache;
  */
 class Auth0Service
 {
-    /**
-     * Stores an instance of Auth0\SDK\API\Authentication.
-     */
-    protected Authentication $a0;
 
-    /**
-     * Stores the configured tenant domain.
-     */
-    protected string $domain;
-
-    /**
-     * Stores the configured client id.
-     */
-    protected string $clientId;
 
     /**
      * Stores the configured client secret.
@@ -73,72 +60,11 @@ class Auth0Service
     protected ?CacheInterface $cache = null;
 
     /**
-     * Stores a provided JWT, set during decodeJWT().
-     */
-    protected string $token;
-
-    /**
      * Stores information about a provided JWT, updated with decodeJWT().
      *
      * @var array<string,mixed>
      */
     protected array $tokenInfo;
-
-    /**
-     * Auth0Service constructor.
-     *
-     * @param string                 $domain           Required. Auth0 domain for your tenant.
-     * @param string                 $clientId         Your Auth0 Client ID.
-     * @param string                 $clientSecret     Your Auth0 Client secret.
-     * @param string                 $audience         Your Auth0 API identifier.
-     * @param string                 $authorizedIssuer This will be generated from $domain if not provided.
-     * @param string                 $algorithm        Must be either 'RS256' (default) or 'HS256'.
-     * @param array<string,mixed>    $validations      A key-value pair representing validations to run on tokens during decoding.
-     * @param CacheItemPoolInterface $cache            A PSR-6 or PSR-16 compatible cache interface.
-     */
-    public function __construct(
-        string $domain,
-        ?string $clientId = '',
-        ?string $clientSecret = '',
-        ?string $audience = '',
-        ?string $authorizedIssuer = '',
-        ?string $algorithm = 'RS256',
-        ?array $validations = [],
-        ?CacheItemPoolInterface $cache = null
-    ) {
-        $this->domain = $domain;
-        $this->clientId = $clientId ?? '';
-        $this->clientSecret = $clientSecret ?? '';
-        $this->audience = $audience ?? '';
-        $this->issuer = 'https://'.$this->domain.'/';
-        $this->algorithm = $algorithm !== null && mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256';
-        $this->validations = $validations ?? [];
-        $this->configuredCache = $cache;
-
-        if ($authorizedIssuer !== null && strlen($authorizedIssuer) !== 0) {
-            $this->issuer = $authorizedIssuer;
-        }
-
-        $this->a0 = new Authentication($this->domain, $this->clientId);
-    }
-
-    /**
-     * Get the Auth0 User Profile based on the JWT (and validate it).
-     *
-     * @param string $jwt The encoded JWT token.
-     *
-     * @return array<string,mixed>
-     */
-    public function getUserProfileByA0UID(string $jwt): ?array
-    {
-        // The /userinfo endpoint is only accessible with RS256.
-        // Return details from JWT instead, in this case.
-        if ($this->algorithm === 'HS256') {
-            return $this->tokenInfo;
-        }
-
-        return $this->a0->userinfo($jwt);
-    }
 
     /**
      * Decodes the JWT and validates it. Throws an exception if invalid.
@@ -152,14 +78,12 @@ class Auth0Service
      *
      * @throws InvalidTokenException Thrown if token fails to validate.
      */
-    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): ?\stdClass
+    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): \stdClass
     {
-        $nonce = $options['nonce'] ?? null;
+        $options['nonce'] ?? null;
         $now = $options['now'] ?? time();
         $maxAge = $options['max_age'] ?? null;
         $leeway = $options['leeway'] ?? 60;
-        $signatureVerifier = null;
-        $verifiedToken = null;
 
         $maxAge = is_numeric($maxAge) ? intval($maxAge) : null;
         $leeway = is_numeric($leeway) ? intval($leeway) : null;
@@ -183,7 +107,6 @@ class Auth0Service
         JwtValidations::validateAge($maxAge, $verifiedToken, $leeway, $now);
 
         $this->tokenInfo = $verifiedToken;
-        $this->token = $token;
 
         return (object) $this->tokenInfo;
     }

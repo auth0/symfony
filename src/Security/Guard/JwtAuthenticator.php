@@ -28,6 +28,9 @@ class JwtAuthenticator extends AbstractAuthenticator
         $this->auth0Service = $auth0Service;
     }
 
+    /**
+     * @return SelfValidatingPassport
+     */
     public function authenticate(Request $request): Passport
     {
         $jwtString = $request->headers->get('Authorization');
@@ -42,13 +45,9 @@ class JwtAuthenticator extends AbstractAuthenticator
 
         try {
             $jwtString = str_replace(['Bearer ', 'bearer '], ['',  ''], $jwtString);
-            $jwt = $this->auth0Service->decodeJWT($jwtString);
+            $this->auth0Service->decodeJWT($jwtString);
         } catch (CoreException $exception) {
             throw new AuthenticationException($exception->getMessage(), $exception->getCode(), $exception);
-        }
-
-        if ($jwt === null) {
-            throw new AuthenticationException('Your JWT seems invalid');
         }
 
         return new SelfValidatingPassport(new UserBadge($jwtString));

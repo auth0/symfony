@@ -20,6 +20,8 @@ class JwtValidations
      * @param array<string,mixed> $token  An array representing data from a decoded JWT.
      *
      * @throws InvalidTokenException When a token claim validation fails.
+     *
+     * @return true
      */
     public static function validateClaims(array $claims = [], array $token = []): bool
     {
@@ -48,6 +50,8 @@ class JwtValidations
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
      *
      * @throws InvalidTokenException When token claim validation fails.
+     *
+     * @return true
      */
     public static function validateClaimNonce(?string $nonce = null, array $token = []): bool
     {
@@ -77,6 +81,8 @@ class JwtValidations
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
      *
      * @throws InvalidTokenException When token claim validation fails.
+     *
+     * @return true
      */
     public static function validateClaimAzp(?string $azp = null, array $token = []): bool
     {
@@ -108,6 +114,8 @@ class JwtValidations
      * @param array<string,mixed> $token An array representing data from a decoded JWT.
      *
      * @throws InvalidTokenException When token claim validation fails.
+     *
+     * @return true
      */
     public static function validateClaimAud(?string $aud = null, array $token = []): bool
     {
@@ -136,35 +144,6 @@ class JwtValidations
     }
 
     /**
-     * Check if a token includes a org_id claim and that it contains an expected value.
-     *
-     * @param string|null $orgId A value expected inside the org_id claim.
-     * @param array<string,mixed> $token An array representing data from a decoded JWT.
-     *
-     * @throws InvalidTokenException When token claim validation fails.
-     */
-    public static function validateClaimOrgId(?string $orgId = null, array $token = []): bool
-    {
-        if ($orgId !== null) {
-            $tokenOrgId = $token['org_id'] ?? null;
-
-            if ($tokenOrgId === null || ! is_string($tokenOrgId)) {
-                throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
-            }
-
-            if ($tokenOrgId !== $orgId) {
-                throw new InvalidTokenException(sprintf(
-                    'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
-                    $orgId,
-                    $tokenOrgId
-                ));
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Check if a token includes a audience claim and that it contains an expected value.
      *
      * @param int|null $maxAge The maximum age (in seconds) after auth_time to consider a token valid.
@@ -173,6 +152,8 @@ class JwtValidations
      * @param int|null $now Starting point (in seconds since Unix Epoch) to calculate maxAge + leeway differences from token.
      *
      * @throws InvalidTokenException When token claim validation fails.
+     *
+     * @return true
      */
     public static function validateAge(?int $maxAge = null, array $token = [], ?int $leeway = 60, ?int $now = null): bool
     {

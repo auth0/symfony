@@ -24,16 +24,4 @@ interface JWTUserProviderInterface extends UserProviderInterface
      * @throws AuthenticationException If the user is not found.
      */
     public function loadUserByJWT(\stdClass $jwt): UserInterface;
-
-    /**
-     * Returns an anonymous user.
-     *
-     * This can return a JWTInfoNotFoundException exception if you don't want
-     * to handle anonymous users.
-     *
-     * It is recommended to return a user with the role IS_AUTHENTICATED_ANONYMOUSLY
-     *
-     * @return null
-     */
-    public function getAnonymousUser();
 }

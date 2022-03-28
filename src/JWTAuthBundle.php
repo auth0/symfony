@@ -39,6 +39,8 @@ class JWTAuthBundle extends Bundle
 
     /**
      * Returns an alias for the JWTAuthBundle
+     *
+     * @psalm-return 'jwt_auth'
      */
     public function getAlias(): string
     {

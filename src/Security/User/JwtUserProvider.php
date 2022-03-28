@@ -102,13 +102,7 @@ class JwtUserProvider implements JWTUserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $jwt = $this->auth0Service->decodeJWT($identifier);
-
-        if ($jwt === null) {
-            throw new AuthenticationException('Your JWT seems invalid');
-        }
-
-        return $this->loadUserByJWT($jwt);
+        return $this->loadUserByJWT($this->auth0Service->decodeJWT($identifier));
     }
 
     /**
@@ -116,16 +110,15 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @param \stdClass $jwt An encoded JWT.
      *
-     * @return array<string>
+     * @return string[]
+     *
+     * @psalm-return non-empty-list<string>
      */
     private function getRoles(\stdClass $jwt): array
     {
-        return array_merge(
-            [
-                'ROLE_JWT_AUTHENTICATED',
-            ],
-            $this->getScopesFromJwtAsRoles($jwt)
-        );
+        $roles = $this->getScopesFromJwtAsRoles($jwt);
+        $roles[] = 'ROLE_JWT_AUTHENTICATED';
+        return $roles;
     }
 
     /**
@@ -133,7 +126,9 @@ class JwtUserProvider implements JWTUserProviderInterface
      *
      * @param \stdClass $jwt An encoded JWT.
      *
-     * @return array<string>
+     * @return string[]
+     *
+     * @psalm-return list<string>
      */
     private function getScopesFromJwtAsRoles(\stdClass $jwt): array
     {
@@ -142,6 +137,7 @@ class JwtUserProvider implements JWTUserProviderInterface
         }
 
         $scopes = explode(' ', $jwt->scope);
+
         return array_map(
             static function ($scope) {
                 $roleSuffix = strtoupper(str_replace([':', '-'], '_', $scope));
