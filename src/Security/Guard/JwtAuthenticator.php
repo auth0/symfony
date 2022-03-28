@@ -20,10 +20,8 @@ class JwtAuthenticator extends AbstractAuthenticator
 
     /**
      * Reference to an instance of Auth0Service.
-     *
-     * @var Auth0Service
      */
-    private $auth0Service;
+    private Auth0Service $auth0Service;
 
     public function __construct(Auth0Service $auth0Service)
     {
@@ -38,7 +36,7 @@ class JwtAuthenticator extends AbstractAuthenticator
             throw new JWTInfoNotFoundException('JWT is missing in the request Authorization header');
         }
 
-        if (0 !== strpos(strtolower($jwtString), 'bearer ')) {
+        if (strpos(strtolower($jwtString), 'bearer ') !== 0) {
             throw new JWTInfoNotFoundException('JWT is not a bearer token');
         }
 

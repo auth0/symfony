@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\JWTAuthBundle\Security\User;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
-use Auth0\SDK\Exception\CoreException;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -47,7 +46,7 @@ class JwtUserProvider implements JWTUserProviderInterface
      */
     public function loadUserByJWT(\stdClass $jwt): UserInterface
     {
-        $token = isset($jwt->token) ? $jwt->token : null;
+        $token = $jwt->token ?? null;
         return new InMemoryUser($jwt->sub, $token, $this->getRoles($jwt));
     }
 
