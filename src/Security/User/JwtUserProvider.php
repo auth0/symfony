@@ -93,7 +93,7 @@ class JwtUserProvider implements JWTUserProviderInterface
     {
         if ($user instanceof InMemoryUser === false) {
             throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', $user::class)
+                sprintf('Instances of "%s" are not supported.', get_class($user))
             );
         }
 
