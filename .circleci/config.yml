@@ -42,7 +42,7 @@ commands:
     steps:
       - run:
           name: Run code quality analysis (PHP Insights)
-          command: php -d memory-limit=-1 ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
+          command: php -d memory-limit=-1 ./vendor/bin/phpinsights -v --no-interaction
 
   run-phpstan:
     steps:
@@ -60,7 +60,7 @@ commands:
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure --min=100
+          command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure
 
   run-snyk:
     steps:
