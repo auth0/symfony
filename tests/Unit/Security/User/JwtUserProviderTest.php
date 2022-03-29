@@ -1,18 +1,18 @@
 <?php
 
-namespace Auth0\Tests\Unit\User;
+namespace Auth0\Tests\Unit\Security\User;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
-use PHPUnit\Framework\TestCase;
+use Auth0\JWTAuthBundle\Security\User\JwtUserProvider;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Tests the @see JwtUserProvider.
+ * @group active
  */
-class JwtUserProviderTest extends TestCase
+class JwtUserProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var JwtUserProvider
@@ -89,7 +89,7 @@ class JwtUserProviderTest extends TestCase
         $expectedUser = new InMemoryUser(
             'username',
             'validToken',
-            ['ROLE_JWT_AUTHENTICATED', 'ROLE_JWT_SCOPE_READ_MESSAGES', 'ROLE_JWT_SCOPE_WRITE_MESSAGES']
+            ['ROLE_JWT_SCOPE_READ_MESSAGES', 'ROLE_JWT_SCOPE_WRITE_MESSAGES', 'ROLE_JWT_AUTHENTICATED']
         );
 
         $this->assertEquals(

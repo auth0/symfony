@@ -37,6 +37,7 @@
     "symfony/framework-bundle": "^5.2 || ^6.0"
   },
   "require-dev": {
+    "mockery/mockery": "^1.5",
     "nunomaduro/phpinsights": "^2.0",
     "nyholm/symfony-bundle-test": "^1.0",
     "pestphp/pest": "^1.0",

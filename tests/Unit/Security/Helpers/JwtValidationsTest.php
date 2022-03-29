@@ -1,13 +1,15 @@
 <?php
 
-namespace Auth0\Tests\Unit\Helpers;
+namespace Auth0\Tests\Unit\Security\Helpers;
 
-use PHPUnit\Framework\TestCase;
 use Mockery;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 
-class JwtValidationsTest extends TestCase
+/**
+ * @group active
+ */
+class JwtValidationsTest extends \PHPUnit\Framework\TestCase
 {
     private array $token;
 

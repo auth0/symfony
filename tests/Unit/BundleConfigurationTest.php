@@ -4,6 +4,9 @@ namespace Auth0\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group active
+ */
 class BundleConfigurationTest extends TestCase
 {
     /** @var \Auth0\JWTAuthBundle\DependencyInjection\JWTAuthExtension  */
