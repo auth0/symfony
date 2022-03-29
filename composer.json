@@ -1,22 +1,13 @@
 {
   "name": "auth0/jwt-auth-bundle",
-  "description": "Support for authenticating users with a JWT in Symfony.",
   "type": "symfony-bundle",
+  "description": "Support for authenticating users with a JWT in Symfony.",
   "keywords": [
-    "auth0",
     "authentication",
-    "authorization",
-    "login",
-    "auth",
+    "firewall",
     "jwt",
-    "json web token",
-    "jwk",
-    "json web key",
-    "oauth",
-    "openid",
-    "secure",
-    "protect",
-    "api"
+    "security",
+    "auth0"
   ],
   "homepage": "http://github.com/auth0/jwt-auth-bundle",
   "license": "MIT",
@@ -28,24 +19,37 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ^8.0",
-    "ext-filter": "*",
-    "ext-json": "*",
-    "ext-mbstring": "*",
-    "ext-openssl": "*",
-    "auth0/auth0-php": "^7.0",
-    "symfony/framework-bundle": "^5.2 || ^6.0"
+    "php": "^7.3 | ^8.0",
+    "symfony/framework-bundle": "^4.4 || ~5.1",
+    "auth0/auth0-php": "^7.6"
   },
   "require-dev": {
-    "mockery/mockery": "^1.5",
-    "nunomaduro/phpinsights": "^2.0",
-    "nyholm/symfony-bundle-test": "^1.0",
-    "pestphp/pest": "^1.0",
-    "phpstan/phpstan": "^1.0",
-    "phpstan/phpstan-strict-rules": "^1.0",
-    "phpstan/phpstan-symfony": "^1.0",
-    "symfony/security-http": "^5.2 || ^6.0",
-    "vimeo/psalm": "^4.0"
+    "phpunit/phpunit": "^9.3",
+    "nyholm/symfony-bundle-test": "^1.0.2",
+    "symfony/security-http": "^4.4 || ^5.1 || ^6.0",
+    "squizlabs/php_codesniffer": "^3.2",
+    "phpcompatibility/php-compatibility": "^8.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+    "phpstan/phpstan": "^0.12.64",
+    "phpstan/extension-installer": "^1.1",
+    "phpstan/phpstan-symfony": "^0.12.20",
+    "mockery/mockery": "^1.4"
+  },
+  "scripts": {
+    "test": "SHELL_INTERACTIVE=1 \"./vendor/bin/phpunit\" --coverage-text ",
+    "test-unit-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml",
+    "analyze": "@php ./vendor/bin/phpstan analyze",
+    "compat": "@php ./vendor/bin/phpcs --standard=.phpcs-compat.xml.dist",
+    "format": "@php ./vendor/bin/phpcbf",
+    "lint": "@php ./vendor/bin/phpcs",
+    "sniffs": "@php ./vendor/bin/phpcs -e",
+    "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
+    "pre-commit": [
+      "@analyze",
+      "@test",
+      "@format",
+      "@compat"
+    ]
   },
   "autoload": {
     "psr-4": {
@@ -54,7 +58,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Auth0\\Tests\\": "tests/"
+      "Auth0\\JWTAuthBundle\\": "Tests/"
     }
   },
   "config": {
@@ -64,41 +68,5 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true
     }
-  },
-  "scripts": {
-    "tests": [
-      "@tests:phpinsights",
-      "@tests:phpstan",
-      "@tests:psalm",
-      "@tests:pest"
-    ],
-    "tests:phpinsights": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/phpinsights -v --no-interaction"
-    ],
-    "tests:phpstan": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/phpstan analyse --ansi"
-    ],
-    "tests:psalm": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/psalm"
-    ],
-    "tests:pest": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/pest --stop-on-failure --coverage"
-    ],
-    "tests:7.4": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker compose run --rm tests-7.4"
-    ],
-    "tests:8.0": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker compose run --rm tests-8.0"
-    ],
-    "tests:8.1": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker compose run --rm tests-8.1"
-    ]
   }
 }

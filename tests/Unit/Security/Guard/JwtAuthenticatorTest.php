@@ -1,12 +1,12 @@
 <?php
 
-namespace Auth0\Tests\Unit\Security\Guard;
+namespace Security\Guard;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Guard\JwtAuthenticator;
 use Auth0\SDK\Exception\CoreException;
-use Auth0\SDK\Exception\InvalidTokenException;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,10 +14,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-/**
- * @group active
- */
-class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
+class JwtAuthenticatorTest extends TestCase
 {
     /** @var JwtAuthenticator */
     private $authenticator;
@@ -33,13 +30,13 @@ class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
         $this->authenticator = new JwtAuthenticator($this->auth0Service);
     }
 
-    public function testJwtAuthenticatorDontSupportWithoutAuthorizationHeader(): void
+    public function testJwtAuthenticatorDontSupportWithoutAuthorizationHeader()
     {
         $request = Request::create('/');
         $this->assertFalse($this->authenticator->supports($request));
     }
 
-    public function testAuthenticateMethodFailIfNoAuthorizationHeaderInRequest(): void
+    public function testAuthenticateMethodFailIfNoAuthorizationHeaderInRequest()
     {
         $request = Request::create('/');
         $this->expectExceptionMessage('JWT is missing in the request Authorization header');
@@ -47,7 +44,7 @@ class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfAuthorizationHeaderIsNotABearer(): void
+    public function testAuthenticateFailsIfAuthorizationHeaderIsNotABearer()
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'someInvalidStuff');
@@ -56,7 +53,7 @@ class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfJwtDecodeFails(): void
+    public function testAuthenticateFailsIfJwtDecodeFails()
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer invalidToken');
@@ -72,7 +69,7 @@ class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfDecodedJwtIsEmpty(): void
+    public function testAuthenticateFailsIfDecodedJwtIsEmpty()
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer token');
@@ -80,14 +77,16 @@ class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('token')
-            ->willThrowException(new AuthenticationException());
+            ->willReturn(null)
+        ;
 
         $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Your JWT seems invalid');
 
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateCanSuccess(): void
+    public function testAuthenticateCanSuccess()
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer amazingToken');
@@ -106,13 +105,11 @@ class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
 
 
         $fakeUser = new class implements UserInterface {
-            public function getRoles(): array { return []; }
-            public function eraseCredentials(): void {}
-            public function getUserIdentifier(): string { return ''; }
-            // Symfony <6.0
-            public function getPassword() {}
-            public function getSalt() {}
-            public function getUsername() {}
+            public function getRoles(){}
+            public function getPassword(){}
+            public function getSalt(){}
+            public function eraseCredentials(){}
+            public function getUsername(){}
         };
 
         $userProviderHasBeenCalled = false;
