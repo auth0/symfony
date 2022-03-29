@@ -39,7 +39,6 @@
   "require-dev": {
     "mockery/mockery": "^1.5",
     "nunomaduro/phpinsights": "^2.0",
-    "nyholm/symfony-bundle-test": "^1.0",
     "pestphp/pest": "^1.0",
     "phpstan/phpstan": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.0",
