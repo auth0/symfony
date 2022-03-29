@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Guard;
-
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,18 +12,27 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 trait AuthenticatorTrait
 {
+    /**
+     * @return bool
+     */
     public function supports(Request $request): ?bool
     {
         return $request->headers->has('Authorization') &&
-            strpos($request->headers->get('Authorization'), 'Bearer') === 0;
+            strpos((string) $request->headers->get('Authorization'), 'Bearer') === 0;
     }
 
+    /**
+     * @return null
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         // Let the request continue, we don't want to redirect the user to some login page.
         return null;
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $responseBody = [

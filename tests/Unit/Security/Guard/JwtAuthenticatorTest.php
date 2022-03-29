@@ -1,12 +1,12 @@
 <?php
 
-namespace Security\Guard;
+namespace Auth0\Tests\Unit\Security\Guard;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Guard\JwtAuthenticator;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidTokenException;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,7 +14,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class JwtAuthenticatorTest extends TestCase
+/**
+ * @group active
+ */
+class JwtAuthenticatorTest extends \PHPUnit\Framework\TestCase
 {
     /** @var JwtAuthenticator */
     private $authenticator;
@@ -30,13 +33,13 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator = new JwtAuthenticator($this->auth0Service);
     }
 
-    public function testJwtAuthenticatorDontSupportWithoutAuthorizationHeader()
+    public function testJwtAuthenticatorDontSupportWithoutAuthorizationHeader(): void
     {
         $request = Request::create('/');
         $this->assertFalse($this->authenticator->supports($request));
     }
 
-    public function testAuthenticateMethodFailIfNoAuthorizationHeaderInRequest()
+    public function testAuthenticateMethodFailIfNoAuthorizationHeaderInRequest(): void
     {
         $request = Request::create('/');
         $this->expectExceptionMessage('JWT is missing in the request Authorization header');
@@ -44,7 +47,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfAuthorizationHeaderIsNotABearer()
+    public function testAuthenticateFailsIfAuthorizationHeaderIsNotABearer(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'someInvalidStuff');
@@ -53,7 +56,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfJwtDecodeFails()
+    public function testAuthenticateFailsIfJwtDecodeFails(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer invalidToken');
@@ -69,7 +72,7 @@ class JwtAuthenticatorTest extends TestCase
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateFailsIfDecodedJwtIsEmpty()
+    public function testAuthenticateFailsIfDecodedJwtIsEmpty(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer token');
@@ -77,16 +80,14 @@ class JwtAuthenticatorTest extends TestCase
         $this->auth0Service->expects($this->once())
             ->method('decodeJWT')
             ->with('token')
-            ->willReturn(null)
-        ;
+            ->willThrowException(new AuthenticationException());
 
         $this->expectException(AuthenticationException::class);
-        $this->expectExceptionMessage('Your JWT seems invalid');
 
         $this->authenticator->authenticate($request);
     }
 
-    public function testAuthenticateCanSuccess()
+    public function testAuthenticateCanSuccess(): void
     {
         $request = Request::create('/');
         $request->headers->set('Authorization', 'Bearer amazingToken');
@@ -105,11 +106,13 @@ class JwtAuthenticatorTest extends TestCase
 
 
         $fakeUser = new class implements UserInterface {
-            public function getRoles(){}
-            public function getPassword(){}
-            public function getSalt(){}
-            public function eraseCredentials(){}
-            public function getUsername(){}
+            public function getRoles(): array { return []; }
+            public function eraseCredentials(): void {}
+            public function getUserIdentifier(): string { return ''; }
+            // Symfony <6.0
+            public function getPassword() {}
+            public function getSalt() {}
+            public function getUsername() {}
         };
 
         $userProviderHasBeenCalled = false;
