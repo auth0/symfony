@@ -12,7 +12,7 @@ class JWTInfoNotFoundException extends \Symfony\Component\Security\Core\Exceptio
     /**
      * {@inheritdoc}
      *
-     * @return string;
+     * @return string
      */
     public function getMessageKey(): string
     {

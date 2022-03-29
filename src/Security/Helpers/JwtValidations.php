@@ -168,7 +168,7 @@ class JwtValidations
 
             $now = $now ?? time();
             $leeway = $leeway ?? 60;
-            $tokenValidUntil = $tokenAuthTime + $maxAge + $leeway;
+            $tokenValidUntil = intval($tokenAuthTime) + $maxAge + $leeway;
 
             if ($now > $tokenValidUntil) {
                 throw new InvalidTokenException(sprintf(

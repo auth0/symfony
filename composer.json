@@ -43,8 +43,7 @@
     "phpstan/phpstan": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.0",
     "phpstan/phpstan-symfony": "^1.0",
-    "symfony/security-http": "^5.2 || ^6.0",
-    "vimeo/psalm": "^4.0"
+    "symfony/security-http": "^5.2 || ^6.0"
   },
   "autoload": {
     "psr-4": {
@@ -68,7 +67,6 @@
     "tests": [
       "@tests:phpinsights",
       "@tests:phpstan",
-      "@tests:psalm",
       "@tests:pest"
     ],
     "tests:phpinsights": [
@@ -79,25 +77,9 @@
       "Composer\\Config::disableProcessTimeout",
       "@php ./vendor/bin/phpstan analyse --ansi"
     ],
-    "tests:psalm": [
-      "Composer\\Config::disableProcessTimeout",
-      "@php ./vendor/bin/psalm"
-    ],
     "tests:pest": [
       "Composer\\Config::disableProcessTimeout",
       "@php ./vendor/bin/pest --stop-on-failure --coverage"
-    ],
-    "tests:7.4": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker compose run --rm tests-7.4"
-    ],
-    "tests:8.0": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker compose run --rm tests-8.0"
-    ],
-    "tests:8.1": [
-      "Composer\\Config::disableProcessTimeout",
-      "docker compose run --rm tests-8.1"
     ]
   }
 }

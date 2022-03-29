@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class JWTAuthBundle extends Bundle
 {
-    public const SDK_VERSION = '5.0.0';
+    public const VERSION = '5.0.0';
 
     /**
      * JWTAuthBundle constructor.
@@ -31,7 +31,7 @@ class JWTAuthBundle extends Bundle
             $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
 
             $infoHeaders->setEnvProperty('Symfony', Kernel::VERSION);
-            $infoHeaders->setPackage('jwt-auth-bundle', self::SDK_VERSION);
+            $infoHeaders->setPackage('jwt-auth-bundle', self::VERSION);
 
             ApiClient::setInfoHeadersData($infoHeaders);
         }

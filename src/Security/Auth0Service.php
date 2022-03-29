@@ -77,12 +77,12 @@ class Auth0Service
      *
      * @var array<string,mixed>
      */
-    protected array $tokenInfo;
+    protected ?array $tokenInfo;
 
     /**
      * Stores a provided JWT, set during decodeJWT().
      */
-    protected string $token;
+    protected ?string $token;
 
     /**
      * Auth0Service constructor.
@@ -114,9 +114,13 @@ class Auth0Service
         $this->algorithm = $algorithm !== null && mb_strtoupper($algorithm) === 'HS256' ? 'HS256' : 'RS256';
         $this->validations = $validations ?? [];
         $this->configuredCache = $cache;
+        $this->token = null;
+        $this->tokenInfo = null;
+
         if ($authorizedIssuer !== null && strlen($authorizedIssuer) !== 0) {
             $this->issuer = $authorizedIssuer;
         }
+
         $this->a0 = new Authentication($this->domain, $this->clientId);
     }
     /**
@@ -124,7 +128,7 @@ class Auth0Service
      *
      * @param string $jwt The encoded JWT token.
      *
-     * @return array<string,mixed>
+     * @return array<mixed>|null
      */
     public function getUserProfileByA0UID(string $jwt): ?array
     {

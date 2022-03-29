@@ -50,12 +50,6 @@ commands:
           name: Run static code analysis (PHPStan)
           command: php -d memory_limit=-1 ./vendor/bin/phpstan analyse --ansi
 
-  run-psalm:
-    steps:
-      - run:
-          name: Run static code analysis (Psalm)
-          command: php -d memory_limit=-1 ./vendor/bin/psalm
-
   run-pest:
     steps:
       - run:
@@ -90,15 +84,6 @@ jobs:
     steps:
       - setup
       - run-phpstan
-  psalm:
-    parameters:
-      php:
-        type: string
-    docker:
-      - image: php:<< parameters.php >>-cli-alpine
-    steps:
-      - setup
-      - run-psalm
   semgrep:
     docker:
       - image: returntocorp/semgrep:latest
@@ -136,10 +121,6 @@ workflows:
             parameters:
               php: ["7.4", "8.0", "8.1"]
       - phpstan:
-          matrix:
-            parameters:
-              php: ["7.4", "8.0", "8.1"]
-      - psalm:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
