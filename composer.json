@@ -43,7 +43,8 @@
     "phpstan/phpstan": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.0",
     "phpstan/phpstan-symfony": "^1.0",
-    "symfony/security-http": "^5.2 || ^6.0"
+    "symfony/security-http": "^5.2 || ^6.0",
+    "symfony/yaml": "^5.2 || ^6.0"
   },
   "autoload": {
     "psr-4": {
