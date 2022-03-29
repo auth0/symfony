@@ -29,7 +29,7 @@ class JwtAuthenticator extends AbstractAuthenticator
         $this->auth0Service = $auth0Service;
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $jwtString = $request->headers->get('Authorization');
         if (!$jwtString) {
