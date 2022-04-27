@@ -7,7 +7,8 @@ JWT Authentication bundle for Symfony
 ## Requirements
 
 - [PHP](http://php.net/) 7.4 or 8.0+
-- [Symfony](https://symfony.com/) 4.4 or 5.4. ([Symfony 6.0 is not supported yet.](https://github.com/auth0/jwt-auth-bundle/issues/130))
+- [Symfony](https://symfony.com/) 4.4 or 5.4.
+  - [Symfony 6 support is coming in the next major.](https://github.com/auth0/jwt-auth-bundle/issues/130)
 
 ## Installation
 
