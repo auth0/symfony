@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle\Security\Helpers;
+use Auth0\SDK\Contract\TokenInterface;
 
 use Auth0\SDK\Exception\InvalidTokenException;
 
@@ -23,7 +24,7 @@ class JwtValidations
      *
      * @return true
      */
-    public static function validateClaims(array $claims = [], array $token = []): bool
+    public static function validateClaims(array $claims = [], TokenInterface $token = null): bool
     {
         $nonce = $claims['nonce'] ?? null;
         $azp = $claims['azp'] ?? null;
@@ -53,10 +54,10 @@ class JwtValidations
      *
      * @return true
      */
-    public static function validateClaimNonce(?string $nonce = null, array $token = []): bool
+    public static function validateClaimNonce(?string $nonce = null, TokenInterface $token = null): bool
     {
         if ($nonce !== null) {
-            $tokenNonce = $token['nonce'] ?? null;
+            $tokenNonce = $token->getNonce();
 
             if ($tokenNonce === null || ! is_string($tokenNonce)) {
                 throw new InvalidTokenException('Nonce (nonce) claim must be a string present');
@@ -84,10 +85,10 @@ class JwtValidations
      *
      * @return true
      */
-    public static function validateClaimAzp(?string $azp = null, array $token = []): bool
+    public static function validateClaimAzp(?string $azp = null, TokenInterface $token = null): bool
     {
         if ($azp !== null) {
-            $tokenAzp = $token['azp'] ?? null;
+            $tokenAzp = $token->getAuthorizedParty;
 
             if ($tokenAzp === null || ! is_string($tokenAzp)) {
                 throw new InvalidTokenException(
@@ -117,12 +118,12 @@ class JwtValidations
      *
      * @return true
      */
-    public static function validateClaimAud(?string $aud = null, array $token = []): bool
+    public static function validateClaimAud(?string $aud = null, TokenInterface $token = null): bool
     {
         if ($aud !== null) {
-            $tokenAud = $token['aud'] ?? [];
+            $tokenAud = $token->getAudience();
 
-            if (! isset($token['aud'])) {
+            if ($tokenAud == null) {
                 throw new InvalidTokenException(
                     'Audience (aud) claim must be a string or array of strings present'
                 );
@@ -155,12 +156,12 @@ class JwtValidations
      *
      * @return true
      */
-    public static function validateAge(?int $maxAge = null, array $token = [], ?int $leeway = 60, ?int $now = null): bool
+    public static function validateAge(?int $maxAge = null, TokenInterface $token = null, ?int $leeway = 60, ?int $now = null): bool
     {
         if ($maxAge !== null) {
-            $tokenAuthTime = $token['auth_time'] ?? null;
+            $tokenAuthTime = $token->getAuthTime();
 
-            if ($tokenAuthTime === null || ! is_int($token['auth_time'])) {
+            if ($tokenAuthTime === null || ! is_int($tokenAuthTime)) {
                 throw new InvalidTokenException(
                     'Authentication Time (auth_time) claim must be a number present when Max Age (max_age) is specified'
                 );
@@ -190,10 +191,10 @@ class JwtValidations
      *
      * @throws InvalidTokenException When token claim validation fails.
      */
-    public static function validateClaimOrgId(?string $orgId = null, array $token = []): bool
+    public static function validateClaimOrgId(?string $orgId = null, TokenInterface $token = null): bool
     {
         if ($orgId !== null) {
-            $tokenOrgId = $token['org_id'] ?? null;
+            $tokenOrgId = $token->getOrganization();
             if ($tokenOrgId === null || ! is_string($tokenOrgId)) {
                 throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
             }
@@ -208,3 +209,4 @@ class JwtValidations
         return true;
     }
 }
+

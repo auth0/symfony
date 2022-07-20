@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Helpers\InformationHeaders;
+// use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\Utility\HttpClient;
+use Auth0\SDK\Utility\HttpTelemetry;
+// use Auth0\SDK\API\Helpers\InformationHeaders;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -25,16 +27,16 @@ class JWTAuthBundle extends Bundle
      */
     public function __construct()
     {
-        $oldInfoHeaders = ApiClient::getInfoHeadersData();
+        // $oldInfoHeaders = ApiClient::getInfoHeadersData();
 
-        if ($oldInfoHeaders !== null) {
-            $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
+        // if ($oldInfoHeaders !== null) {
+        //     $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
 
-            $infoHeaders->setEnvProperty('Symfony', Kernel::VERSION);
-            $infoHeaders->setPackage('jwt-auth-bundle', self::VERSION);
+        //     $infoHeaders->setEnvProperty('Symfony', Kernel::VERSION);
+        //     $infoHeaders->setPackage('jwt-auth-bundle', self::VERSION);
 
-            ApiClient::setInfoHeadersData($infoHeaders);
-        }
+        //     ApiClient::setInfoHeadersData($infoHeaders);
+        // }
     }
 
     /**
@@ -47,3 +49,4 @@ class JWTAuthBundle extends Bundle
         return 'jwt_auth';
     }
 }
+

@@ -6,14 +6,19 @@ namespace Auth0\JWTAuthBundle\Security;
 
 use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Helpers\JWKFetcher;
+// use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
+use Auth0\SDK\Token\Verifier;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Psr16Cache;
+
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
 
 /**
  * Service that provides access to the Auth0 SDK and JWT validation
@@ -23,7 +28,7 @@ class Auth0Service
     /**
      * Stores an instance of Auth0\SDK\API\Authentication.
      */
-    protected Authentication $a0;
+    protected Auth0 $a0;
 
     /**
      * Stores the configured tenant domain.
@@ -77,7 +82,7 @@ class Auth0Service
      *
      * @var array<string,mixed>
      */
-    protected ?array $tokenInfo;
+    protected ?TokenInterface $tokenInfo;
 
     /**
      * Stores a provided JWT, set during decodeJWT().
@@ -121,7 +126,14 @@ class Auth0Service
             $this->issuer = $authorizedIssuer;
         }
 
-        $this->a0 = new Authentication($this->domain, $this->clientId);
+        $configuration = new SdkConfiguration(
+            domain: $this->domain,
+            clientId: $this->clientId,
+            clientSecret: $this->clientSecret,
+            redirectUri: 'https://localhost/graphql/',
+            tokenAlgorithm: 'RS256'
+        );
+        $this->a0 = new Auth0($configuration);
     }
     /**
      * Get the Auth0 User Profile based on the JWT (and validate it).
@@ -152,7 +164,7 @@ class Auth0Service
      *
      * @throws InvalidTokenException Thrown if token fails to validate.
      */
-    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): \stdClass
+    public function decodeJWT(string $token, ?array $claimsToValidate = null, array $options = []): ?TokenInterface
     {
         $token = trim($token);
 
@@ -172,12 +184,13 @@ class Auth0Service
         if ($this->algorithm === 'HS256') {
             $signatureVerifier = new SymmetricVerifier($this->clientSecret);
         } else {
-            $jwksFetcher = new JWKFetcher($this->getCache(), [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
-            $signatureVerifier = new AsymmetricVerifier($jwksFetcher);
+            // $jwksFetcher = new JWKFetcher($this->getCache(), [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
+            // $signatureVerifier = new AsymmetricVerifier($jwksFetcher);
         }
 
-        $tokenVerifier = new TokenVerifier($this->issuer, $this->audience, $signatureVerifier);
-        $verifiedToken = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
+        $verifiedToken = $this->a0->decode($token, [$this->audience]);
+        // $tokenVerifier = new TokenVerifier($this->issuer, $this->audience, $signatureVerifier);
+        // $verifiedToken = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
 
         if ($claimsToValidate === null) {
             $claimsToValidate = $this->validations;
@@ -189,7 +202,7 @@ class Auth0Service
         $this->tokenInfo = $verifiedToken;
         $this->token = $token;
 
-        return (object) $this->tokenInfo;
+        return $this->tokenInfo;
     }
 
     private function getCache(): ?CacheInterface
@@ -205,3 +218,4 @@ class Auth0Service
         return null;
     }
 }
+
