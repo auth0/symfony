@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security\User;
+namespace Auth0\JWTAuthBundle\Security\User;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
