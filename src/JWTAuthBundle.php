@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\JWTAuthBundle;
 
-// use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpTelemetry;
-// use Auth0\SDK\API\Helpers\InformationHeaders;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
 
