@@ -27,16 +27,8 @@ class JWTAuthBundle extends Bundle
      */
     public function __construct()
     {
-        // $oldInfoHeaders = ApiClient::getInfoHeadersData();
-
-        // if ($oldInfoHeaders !== null) {
-        //     $infoHeaders = InformationHeaders::Extend($oldInfoHeaders);
-
-        //     $infoHeaders->setEnvProperty('Symfony', Kernel::VERSION);
-        //     $infoHeaders->setPackage('jwt-auth-bundle', self::VERSION);
-
-        //     ApiClient::setInfoHeadersData($infoHeaders);
-        // }
+        HttpTelemetry::setPackage('jwt-auth-bundle', self::VERSION);
+        HttpTelemetry::setEnvProperty('Symfony', Kernel::VERSION);
     }
 
     /**

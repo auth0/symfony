@@ -8,7 +8,6 @@ use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Exception\InvalidTokenException;
-// use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\TokenVerifier;
@@ -130,8 +129,8 @@ class Auth0Service
             domain: $this->domain,
             clientId: $this->clientId,
             clientSecret: $this->clientSecret,
-            redirectUri: 'https://localhost/graphql/',
-            tokenAlgorithm: 'RS256'
+            tokenAlgorithm: 'RS256',
+            tokenJwksUri: $this->issuer.'.well-known/jwks.json'
         );
         $this->a0 = new Auth0($configuration);
     }
@@ -181,16 +180,7 @@ class Auth0Service
         $leeway = is_numeric($leeway) ? intval($leeway) : null;
         $now = is_numeric($now) ? intval($now) : null;
 
-        if ($this->algorithm === 'HS256') {
-            $signatureVerifier = new SymmetricVerifier($this->clientSecret);
-        } else {
-            // $jwksFetcher = new JWKFetcher($this->getCache(), [ 'base_uri' => $this->issuer.'.well-known/jwks.json' ]);
-            // $signatureVerifier = new AsymmetricVerifier($jwksFetcher);
-        }
-
         $verifiedToken = $this->a0->decode($token, [$this->audience]);
-        // $tokenVerifier = new TokenVerifier($this->issuer, $this->audience, $signatureVerifier);
-        // $verifiedToken = $tokenVerifier->verify($token, [ 'leeway' => $leeway ]);
 
         if ($claimsToValidate === null) {
             $claimsToValidate = $this->validations;
