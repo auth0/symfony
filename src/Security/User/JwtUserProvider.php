@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth0\JWTAuthBundle\Security\User;
+namespace App\Security\User;
 
 use Auth0\JWTAuthBundle\Security\Auth0Service;
 use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Auth0\SDK\Token;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\InMemoryUser;
@@ -40,14 +40,14 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @param \stdClass $jwt An encoded JWT.
+     * @param Token $jwt An encoded JWT.
      *
      * @return UserInterface
      */
-    public function loadUserByJWT(\stdClass $jwt): UserInterface
+    public function loadUserByJWT(Token $jwt): UserInterface
     {
         $token = $jwt->token ?? null;
-        return new InMemoryUser($jwt->sub, $token, $this->getRoles($jwt));
+        return new InMemoryUser($jwt->getSubject(), $token, $this->getRoles($jwt));
     }
 
     /**
@@ -108,13 +108,13 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the roles for the user.
      *
-     * @param \stdClass $jwt An encoded JWT.
+     * @param Token $jwt An encoded JWT.
      *
      * @return string[]
      *
      * @psalm-return non-empty-list<string>
      */
-    private function getRoles(\stdClass $jwt): array
+    private function getRoles(Token $jwt): array
     {
         $roles = $this->getScopesFromJwtAsRoles($jwt);
         $roles[] = 'ROLE_JWT_AUTHENTICATED';
@@ -124,13 +124,13 @@ class JwtUserProvider implements JWTUserProviderInterface
     /**
      * Returns the scopes from the JSON Web Token as Symfony roles prefixed with 'ROLE_JWT_SCOPE_'.
      *
-     * @param \stdClass $jwt An encoded JWT.
+     * @param Token $jwt An encoded JWT.
      *
      * @return string[]
      *
      * @psalm-return list<string>
      */
-    private function getScopesFromJwtAsRoles(\stdClass $jwt): array
+    private function getScopesFromJwtAsRoles(Token $jwt): array
     {
         if (isset($jwt->scope) === false) {
             return [];
@@ -148,3 +148,4 @@ class JwtUserProvider implements JWTUserProviderInterface
         );
     }
 }
+
