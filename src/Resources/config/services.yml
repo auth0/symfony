@@ -23,3 +23,5 @@ services:
 
   jwt_auth.security.user.jwt_user_provider:
     class: Auth0\JWTAuthBundle\Security\User\JwtUserProvider
+    arguments:
+      - "@jwt_auth.auth0_service"
