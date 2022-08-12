@@ -180,7 +180,7 @@ class Auth0Service
         $leeway = is_numeric($leeway) ? intval($leeway) : null;
         $now = is_numeric($now) ? intval($now) : null;
 
-        $verifiedToken = $this->a0->decode($token, [$this->audience]);
+        $verifiedToken = $this->a0->decode($token, [$this->audience], tokenType: Token::TYPE_TOKEN);
 
         if ($claimsToValidate === null) {
             $claimsToValidate = $this->validations;
