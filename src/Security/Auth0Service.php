@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Auth0\JWTAuthBundle\Security;
 
 use Auth0\JWTAuthBundle\Security\Helpers\JwtValidations;
-use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
-use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
-use Auth0\SDK\Helpers\Tokens\TokenVerifier;
-use Auth0\SDK\Token\Verifier;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Psr16Cache;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Token;
 
 /**
  * Service that provides access to the Auth0 SDK and JWT validation
@@ -208,4 +204,5 @@ class Auth0Service
         return null;
     }
 }
+
 
