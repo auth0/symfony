@@ -75,7 +75,7 @@ class Auth0Service
     /**
      * Stores information about a provided JWT, updated with decodeJWT().
      *
-     * @var array<string,mixed>
+     * @var ?TokenInterface
      */
     protected ?TokenInterface $tokenInfo;
 
@@ -126,25 +126,28 @@ class Auth0Service
             clientId: $this->clientId,
             clientSecret: $this->clientSecret,
             tokenAlgorithm: 'RS256',
-            tokenJwksUri: $this->issuer.'.well-known/jwks.json'
+            tokenJwksUri: $this->issuer.'.well-known/jwks.json',
         );
         $this->a0 = new Auth0($configuration);
     }
     /**
      * Get the Auth0 User Profile based on the JWT (and validate it).
      *
-     * @param string $jwt The encoded JWT token.
-     *
      * @return array<mixed>|null
      */
-    public function getUserProfileByA0UID(string $jwt): ?array
+    public function getUserProfile(): ?array
     {
-        // The /userinfo endpoint is only accessible with RS256.
-        // Return details from JWT instead, in this case.
-        if ($this->algorithm === 'HS256') {
-            return $this->tokenInfo;
-        }
-        return $this->a0->userinfo($jwt);
+        $management = $this->a0->management();
+        $guzzleResponse = $management->users()->get($this->tokenInfo->getSubject());
+
+        return json_decode($guzzleResponse->getBody()->getContents(), true);
+    }
+
+    public function getUserRoles(): array
+    {
+        $management = $this->a0->management();
+        $guzzleResponse = $management->users()->getRoles($this->tokenInfo->getSubject());
+        return json_decode($guzzleResponse->getBody()->getContents(), true);
     }
 
     /**
@@ -204,5 +207,4 @@ class Auth0Service
         return null;
     }
 }
-
 
