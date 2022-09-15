@@ -150,6 +150,11 @@ class Auth0Service
         return json_decode($guzzleResponse->getBody()->getContents(), true);
     }
 
+    public function getA0(): Auth0
+    {
+        return $this->a0;
+    }
+
     /**
      * Decodes the JWT and validates it. Throws an exception if invalid.
      *
