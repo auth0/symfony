@@ -199,6 +199,11 @@ class Auth0Service
         return $this->tokenInfo;
     }
 
+    public function getRawToken(): ?string
+    {
+        return $this->token;
+    }
+
     private function getCache(): ?CacheInterface
     {
         if ($this->cache instanceof CacheInterface) {
@@ -212,4 +217,5 @@ class Auth0Service
         return null;
     }
 }
+
 
