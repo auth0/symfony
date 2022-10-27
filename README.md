@@ -1,6 +1,6 @@
 ![jwt-auth-bundle](.github/header.png)
 
-Symfony SDK for Auth0 Authentication and Management APIs.
+Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle)
 [![Build](https://img.shields.io/circleci/project/github/auth0/jwt-auth-bundle/master.svg)](https://circleci.com/gh/auth0/jwt-auth-bundle)
