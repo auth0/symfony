@@ -1,26 +1,52 @@
-# jwt-auth-bundle
+![auth0-php](.github/header.png)
 
-JWT Authentication bundle for Symfony
+Symfony SDK for Auth0 Authentication and Management APIs.
 
-[![Build Status](https://img.shields.io/circleci/project/github/auth0/jwt-auth-bundle/master.svg)](https://circleci.com/gh/auth0/jwt-auth-bundle) [![Total Downloads](https://img.shields.io/packagist/dt/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/jwt-auth-bundle?label=stable)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![PHP Support](https://img.shields.io/packagist/php-v/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![Code Coverage](https://codecov.io/gh/auth0/jwt-auth-bundle/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/jwt-auth-bundle) [![License](https://img.shields.io/packagist/l/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle) [![FOSSA](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle?ref=badge_shield)
+[![Package](https://img.shields.io/packagist/dt/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle)
+[![Build](https://img.shields.io/circleci/project/github/auth0/jwt-auth-bundle/master.svg)](https://circleci.com/gh/auth0/jwt-auth-bundle)
+[![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 
-## Requirements
+:books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
+
+## Documentation
+
+- [Docs site](https://www.auth0.com/docs) — explore our docs site and learn more about Auth0.
+
+## Getting Started
+
+### Requirements
 
 - [PHP](http://php.net/) 7.4 or 8.0+
-- [Symfony](https://symfony.com/) 4.4 or 5.4.
-  - [Symfony 6 support is coming in the next major.](https://github.com/auth0/jwt-auth-bundle/issues/130)
+- [Symfony](https://symfony.com/) 4.4 or 5.4
 
-## Installation
+> Support for Symfony 6 is coming in the next major update to this SDK.
 
-Installation is supported through [Composer](https://getcomposer.org/doc/00-intro.md):
+> This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP versions that have reached end of life and no longer receive security updates.
 
-```bash
+### Installation
+
+Add the dependency to your application with [Composer](https://getcomposer.org/):
+
+```
 composer require auth0/jwt-auth-bundle
 ```
 
-## Configuration
+### Configure Auth0
 
-After installing the bundle in your project you should find a new file located at `config/packages/jwt_auth.yaml`. These values should read from variables set in your `.env` file. Available configuration options are:
+Create a **Regular Web Application** in the [Auth0 Dashboard](https://manage.auth0.com/#/applications). Verify that the "Token Endpoint Authentication Method" is set to `POST`.
+
+Next, configure the callback and logout URLs for your application under the "Application URIs" section of the "Settings" page:
+
+- **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
+- **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after user logout, e.g., `http://localhost:3000/login`.
+
+Note the **Domain**, **Client ID**, and **Client Secret**. These values will be used later.
+
+### Publish SDK configuration
+
+After installation, you will find a new file in your application, `config/packages/jwt_auth.yaml`.
+
+The following is an example configuration, with environment variables read from your `.env` file.
 
 ```yaml
 jwt_auth:
@@ -33,6 +59,7 @@ jwt_auth:
 
   # Defaults to RS256. Supported options are RS256 or HS256.
   algorithm: "RS256"
+
   # If you're using HS256, you need to provide the client secret for your registered Auth0 application.
   client_secret: "%env(AUTH0_CLIENT_SECRET)%"
 
@@ -54,45 +81,113 @@ jwt_auth:
     leeway: 60
 ```
 
-## Auth0 integration
+### Configure your `.env` file
 
-The [Auth0 PHP SDK](https://github.com/auth0/auth0-PHP) is included in this bundle to handle the processing of JWTs. You can inject to your `UserProvider` to get the user profile, [example code](https://github.com/auth0-community/auth0-symfony-api-samples/blob/master/01-Authorization-RS256/src/AppBundle/Security/A0UserProvider.php).
+Open the `.env` file within your application's directory, and add the following lines:
 
-## Contributing
+```ini
+AUTH0_DOMAIN="Your Auth0 domain"
+AUTH0_CLIENT_ID="Your Auth0 application client ID"
+AUTH0_CLIENT_SECRET="Your Auth0 application client secret"
+AUTH0_API_AUDIENCE="Your Auth0 API identifier"
+```
 
-We appreciate your feedback and contributions to the project! Before you get started, please review the following:
+## Retrieving the User
+
+You can inject to your `UserProvider` to get the user profile, for example:
+
+```php
+<?php
+
+namespace AppBundle\Security;
+
+use Auth0\JWTAuthBundle\Security\Auth0Service;
+use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
+use Symfony\Component\Intl\Exception\NotImplementedException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+
+class A0UserProvider implements JWTUserProviderInterface
+{
+    protected $auth0Service;
+
+    public function __construct(Auth0Service $auth0Service) {
+        $this->auth0Service = $auth0Service;
+    }
+
+    public function loadUserByJWT($jwt) {
+        // you can fetch the user profile from the auth0 api
+        // or from your database
+        // $data = $this->auth0Service->getUserProfileByA0UID($jwt->token,$jwt->sub);
+
+        // in this case, we will just use what we got from
+        // the token because we dont need any info from the profile
+        $data = [ 'sub' => $jwt->sub ];
+        $roles = array();
+        $roles[] = 'ROLE_OAUTH_AUTHENTICATED';
+        if (isset($jwt->scope)) {
+          $scopes = explode(' ', $jwt->scope);
+
+          if (array_search('read:messages', $scopes) !== false) {
+            $roles[] = 'ROLE_OAUTH_READER';
+          }
+        }
+
+        return new A0User($data, $roles);
+    }
+
+    public function loadUserByUsername($username)
+    {
+        throw new NotImplementedException('method not implemented');
+    }
+
+    public function getAnonymousUser() {
+        return new A0AnonymousUser();
+    }
+
+    public function refreshUser(UserInterface $user)
+    {
+        if (!$user instanceof WebserviceUser) {
+            throw new UnsupportedUserException(
+                sprintf('Instances of "%s" are not supported.', get_class($user))
+            );
+        }
+
+        return $this->loadUserByUsername($user->getUsername());
+    }
+
+    public function supportsClass($class)
+    {
+        return $class === 'AppBundle\Security\A0User';
+    }
+}
+```
+
+## Feedback
+
+### Contributing
+
+We appreciate feedback and contribution to this repo! Before you get started, please see the following:
 
 - [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
-- [The Auth0 PHP SDK contribution guide](CONTRIBUTING.md)
 
-## Support + Feedback
+### Raise an issue
+To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/auth0-PHP/issues).
 
-- The [Auth0 Community](https://community.auth0.com/) is a valuable resource for asking questions and finding answers, staffed by the Auth0 team and a community of enthusiastic developers
-- For code-level support (such as feature requests and bug reports) we encourage you to [open issues](https://github.com/auth0/auth0-PHP/issues) here on our repo
-- For customers on [paid plans](https://auth0.com/pricing/), our [support center](https://support.auth0.com/) is available for opening tickets with our knowledgeable support specialists
+### Vulnerability Reporting
+Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
-Further details about our support solutions are [available on our website.](https://auth0.com/docs/support)
+---
 
-## Vulnerability Reporting
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://cdn.auth0.com/website/sdks/logos/auth0_light_mode.png" width="150">
+    <source media="(prefers-color-scheme: dark)" srcset="https://cdn.auth0.com/website/sdks/logos/auth0_dark_mode.png" width="150">
+    <img alt="Auth0 Logo" src="https://cdn.auth0.com/website/sdks/logos/auth0_light_mode.png" width="150">
+  </picture>
+</p>
 
-Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+<p align="center">Auth0 is an easy to implement, adaptable authentication and authorization platform. To learn more checkout <a href="https://auth0.com/why-auth0">Why Auth0?</a></p>
 
-## What is Auth0?
-
-Auth0 helps you to:
-
-- Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, Box, Salesforce (amongst others), or enterprise identity systems like Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider.
-- Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
-- Add support for [passwordless](https://auth0.com/passwordless) and [multi-factor authentication](https://auth0.com/docs/mfa).
-- Add support for [linking different user accounts](https://docs.auth0.com/link-accounts) with the same user.
-- Analytics of how, when and where users are logging in.
-- Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
-
-[Why Auth0?](https://auth0.com/why-auth0)
-
-## License
-
-This project is open source software licensed under [the MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file for more info.
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fjwt-auth-bundle?ref=badge_large)
+<p align="center">This project is licensed under the MIT license. See the <a href="./LICENSE"> LICENSE</a> file for more info.</p>
