@@ -1,10 +1,10 @@
-![auth0-php](.github/header.png)
+![jwt-auth-bundle](.github/header.png)
 
 Symfony SDK for Auth0 Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle)
 [![Build](https://img.shields.io/circleci/project/github/auth0/jwt-auth-bundle/master.svg)](https://circleci.com/gh/auth0/jwt-auth-bundle)
-[![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
+[![License](https://img.shields.io/packagist/l/auth0/jwt-auth-bundle)](https://doge.mit-license.org/)
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
 
@@ -173,7 +173,7 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
 ### Raise an issue
-To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/auth0-PHP/issues).
+To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/jwt-auth-bundle/issues).
 
 ### Vulnerability Reporting
 Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
