@@ -1,4 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
 parameters:
-  level: max
-  paths:
-    - src
+    level: max
+
+    paths:
+        - src
+
+    bootstrapFiles:
+        - %rootDir%/../../squizlabs/php_codesniffer/autoload.php
