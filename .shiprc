@@ -1,6 +1,6 @@
 {
   "files": {
-    "src/JWTAuthBundle.php": []
+    "src/Bundle.php": []
   },
   "prefixVersion": false
 }

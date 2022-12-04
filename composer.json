@@ -1,5 +1,5 @@
 {
-  "name": "auth0/symfony",
+  "name": "auth0/jwt-auth-bundle",
   "description": "Symfony SDK for Auth0 Authentication and Management APIs.",
   "license": "MIT",
   "type": "symfony-bundle",
@@ -30,10 +30,13 @@
   "homepage": "https://github.com/auth0/jwt-auth-bundle",
   "require": {
     "php": "^8.0",
-    "symfony/framework-bundle": "^6.0",
-    "auth0/auth0-php": "^8.0"
+    "auth0/auth0-php": "^8.0",
+    "symfony/cache": "^6.1",
+    "symfony/framework-bundle": "^6.1",
+    "symfony/security-bundle": "^6.1"
   },
   "require-dev": {
+    "ergebnis/composer-normalize": "^2.28",
     "firebase/php-jwt": "^6.3",
     "hyperf/event": "^2.2",
     "laravel/pint": "^1.2",
@@ -46,10 +49,10 @@
     "phpunit/phpunit": "^9.5",
     "rector/rector": "^0.14.7",
     "squizlabs/php_codesniffer": "^3.7",
-    "symfony/cache": "^4.4 || ^5.4 || ^6.1",
     "vimeo/psalm": "^4.30",
     "wikimedia/composer-merge-plugin": "^2.0"
   },
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Auth0\\Symfony\\": "src/"
@@ -69,8 +72,22 @@
       "symfony/flex": true,
       "phpstan/extension-installer": true
     },
+    "composer-normalize": {
+      "indent-size": 4,
+      "indent-style": "space"
+    },
     "optimize-autoloader": true,
     "sort-packages": true
   },
-  "prefer-stable": true
+  "scripts": {
+    "phpstan": "@php vendor/bin/phpstan analyse",
+    "phpstan:pro": "@php vendor/bin/phpstan analyse --pro",
+    "pint": "@php vendor/bin/pint --test",
+    "pint:fix": "@php vendor/bin/pint",
+    "psalm": "@php vendor/bin/psalm",
+    "psalm:fix": "@php vendor/bin/psalter --issues=all",
+    "rector": "@php vendor/bin/rector process src --dry-run",
+    "rector:fix": "@php vendor/bin/rector process src",
+    "test": "@php vendor/bin/pest --order-by random"
+  }
 }
