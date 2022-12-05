@@ -16,8 +16,8 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ### Requirements
 
-- [PHP](http://php.net/) 7.4 or 8.0+
-- [Symfony](https://symfony.com/) 4.4 or 5.4
+- [PHP](http://php.net/) 8.0+
+- [Symfony](https://symfony.com/) 6.1+
 
 > Support for Symfony 6 is coming in the next major update to this SDK.
 
@@ -44,41 +44,36 @@ Note the **Domain**, **Client ID**, and **Client Secret**. These values will be 
 
 ### Publish SDK configuration
 
-After installation, you will find a new file in your application, `config/packages/jwt_auth.yaml`.
+After installation, you will find a new file in your application, `config/packages/auth0.yaml`. (If this file isn't present, please create it manually.)
 
-The following is an example configuration, with environment variables read from your `.env` file.
+The following is an example configuration, with environment variables read from your `.env` file. It is not recommended that you include your credentials in this file directly.
 
 ```yaml
-jwt_auth:
-  #  The domain of your registered Auth0 tenant.
-  domain: "%env(AUTH0_DOMAIN)%"
-  # The client ID string of your registered Auth0 application.
-  client_id: "%env(AUTH0_CLIENT_ID)%"
-  # The audience/identifier string of your registered Auth0 API.
-  audience: "%env(AUTH0_API_AUDIENCE)%"
+auth0:
+  sdk:
+    domain: "%env(string:key:host:url:AUTH0_DOMAIN)%"
+    # custom_domain: "%env(string:key:host:url:AUTH0_CUSTOM_DOMAIN)%"
+    client_id: "%env(trim:string:AUTH0_CLIENT_ID)%"
+    client_secret: "%env(trim:string:AUTH0_CLIENT_SECRET)%"
+    cookie_secret: "%kernel.secret%"
+    # cookie_expires: 3600
+    # cookie_path: "/"
+    # cookie_secure: false
+    # audiences:
+    #  - "%env(trim:string:AUTH0_API_AUDIENCE)%"
+    scopes:
+      - openid
+      - profile
+      - email
+      - offline_access
 
-  # Defaults to RS256. Supported options are RS256 or HS256.
-  algorithm: "RS256"
-
-  # If you're using HS256, you need to provide the client secret for your registered Auth0 application.
-  client_secret: "%env(AUTH0_CLIENT_SECRET)%"
-
-  # Recommended. A PSR-6 or PSR-16 compatible cache.
-  # See: https://symfony.com/doc/current/components/cache.html
-  cache: "cache.app"
-
-  # Token validations to run during JWT decoding:
-  validations:
-    # Validate AUD claim against a value, such as an API identifier. Set to false to skip. Defaults to jwt_auth.audience.
-    aud: "%env(AUTH0_API_AUDIENCE)%"
-    # Validate the AZP claim against a value, such as a client ID. Set to false to skip. Defaults to false.
-    azp: "%env(AUTH0_CLIENT_ID)%"
-    # Validate ORG_ID claim against a value, such as the Auth0 Organization. Set to false to skip. Defaults to false.
-    org_id: "%env(AUTH0_ORGANIZATION)%"
-    # Maximum age (in seconds) since the auth_time of the token. Set to false to skip. Defaults to false.
-    max_age: 3600
-    # Clock tolerance (in seconds) for token expiration checks. Requires an integer value. Defaults to 60 seconds.
-    leeway: 60
+  authenticator:
+    routes:
+      callback: "%env(string:AUTH0_ROUTE_CALLBACK)%"
+      success: "%env(string:AUTH0_ROUTE_SUCCESS)%"
+      failure: "%env(string:AUTH0_ROUTE_FAILURE)%"
+      login: "%env(string:AUTH0_ROUTE_LOGIN)%"
+      logout: "%env(string:AUTH0_ROUTE_LOGOUT)%"
 ```
 
 ### Configure your `.env` file
@@ -86,81 +81,92 @@ jwt_auth:
 Open the `.env` file within your application's directory, and add the following lines:
 
 ```ini
-AUTH0_DOMAIN="Your Auth0 domain"
-AUTH0_CLIENT_ID="Your Auth0 application client ID"
-AUTH0_CLIENT_SECRET="Your Auth0 application client secret"
-AUTH0_API_AUDIENCE="Your Auth0 API identifier"
+AUTH0_DOMAIN=... # Your Auth0 domain
+AUTH0_CUSTOM_DOMAIN=... # Your Auth0 custom domain (if you have one)
+AUTH0_CLIENT_ID=... # Your Auth0 application client ID
+AUTH0_CLIENT_SECRET=... # Your Auth0 application client secret
+AUTH0_API_AUDIENCE=... # Your Auth0 API identifier
+
+# The following should be set to the same values as the routes in your application
+AUTH0_ROUTE_CALLBACK=callback
+AUTH0_ROUTE_LOGIN=login
+AUTH0_ROUTE_SUCCESS=private
+AUTH0_ROUTE_FAILURE=public
+AUTH0_ROUTE_LOGOUT=public
+```
+
+### Configure your `security.yaml` file
+
+Open your application's `config/packages/security.yaml` file, and update it based on the following example:
+
+```yaml
+security:
+  providers:
+    auth0_provider:
+      id: Auth0\Symfony\Security\UserProvider
+
+  firewalls:
+    auth0:
+      pattern: ^/auth0/private$ # An example route for stateeful/authenticated (meaning using sessions) requests
+      provider: auth0_provider
+      custom_authenticators:
+        - auth0.authenticator
+    api:
+      pattern: ^/api # An example route for stateless/authorized (using access tokens) requests
+      stateless: true
+      provider: auth0_provider
+      custom_authenticators:
+        - auth0.authorizer
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      lazy: true
+
+  access_control:
+    - { path: ^/api$, roles: PUBLIC_ACCESS } # PUBLIC_ACCESS is a special role that allows everyone to access the path.
+    - { path: ^/api/private$, roles: IS_AUTHENTICATED_FULLY } # IS_AUTHENTICATED_FULLY is a special role that allows only authenticated users to access the path.
+    - { path: ^/api/scoped$, roles: ROLE_USING_TOKEN } # The ROLE_USING_TOKEN role is added to users if they are authorizing using the `auth0.authorizer` authenticator (that is, using an access token.)
+```
+
+### Optional: Add Authentication helper routes
+
+Open your application's `config/routes.yaml` file, and add the following lines:
+
+```yaml
+login: # Send the user to Auth0 for authentication.
+  path: /login
+  controller: Auth0\Symfony\Controllers\AuthenticationController::login
+
+callback: # This user will be returned here from Auth0 after authentication; this is a special route that completes the authentication process. After this, the user will be redirected to the route configured as `AUTH0_ROUTE_SUCCESS` in your .env file.
+  path: /callback
+  controller: Auth0\Symfony\Controllers\AuthenticationController::callback
+
+logout: # This route will clear the user's session, redirect them to Auth0 for logout and return them to the route configured as `AUTH0_ROUTE_LOGOUT` in your .env file.
+  path: /logout
+  controller: Auth0\Symfony\Controllers\AuthenticationController::logout
 ```
 
 ## Retrieving the User
 
-You can inject to your `UserProvider` to get the user profile, for example:
-
 ```php
 <?php
 
-namespace AppBundle\Security;
+namespace App\Controller;
 
-use Auth0\JWTAuthBundle\Security\Auth0Service;
-use Auth0\JWTAuthBundle\Security\Core\JWTUserProviderInterface;
-use Symfony\Component\Intl\Exception\NotImplementedException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class A0UserProvider implements JWTUserProviderInterface
+class ExampleRouteController extends AbstractController
 {
-    protected $auth0Service;
-
-    public function __construct(Auth0Service $auth0Service) {
-        $this->auth0Service = $auth0Service;
-    }
-
-    public function loadUserByJWT($jwt) {
-        // you can fetch the user profile from the auth0 api
-        // or from your database
-        // $data = $this->auth0Service->getUserProfileByA0UID($jwt->token,$jwt->sub);
-
-        // in this case, we will just use what we got from
-        // the token because we dont need any info from the profile
-        $data = [ 'sub' => $jwt->sub ];
-        $roles = array();
-        $roles[] = 'ROLE_OAUTH_AUTHENTICATED';
-        if (isset($jwt->scope)) {
-          $scopes = explode(' ', $jwt->scope);
-
-          if (array_search('read:messages', $scopes) !== false) {
-            $roles[] = 'ROLE_OAUTH_READER';
-          }
-        }
-
-        return new A0User($data, $roles);
-    }
-
-    public function loadUserByUsername($username)
+    public function index(): Response
     {
-        throw new NotImplementedException('method not implemented');
-    }
-
-    public function getAnonymousUser() {
-        return new A0AnonymousUser();
-    }
-
-    public function refreshUser(UserInterface $user)
-    {
-        if (!$user instanceof WebserviceUser) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
-            );
-        }
-
-        return $this->loadUserByUsername($user->getUsername());
-    }
-
-    public function supportsClass($class)
-    {
-        return $class === 'AppBundle\Security\A0User';
+        return new Response(
+            '<html><body><pre>' . print_r($this->getUser(), true) . '</pre> <a href="/auth0/logout">Logout</a></body></html>'
+        );
     }
 }
+
 ```
 
 ## Feedback
@@ -173,9 +179,11 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
 ### Raise an issue
+
 To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/jwt-auth-bundle/issues).
 
 ### Vulnerability Reporting
+
 Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ---
