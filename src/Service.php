@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Symfony\Security;
+namespace Auth0\Symfony;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
@@ -10,15 +10,17 @@ use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\Symfony\Contracts\Security\ServiceInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
 
 final class Service implements ServiceInterface
 {
+    private ?Auth0 $sdk = null;
+
     public function __construct(
-        private ?Auth0 $sdk = null,
-        private ?SdkConfiguration $configuration = null,
-        private ?StoreInterface $store = null,
-        private ?CacheItemPoolInterface $cache = null
-    ) {
+        private SdkConfiguration $configuration,
+        private LoggerInterface $logger
+    )
+    {
     }
 
     public function getSdk()
@@ -32,10 +34,6 @@ final class Service implements ServiceInterface
 
     public function getConfiguration(): ?SdkConfiguration
     {
-        if (null === $this->configuration) {
-            $this->configuration = new SdkConfiguration();
-        }
-
         return $this->configuration;
     }
 

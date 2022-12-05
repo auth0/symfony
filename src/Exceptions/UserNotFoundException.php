@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Symfony\Exceptions;
 
-use Auth0\Symfony\Contracts\Exceptions\UserNotFoundExceptionInterface;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException as SymfonyUserNotFoundException;;
+use Auth0\Symfony\Contracts\Exceptions\ExceptionInterface;
 
-final class UserNotFoundException extends SymfonyUserNotFoundException implements UserNotFoundExceptionInterface
+final class UserNotFoundException extends \Exception implements ExceptionInterface
 {
     public const MSG_CANNOT_LOAD_BY_USERNAME = '%1$s cannot load user "%2$s" by username. Use %1$s::loadUserByJWT instead.';
 

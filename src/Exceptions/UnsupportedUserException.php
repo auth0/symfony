@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Symfony\Exceptions;
 
-use Auth0\Symfony\Contracts\Exceptions\UnsupportedUserExceptionInterface;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException as SymfonyUnsupportedUserException;
+use Auth0\Symfony\Contracts\Exceptions\ExceptionInterface;
 
-final class UnsupportedUserException extends SymfonyUnsupportedUserException implements UnsupportedUserExceptionInterface
+final class UnsupportedUserException extends \Exception implements ExceptionInterface
 {
     public const MSG_CLASS_NOT_SUPORTED = 'Instances of `%s` are not supported.';
 

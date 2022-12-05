@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Symfony\Security\Guard;
+namespace Auth0\Symfony\Security;
 
 use Auth0\Symfony\Contracts\Security\Guard\AuthorizerInterface;
-use Auth0\Symfony\Exceptions\TokenException;
-use Auth0\Symfony\Security\Service;
+use Auth0\Symfony\Service;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,56 +20,75 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 final class Authorizer extends AbstractAuthenticator implements AuthorizerInterface
 {
     public function __construct(
-        private Service $service
+        private array $configuration,
+        private Service $service,
+        private LoggerInterface $logger
     )
     {
+    }
+
+    public function getService(): Service
+    {
+        return $this->service;
+    }
+
+    public function getConfiguration(): array
+    {
+        return $this->configuration;
+    }
+
+    public function supports(Request $request): ?bool
+    {
+        return null !== $request->get('token') || ($request->headers->has('Authorization') && stripos((string) $request->headers->get('Authorization'), 'Bearer ') === 0);
     }
 
     public function authenticate(Request $request): Passport
     {
         // Extract any available value from the authorization header
-        $token = trim($request->headers->get('Authorization', ''));
+        $param = $request->get('token', null);
+        $header = trim($request->headers->get('Authorization', ''));
+        $token = $param ?? $header;
+        $usingHeader = null === $param;
 
         // Ensure the 'authorization' header is present in the request
         if ('' === $token) {
-            throw TokenException::missingAuthorizationHeader();
+            throw new AuthenticationException('`Authorization` header not present.');
         }
 
         // Ensure the 'authorization' header includes a bearer prefixed JSON web token.
-        if (0 !== stripos($token, 'bearer ')) {
-            throw TokenException::badAuthorizationHeader();
+        if ($usingHeader && 0 !== stripos($token, 'bearer ')) {
+            throw new AuthenticationException('`Authorization` header is malformed.');
         }
 
         // Strip the 'bearer' portion of the authorization string.
         $token = str_ireplace('bearer ', '', $token);
 
         // Decode, validate and verify token.
-        $this->service->getSdk()->decode(
+        $token = $this->getService()->getSdk()->decode(
             token: $token,
             tokenType: \Auth0\SDK\Token::TYPE_TOKEN
         );
 
-        return new SelfValidatingPassport(new UserBadge($token));
-    }
+        $user = json_encode(['type' => 'stateless', 'data' => ['user' => $token->toArray()]]);
 
-    public function supports(Request $request): ?bool
-    {
-        return $request->headers->has('Authorization') && stripos((string) $request->headers->get('Authorization'), 'Bearer ') === 0;
+        return new SelfValidatingPassport(new UserBadge($user));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // Let the request continue, we don't want to redirect the user to some login page.
         return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $response = [
-            'message' => 'Authorization failed: ' . strtr($exception->getMessageKey(), $exception->getMessageData())
-
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+            'errors' => [
+                (object) [
+                    'status' => JsonResponse::HTTP_UNAUTHORIZED,
+                    'title' => 'Authorization failed',
+                    'detail' => strtr($exception->getMessageKey(), $exception->getMessageData())
+                ]
+            ]
         ];
 
         return new JsonResponse($response, JsonResponse::HTTP_UNAUTHORIZED);
