@@ -1,3 +1,5 @@
+> **Warning** This SDK is in beta and is subject to breaking changes. It is not recommended for production use, but your feedback and help in testing is appreciated!
+
 ![jwt-auth-bundle](https://cdn.auth0.com/website/sdks/banners/jwt-auth-bundle-banner.png)
 
 Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
