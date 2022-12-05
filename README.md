@@ -19,9 +19,7 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 - [PHP](http://php.net/) 8.0+
 - [Symfony](https://symfony.com/) 6.1+
 
-> Support for Symfony 6 is coming in the next major update to this SDK.
-
-> This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP versions that have reached end of life and no longer receive security updates.
+> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
 ### Installation
 
@@ -168,6 +166,21 @@ class ExampleRouteController extends AbstractController
 }
 
 ```
+
+## Support Policy
+
+Our support windows are determined by the [Symfony release support](https://symfony.com/doc/current/contributing/community/releases.html#maintenance) and [PHP release support](https://www.php.net/supported-versions.php) schedules, and support ends when either the Symfony framework or PHP runtime outlined below stop receiving security fixes, whichever may come first.
+
+| SDK Version | Symfony Version¹ | PHP Version² | Support Ends³ |
+| ----------- | ---------------- | ------------ | ------------- |
+| 5           | 6.2              | 8.2          | Jul 2023      |
+|             |                  | 8.1          | Jul 2023      |
+|             |                  | 8.0          | Jul 2023      |
+|             | 6.1              | 8.2          | Jan 2023      |
+|             |                  | 8.1          | Jan 2023      |
+|             |                  | 8.0          | Jan 2023      |
+
+Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
 
 ## Feedback
 
