@@ -1,6 +1,6 @@
 {
   "files": {
-    "src/Bundle.php": []
+    "src/Auth0Bundle.php": []
   },
   "prefixVersion": false
 }
