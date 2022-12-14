@@ -8,12 +8,12 @@ use Auth0\Symfony\Contracts\Exceptions\ExceptionInterface;
 
 final class UnsupportedUserException extends \Exception implements ExceptionInterface
 {
-    public const MSG_CLASS_NOT_SUPORTED = 'Instances of `%s` are not supported.';
+    public const MSG_CLASS_NOT_SUPPORTED = 'Instances of `%s` are not supported.';
 
     public static function classNotSupported(
         string $class,
         ?\Throwable $previous = null
     ): self {
-        return new self(sprintf(self::MSG_CLASS_NOT_SUPORTED, $class), 0, $previous);
+        return new self(sprintf(self::MSG_CLASS_NOT_SUPPORTED, $class), 0, $previous);
     }
 }

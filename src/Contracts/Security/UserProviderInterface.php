@@ -10,5 +10,4 @@ use Symfony\Component\Security\Core\User\UserInterface;
 interface UserProviderInterface
 {
     public function loadByUserModel(User $user): UserInterface;
-    // public function loadUserToken(\stdClass $jwt): UserInterface;
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Symfony\Contracts;
 
-interface BundleInterface
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+
+interface BundleInterface extends AbstractBundle
 {
 }

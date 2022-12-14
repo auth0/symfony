@@ -8,7 +8,7 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Store\CookieStore;
-use Auth0\Symfony\Contracts\Security\ServiceInterface;
+use Auth0\Symfony\Contracts\ServiceInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 
