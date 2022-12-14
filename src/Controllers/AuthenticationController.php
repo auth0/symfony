@@ -3,14 +3,14 @@
 namespace Auth0\Symfony\Controllers;
 
 use Auth0\SDK\Auth0;
+use Auth0\Symfony\Contracts\Exceptions\AuthenticationControllerInterface;
 use Auth0\Symfony\Security\Authenticator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
-class AuthenticationController extends AbstractController
+final class AuthenticationController implements AuthenticationControllerInterface
 {
     public function __construct(
         private Authenticator $authenticator,
