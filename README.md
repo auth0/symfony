@@ -52,15 +52,18 @@ The following is an example configuration that will use environment variables to
 auth0:
   sdk:
     domain: "%env(trim:string:AUTH0_DOMAIN)%"
-    # custom_domain: "%env(trim:string:AUTH0_CUSTOM_DOMAIN)%"
     client_id: "%env(trim:string:AUTH0_CLIENT_ID)%"
     client_secret: "%env(trim:string:AUTH0_CLIENT_SECRET)%"
     cookie_secret: "%kernel.secret%"
-    # cookie_expires: 3600
-    # cookie_path: "/"
-    # cookie_secure: false
+
+    # custom_domain: "%env(trim:string:AUTH0_CUSTOM_DOMAIN)%"
+
     # audiences:
     #  - "%env(trim:string:AUTH0_API_AUDIENCE)%"
+
+    # token_cache: cache.auth0_token_cache
+    # management_token_cache: cache.auth0_management_token_cache
+
     scopes:
       - openid
       - profile
@@ -176,7 +179,30 @@ logout: # This route will clear the user's session and return them to the route 
   controller: Auth0\Symfony\Controllers\AuthenticationController::logout
 ```
 
-## Retrieving the User
+### Recommended: Configure caching
+
+The SDK provides two caching properties in it's configuration: `token_cache` and `management_token_cache`. These are compatible with any PSR-6 cache implementation, of which Symfony offers several out of the box.
+
+These are used to store JSON Web Key Sets (JWKS) results for validating access token signatures and generated management API tokens, respectively. We recommended configuring this feature to improve your application's performance by reducing the number of network requests the SDK needs to make.
+
+The following is an example `config/packages/cache.yaml` file that would configure the SDK to use a Redis backend for caching:
+
+```yaml
+framework:
+  cache:
+    prefix_seed: auth0_symfony_sample
+
+    app: cache.adapter.redis
+    default_redis_provider: redis://localhost
+
+    pools:
+      auth0_token_cache: { adapter: cache.adapter.redis }
+      auth0_management_token_cache: { adapter: cache.adapter.redis }
+```
+
+Please review [the Symfony cache documentation](https://symfony.com/doc/current/components/cache.html#cache-component-psr6-caching) for adapter-specific configuration options. Please note that the SDK does not currently support Symfony's "Cache Contract" adapter type.
+
+### Example: Retrieving the User
 
 The following example shows how to retrieve the authenticated user within a controller. For this example, we'll create a mock `ExampleController` class that is accessible from a route at `/private`.
 
