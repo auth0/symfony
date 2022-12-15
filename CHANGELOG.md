@@ -1,5 +1,22 @@
 # Change Log
 
+## [5.0.0 BETA-1](https://github.com/auth0/jwt-auth-bundle/tree/5.0.0-BETA1) (2022-12-15)
+
+[Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/5.0.0-BETA0...5.0.0-BETA1)
+
+> **Warning** This SDK is in beta and is subject to breaking changes. It is not recommended for production use, but your feedback and help in testing is appreciated!
+
+This release introduces PHP 8.0 support, Symfony 6.1+ support, and upgrades the bundle to use Auth0's Auth0-PHP SDK 8.x branch. It also introduces a new configuration format, full authorization support, and other improvements. Please review the updated [README.md](README.md) for guidance on updating your application.
+
+**Added**
+
+- Integration with Symfony session management APIs [\#141](https://github.com/auth0/jwt-auth-bundle/pull/141) ([evansims](https://github.com/evansims))
+- Integration with Symfony caching component APIs [\#140](https://github.com/auth0/jwt-auth-bundle/pull/140) ([evansims](https://github.com/evansims))
+
+**Fixed**
+
+- Minor bug fixes and performance improvements from BETA-0
+
 ## [5.0.0 BETA-0](https://github.com/auth0/jwt-auth-bundle/tree/5.0.0-BETA0) (2022-12-04)
 
 [Full Changelog](https://github.com/auth0/jwt-auth-bundle/compare/4.0.0...5.0.0-BETA0)
