@@ -22,22 +22,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 final class Authenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
     public function __construct(
-        private array $configuration,
-        private Service $service,
+        public array $configuration,
+        public Service $service,
         private RouterInterface $router,
         private LoggerInterface $logger
     )
     {
-    }
-
-    public function getService(): Service
-    {
-        return $this->service;
-    }
-
-    public function getConfiguration(): array
-    {
-        return $this->configuration;
     }
 
     public function supports(Request $request): ?bool
