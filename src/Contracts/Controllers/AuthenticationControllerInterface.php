@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Symfony\Contracts\Exceptions;
+namespace Auth0\Symfony\Contracts\Controllers;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
-interface AuthenticationControllerInterface extends AbstractController
+interface AuthenticationControllerInterface
 {
 }
