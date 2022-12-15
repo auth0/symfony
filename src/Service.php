@@ -11,6 +11,7 @@ use Auth0\SDK\Store\CookieStore;
 use Auth0\Symfony\Contracts\ServiceInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 final class Service implements ServiceInterface
 {
@@ -18,9 +19,18 @@ final class Service implements ServiceInterface
 
     public function __construct(
         private SdkConfiguration $configuration,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private ?CacheItemPoolInterface $tokenCache,
+        private ?CacheItemPoolInterface $managementTokenCache,
     )
     {
+        if (null !== $tokenCache) {
+            $configuration->setTokenCache($tokenCache);
+        }
+
+        if (null !== $managementTokenCache) {
+            $configuration->setManagementTokenCache($managementTokenCache);
+        }
     }
 
     public function getSdk()

@@ -26,19 +26,14 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $tokenCache = $config['sdk']['token_cache'] ?? null;
-        $managementTokenCache = $config['sdk']['management_token_cache'] ?? null;
+        $tokenCache = $config['sdk']['token_cache'] ?? '';
+        $managementTokenCache = $config['sdk']['management_token_cache'] ?? '';
         $transientStorage = $config['sdk']['transient_storage'] ?? null;
         $sessionStorage = $config['sdk']['session_storage'] ?? null;
         $eventListenerProvider = $config['sdk']['event_listener_provider'] ?? null;
 
-        if (null !== $tokenCache && '' !== $tokenCache) {
-            $tokenCache = new Reference($tokenCache);
-        }
-
-        if (null !== $managementTokenCache && '' !== $managementTokenCache) {
-            $managementTokenCache = new Reference($managementTokenCache);
-        }
+        $tokenCache = new Reference('' === $tokenCache ? 'cache.app' : $tokenCache);
+        $managementTokenCache = new Reference('' === $managementTokenCache ? 'cache.app' : $managementTokenCache);
 
         if (null !== $transientStorage && '' !== $transientStorage) {
             $transientStorage = new Reference($transientStorage);
@@ -87,7 +82,7 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
                 ->arg('$tokenJwksUri', $config['sdk']['token_jwks_uri'])
                 ->arg('$tokenMaxAge', $config['sdk']['token_max_age'])
                 ->arg('$tokenLeeway', $config['sdk']['token_leeway'] ?? 60)
-                ->arg('$tokenCache', $tokenCache)
+                ->arg('$tokenCache', null)
                 ->arg('$tokenCacheTtl', $config['sdk']['token_cache_ttl'])
                 ->arg('$httpClient', $config['sdk']['http_client'])
                 ->arg('$httpMaxRetries', $config['sdk']['http_max_retries'])
@@ -111,7 +106,7 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
                 ->arg('$transientStorageId', $config['sdk']['transient_storage_id'])
                 ->arg('$queryUserInfo', false)
                 ->arg('$managementToken', $config['sdk']['management_token'])
-                ->arg('$managementTokenCache', $managementTokenCache)
+                ->arg('$managementTokenCache', null)
                 ->arg('$eventListenerProvider', $eventListenerProvider)
         ;
 
@@ -119,6 +114,8 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->set('auth0', Service::class)
                 ->arg('$configuration', new Reference('auth0.configuration'))
                 ->arg('$logger', new Reference('logger'))
+                ->arg('$tokenCache', $tokenCache)
+                ->arg('$managementTokenCache', $managementTokenCache)
         ;
 
         $container->services()
