@@ -37,22 +37,22 @@ Create a **Regular Web Application** in the [Auth0 Dashboard](https://manage.aut
 
 Next, configure the callback and logout URLs for your application under the "Application URIs" section of the "Settings" page:
 
-- **Allowed Callback URLs**: The URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
-- **Allowed Logout URLs**: The URL of your application where Auth0 will redirect to after user logout, e.g., `http://localhost:3000/login`.
+- **Allowed Callback URLs**: URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:8000/callback`.
+- **Allowed Logout URLs**: URL of your application where Auth0 will redirect to after logout, e.g., `http://localhost:8000/login`.
 
 Note the **Domain**, **Client ID**, and **Client Secret**. These values will be used later.
 
-### Publish SDK configuration
+### Configure the SDK
 
-After installation, you will find a new file in your application, `config/packages/auth0.yaml`. (If this file isn't present, please create it manually.)
+After installation, you should find a new file in your application, `config/packages/auth0.yaml`. If this file isn't present, please create it manually.
 
-The following is an example configuration, with environment variables read from your `.env` file. It is not recommended that you include your credentials in this file directly.
+The following is an example configuration that will use environment variables to assign values. You should avoid storing sensitive credentials directly in this file, as it will often be committed to version control.
 
 ```yaml
 auth0:
   sdk:
-    domain: "%env(string:key:host:url:AUTH0_DOMAIN)%"
-    # custom_domain: "%env(string:key:host:url:AUTH0_CUSTOM_DOMAIN)%"
+    domain: "%env(trim:string:AUTH0_DOMAIN)%"
+    # custom_domain: "%env(trim:string:AUTH0_CUSTOM_DOMAIN)%"
     client_id: "%env(trim:string:AUTH0_CLIENT_ID)%"
     client_secret: "%env(trim:string:AUTH0_CLIENT_SECRET)%"
     cookie_secret: "%kernel.secret%"
@@ -78,22 +78,49 @@ auth0:
 
 ### Configure your `.env` file
 
-Open the `.env` file within your application's directory, and add the following lines:
+Create or open a `.env.local` file within your application directory, and add the following lines:
 
 ```ini
-AUTH0_DOMAIN=... # Your Auth0 domain
-AUTH0_CUSTOM_DOMAIN=... # Your Auth0 custom domain (if you have one)
-AUTH0_CLIENT_ID=... # Your Auth0 application client ID
-AUTH0_CLIENT_SECRET=... # Your Auth0 application client secret
-AUTH0_API_AUDIENCE=... # Your Auth0 API identifier
+#
+# ↓ Refer to your Auth0 application details (https://manage.auth0.com/#/applications) for these values.
+#
 
-# The following should be set to the same values as the routes in your application
+# Your Auth0 application domain
+AUTH0_DOMAIN=...
+
+# Your Auth0 application client ID
+AUTH0_CLIENT_ID=...
+
+# Your Auth0 application client secret
+AUTH0_CLIENT_SECRET=...
+
+# Optional. Your Auth0 custom domain, if you have one. (https://manage.auth0.com/#/custom_domains)
+AUTH0_CUSTOM_DOMAIN=...
+
+# Optional. Your Auth0 API identifier/audience, if used. (https://manage.auth0.com/#/apis)
+AUTH0_API_AUDIENCE=...
+
+#
+# ↓ These routes will be used by the SDK to direct traffic during authentication.
+#
+
+# The route that SDK will redirect to after authentication:
 AUTH0_ROUTE_CALLBACK=callback
+
+# The route that will trigger the authentication process:
 AUTH0_ROUTE_LOGIN=login
+
+# The route that the SDK will redirect to after a successful authentication:
 AUTH0_ROUTE_SUCCESS=private
+
+# The route that the SDK will redirect to after a failed authentication:
 AUTH0_ROUTE_FAILURE=public
+
+# The route that the SDK will redirect to after a successful logout:
 AUTH0_ROUTE_LOGOUT=public
 ```
+
+Please ensure this `.env.local` file is included in your `.gitignore`. It should never be committed to version control.
 
 ### Configure your `security.yaml` file
 
@@ -107,12 +134,12 @@ security:
 
   firewalls:
     auth0:
-      pattern: ^/auth0/private$ # An example route for stateeful/authenticated (meaning using sessions) requests
+      pattern: ^/private$ # An example route for stateeful/authenticated (meaning session) requests
       provider: auth0_provider
       custom_authenticators:
         - auth0.authenticator
     api:
-      pattern: ^/api # An example route for stateless/authorized (using access tokens) requests
+      pattern: ^/api # An example route for stateless/authorized (meaning access token) requests
       stateless: true
       provider: auth0_provider
       custom_authenticators:
@@ -125,13 +152,15 @@ security:
 
   access_control:
     - { path: ^/api$, roles: PUBLIC_ACCESS } # PUBLIC_ACCESS is a special role that allows everyone to access the path.
-    - { path: ^/api/private$, roles: IS_AUTHENTICATED_FULLY } # IS_AUTHENTICATED_FULLY is a special role that allows only authenticated users to access the path.
-    - { path: ^/api/scoped$, roles: ROLE_USING_TOKEN } # The ROLE_USING_TOKEN role is added to users if they are authorizing using the `auth0.authorizer` authenticator (that is, using an access token.)
+    - { path: ^/api/scoped$, roles: ROLE_USING_TOKEN } # The ROLE_USING_TOKEN role is added by the Auth0 SDK to any request that includes a valid access token.
+    - { path: ^/api/scoped$, roles: ROLE_READ_MESSAGES } # This route will expect the given access token to have the `read:messages` scope in order to access it.
 ```
 
 ### Optional: Add Authentication helper routes
 
-Open your application's `config/routes.yaml` file, and add the following lines:
+The SDK includes a number of pre-built HTTP controllers that can be used to handle authentication. These controllers are not required, but can be helpful in getting started.
+
+To use these, open your application's `config/routes.yaml` file, and add the following lines:
 
 ```yaml
 login: # Send the user to Auth0 for authentication.
@@ -142,12 +171,24 @@ callback: # This user will be returned here from Auth0 after authentication; thi
   path: /callback
   controller: Auth0\Symfony\Controllers\AuthenticationController::callback
 
-logout: # This route will clear the user's session, redirect them to Auth0 for logout and return them to the route configured as `AUTH0_ROUTE_LOGOUT` in your .env file.
+logout: # This route will clear the user's session and return them to the route configured as `AUTH0_ROUTE_LOGOUT` in your .env file.
   path: /logout
   controller: Auth0\Symfony\Controllers\AuthenticationController::logout
 ```
 
 ## Retrieving the User
+
+The following example shows how to retrieve the authenticated user within a controller. For this example, we'll create a mock `ExampleController` class that is accessible from a route at `/private`.
+
+Add a route to your application's `config/routes.yaml` file:
+
+```yaml
+private:
+  path: /private
+  controller: App\Controller\ExampleController::private
+```
+
+Now update or create a `src/Controller/ExampleController.php` class to include the following code:
 
 ```php
 <?php
@@ -157,17 +198,18 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ExampleRouteController extends AbstractController
+class ExampleController extends AbstractController
 {
-    public function index(): Response
+    public function private(): Response
     {
         return new Response(
             '<html><body><pre>' . print_r($this->getUser(), true) . '</pre> <a href="/auth0/logout">Logout</a></body></html>'
         );
     }
 }
-
 ```
+
+If you visit the `/private` route in your browser, you should see the authenticated user's details. If you are not already authenticated, you will be redirected to the `/login` route to login, and then back to `/private` afterward.
 
 ## Support Policy
 
