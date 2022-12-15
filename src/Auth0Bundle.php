@@ -11,6 +11,7 @@ use Auth0\Symfony\Controllers\AuthenticationController;
 use Auth0\Symfony\Security\Authenticator;
 use Auth0\Symfony\Security\Authorizer;
 use Auth0\Symfony\Security\UserProvider;
+use Auth0\Symfony\Stores\SessionStore;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -26,22 +27,19 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $tokenCache = $config['sdk']['token_cache'] ?? '';
-        $managementTokenCache = $config['sdk']['management_token_cache'] ?? '';
-        $transientStorage = $config['sdk']['transient_storage'] ?? null;
-        $sessionStorage = $config['sdk']['session_storage'] ?? null;
+        $tokenCache = $config['sdk']['token_cache'] ?? 'cache.app';
+        $tokenCache = new Reference($tokenCache);
+
+        $managementTokenCache = $config['sdk']['management_token_cache'] ?? 'cache.app';
+        $managementTokenCache = new Reference($managementTokenCache);
+
+        $transientStorage = new Reference($config['sdk']['transient_storage'] ?? 'auth0.store_transient');
+        $sessionStorage = new Reference($config['sdk']['session_storage'] ?? 'auth0.store_session');
+
+        $transientStoragePrefix = $config['sdk']['transient_storage_prefix'] ?? 'auth0_transient';
+        $sessionStoragePrefix = $config['sdk']['session_storage_prefix'] ?? 'auth0_session';
+
         $eventListenerProvider = $config['sdk']['event_listener_provider'] ?? null;
-
-        $tokenCache = new Reference('' === $tokenCache ? 'cache.app' : $tokenCache);
-        $managementTokenCache = new Reference('' === $managementTokenCache ? 'cache.app' : $managementTokenCache);
-
-        if (null !== $transientStorage && '' !== $transientStorage) {
-            $transientStorage = new Reference($transientStorage);
-        }
-
-        if (null !== $sessionStorage && '' !== $sessionStorage) {
-            $sessionStorage = new Reference($sessionStorage);
-        }
 
         if (null !== $eventListenerProvider && '' !== $eventListenerProvider) {
             $eventListenerProvider = new Reference($eventListenerProvider);
@@ -82,7 +80,7 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
                 ->arg('$tokenJwksUri', $config['sdk']['token_jwks_uri'])
                 ->arg('$tokenMaxAge', $config['sdk']['token_max_age'])
                 ->arg('$tokenLeeway', $config['sdk']['token_leeway'] ?? 60)
-                ->arg('$tokenCache', null)
+                ->arg('$tokenCache', $tokenCache)
                 ->arg('$tokenCacheTtl', $config['sdk']['token_cache_ttl'])
                 ->arg('$httpClient', $config['sdk']['http_client'])
                 ->arg('$httpMaxRetries', $config['sdk']['http_max_retries'])
@@ -91,7 +89,7 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
                 ->arg('$httpStreamFactory', $config['sdk']['http_stream_factory'])
                 ->arg('$httpTelemetry', $config['sdk']['http_telemetry'])
                 ->arg('$sessionStorage', $sessionStorage)
-                ->arg('$sessionStorageId', $config['sdk']['session_storage_id'])
+                ->arg('$sessionStorageId', $sessionStoragePrefix)
                 ->arg('$cookieSecret', $config['sdk']['cookie_secret'])
                 ->arg('$cookieDomain', $config['sdk']['cookie_domain'])
                 ->arg('$cookieExpires', $config['sdk']['cookie_expires'])
@@ -103,19 +101,19 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
                 ->arg('$persistAccessToken', true)
                 ->arg('$persistRefreshToken', true)
                 ->arg('$transientStorage', $transientStorage)
-                ->arg('$transientStorageId', $config['sdk']['transient_storage_id'])
+                ->arg('$transientStorageId', $transientStoragePrefix)
                 ->arg('$queryUserInfo', false)
                 ->arg('$managementToken', $config['sdk']['management_token'])
-                ->arg('$managementTokenCache', null)
+                ->arg('$managementTokenCache', $managementTokenCache)
                 ->arg('$eventListenerProvider', $eventListenerProvider)
         ;
 
         $container->services()
             ->set('auth0', Service::class)
                 ->arg('$configuration', new Reference('auth0.configuration'))
+                ->arg('$requestStack', new Reference('request_stack'))
                 ->arg('$logger', new Reference('logger'))
-                ->arg('$tokenCache', $tokenCache)
-                ->arg('$managementTokenCache', $managementTokenCache)
+                ->tag('routing.condition_service')
         ;
 
         $container->services()
@@ -124,11 +122,26 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
                 ->arg('$service', new Reference('auth0'))
                 ->arg('$router', new Reference('router'))
                 ->arg('$logger', new Reference('logger'))
+                ->tag('security.authenticator')
+        ;
+
+        $container->services()
+            ->set('auth0.store_session', SessionStore::class)
+                ->arg('$namespace', $sessionStoragePrefix)
+                ->arg('$requestStack', new Reference('request_stack'))
+                ->arg('$logger', new Reference('logger'))
+        ;
+
+        $container->services()
+            ->set('auth0.store_transient', SessionStore::class)
+                ->arg('$namespace', $transientStoragePrefix)
+                ->arg('$requestStack', new Reference('request_stack'))
+                ->arg('$logger', new Reference('logger'))
         ;
 
         $container->services()
             ->set('auth0.authorizer', Authorizer::class)
-            ->arg('$configuration', $config['authorizer'] ?? [])
+                ->arg('$configuration', $config['authorizer'] ?? [])
                 ->arg('$service', new Reference('auth0'))
                 ->arg('$logger', new Reference('logger'))
         ;

@@ -6,12 +6,9 @@ namespace Auth0\Symfony;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Store\CookieStore;
 use Auth0\Symfony\Contracts\ServiceInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class Service implements ServiceInterface
 {
@@ -19,45 +16,31 @@ final class Service implements ServiceInterface
 
     public function __construct(
         private SdkConfiguration $configuration,
+        private RequestStack $requestStack,
         private LoggerInterface $logger,
-        private ?CacheItemPoolInterface $tokenCache,
-        private ?CacheItemPoolInterface $managementTokenCache,
     )
     {
-        if (null !== $tokenCache) {
-            $configuration->setTokenCache($tokenCache);
-        }
-
-        if (null !== $managementTokenCache) {
-            $configuration->setManagementTokenCache($managementTokenCache);
-        }
     }
 
     public function getSdk()
     {
         if (null === $this->sdk) {
-            $this->sdk = new Auth0($this->getConfiguration());
+            $this->warmUp();
+            $this->sdk = new Auth0($this->configuration);
         }
 
         return $this->sdk;
     }
 
-    public function getConfiguration(): ?SdkConfiguration
+    public function warmUp(): void
     {
-        return $this->configuration;
-    }
+        $request = $this->requestStack->getCurrentRequest();
 
-    public function getStore(): ?StoreInterface
-    {
-        if (null === $this->store) {
-            $this->store = new CookieStore($this->getConfiguration());
+        if (null !== $request) {
+            $this->configuration->getTokenCache();
+            $this->configuration->getManagementTokenCache();
+            $this->configuration->getSessionStorage();
+            $this->configuration->getTransientStorage();
         }
-
-        return $this->store;
-    }
-
-    public function getCache(): ?CacheItemPoolInterface
-    {
-        return $this->cache;
     }
 }

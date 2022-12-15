@@ -22,45 +22,62 @@ final class AuthenticationController extends AbstractController implements Authe
 
     public function login(Request $request): Response
     {
+        $session = $this->getSdk()->getCredentials();
+
         $host = $request->getSchemeAndHttpHost();
-        $route = $this->getRedirectUrl('callback');
-        $url = $this->getSdk()->login($host . $route);
+        $route = $this->getRedirectUrl('success');
+        $url = $host . $route;
+
+        if (! $session) {
+            $route = $this->getRedirectUrl('callback');
+            $url = $this->getSdk()->login($host . $route);
+        }
 
         return new RedirectResponse($url);
     }
 
     public function logout(Request $request): Response
     {
+        $session = $this->getSdk()->getCredentials();
+
         $host = $request->getSchemeAndHttpHost();
         $route = $this->getRedirectUrl('logout');
-        $url = $this->getSdk()->logout($host . $route);
+        $url = $host . $route;
+
+        if ($session) {
+            $url = $this->getSdk()->logout($url);
+        }
 
         return new RedirectResponse($url);
     }
 
     public function callback(Request $request): Response
     {
-        $code = $request->get('code');
-        $state = $request->get('state');
+        $host = $request->getSchemeAndHttpHost();
+        $redirect = $host;
 
-        if (null !== $code && null !== $state) {
-            $host = $request->getSchemeAndHttpHost();
-            $route = $this->getRedirectUrl('success');
-            $redirect = $host . $route;
+        $session = $this->getSdk()->getCredentials();
 
-            try {
-                $this->getSdk()->exchange($host . $route, $code, $state);
+        if (! $session) {
+            $code = $request->get('code');
+            $state = $request->get('state');
 
-                if ($request->hasSession()) {
-                    $redirect = $request->getSession()->get('auth0:callback_redirect', $redirect);
-                    $request->getSession()->remove('auth0:callback_redirect');
+            if (null !== $code && null !== $state) {
+                $route = $this->getRedirectUrl('success');
+
+                try {
+                    $this->getSdk()->exchange($host . $route, $code, $state);
+
+                    if ($request->hasSession()) {
+                        $redirect = $request->getSession()->get('auth0:callback_redirect', $redirect);
+                        $request->getSession()->remove('auth0:callback_redirect');
+                    }
+                } catch (\Throwable $th) {
+                    $this->addFlash('error', $th->getMessage());
+
+                    $route = $this->getRedirectUrl('failure');
+                    $redirect = $host . $route;
                 }
-            } catch (\Throwable $th) {
-                $this->addFlash('error', $th->getMessage());
-
-                $host = $request->getSchemeAndHttpHost();
-                $route = $this->getRedirectUrl('failure');
-                $redirect = $host . $route;
             }
         }
 
@@ -69,8 +86,7 @@ final class AuthenticationController extends AbstractController implements Authe
 
     private function getRedirectUrl(string $route): string
     {
-        $configuration = $this->authenticator->getConfiguration();
-        $routes = $configuration['routes'] ?? [];
+        $routes = $this->authenticator->configuration['routes'] ?? [];
         $route = $routes[$route] ?? null;
 
         if (null !== $route && '' !== $route) {
@@ -85,6 +101,6 @@ final class AuthenticationController extends AbstractController implements Authe
 
     private function getSdk(): Auth0
     {
-        return $this->authenticator->getService()->getSdk();
+        return $this->authenticator->service->getSdk();
     }
 }
