@@ -241,7 +241,7 @@ If you visit the `/private` route in your browser, you should see the authentica
 
 Our support windows are determined by the [Symfony release support](https://symfony.com/doc/current/contributing/community/releases.html#maintenance) and [PHP release support](https://www.php.net/supported-versions.php) schedules, and support ends when either the Symfony framework or PHP runtime outlined below stop receiving security fixes, whichever may come first.
 
-| SDK Version | Symfony Version¹ | PHP Version² | Support Ends³ |
+| SDK Version | Symfony Version  | PHP Version  | Support Ends  |
 | ----------- | ---------------- | ------------ | ------------- |
 | 5           | 6.2              | 8.2          | Jul 2023      |
 |             |                  | 8.1          | Jul 2023      |
