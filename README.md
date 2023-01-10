@@ -240,10 +240,10 @@ Our support windows are determined by the [Symfony release support](https://symf
 
 | SDK Version | Symfony Version | PHP Version | Support Ends |
 | ----------- | --------------- | ----------- | ------------ |
-| 5           | 6.2             | 8.2         | Jul 2023     |
-|             |                 | 8.1         | Jul 2023     |
-|             | 6.1             | 8.2         | Jan 2023     |
-|             |                 | 8.1         | Jan 2023     |
+| 5           | 6.2             | 8.2         | Jul 31 2023  |
+|             |                 | 8.1         | Jul 31 2023  |
+|             | 6.1             | 8.2         | Jan 31 2023  |
+|             |                 | 8.1         | Jan 31 2023  |
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
 
