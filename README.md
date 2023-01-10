@@ -244,6 +244,9 @@ Our support windows are determined by the [Symfony release support](https://symf
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
 
+> *Note:*
+> We do not currently support Symfony LTS versions, but anticipate adding support for this when Symfony's 6.x branch enters it's LTS window.
+
 ## Feedback
 
 ### Contributing
