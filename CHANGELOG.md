@@ -4,11 +4,13 @@
 
 [Full Changelog](https://github.com/auth0/symfony/compare/4.0.0...5.0.0)
 
-We are excited to announce the release of V5.0 of Auth0's Symfony SDK! This version is a complete rewrite of our Symfony bundle, and includes full support for PHP 8.1 and Symfony 6.1. In includes a number of exciting new features, including:
+We are excited to announce the release of V5.0 of Auth0's Symfony SDK! This version is a complete rewrite of our Symfony bundle, and includes full support for PHP 8.1 and Symfony 6.1. It also includes numerous new features and greatly expanded functionality, including:
 
-- Full authentication and management APIs support
-- Support for the Auth0 PHP SDK 8.0
+- Plug-and-play route controllers to instantly add Auth0 authentication to your Symfony application
+- Expanded route authorization support
+- Support for Symfony's new Guard APIs
 - Improved performance and stability
+- Full integration with v8 of the [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP) and all of it's features, including Management APIs support
 
 This release represents a significant upgrade to the API of our bundle, and we'd encourage you to refer to our updated [README.md](README.md) for usage of the new release, and guidance on upgrading your Symfony application. We hope you enjoy this new version and all of the features it has to offer. Thank you for using Auth0!
 
