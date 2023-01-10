@@ -4,7 +4,15 @@
 
 [Full Changelog](https://github.com/auth0/symfony/compare/4.0.0...5.0.0)
 
-This release introduces PHP 8.1+ support, Symfony 6.1+ support, and upgrades the bundle to use Auth0's Auth0-PHP SDK 8.x branch. It also introduces a new configuration format, full authorization support, and other improvements. Please review the updated [README.md](README.md) for guidance on updating your application.
+We are excited to announce the release of V5.0 of Auth0's Symfony SDK! This version is a complete rewrite of our Symfony bundle, and includes full support for PHP 8.1 and Symfony 6.1. In includes a number of exciting new features, including:
+
+- Full authentication and management APIs support
+- Support for the Auth0 PHP SDK 8.0
+- Improved performance and stability
+
+This release represents a significant upgrade to the API of our bundle, and we'd encourage you to refer to our updated [README.md](README.md) for usage of the new release, and guidance on upgrading your Symfony application. We hope you enjoy this new version and all of the features it has to offer. Thank you for using Auth0!
+
+Note: As of this release, we have renamed the package `auth0/symfony` (previously `auth0/jwt-auth-bundle`) to better illustrate the elevation of functionality in this SDK from a JWT handling library to a full Auth0 integration. We have marked the `auth0/jwt-auth-bundle` package as deprecated with Packagist to inform customers of this change. Simply update your `composer.json` to reference the new package name to continue receiving support.
 
 ## [5.0.0 BETA-1](https://github.com/auth0/symfony/tree/5.0.0-BETA1) (2022-12-15)
 
