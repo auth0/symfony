@@ -9,8 +9,8 @@ Check that your environment is compatible with 4.0's requirements before upgradi
 
 Update your application, if necessary:
 
-- If you wish to use JWK caching (recommended), please ensure the caching component you are passing to jwt-auth-bundle's configuration is either [PSR-6](https://www.php-fig.org/psr/psr-6/) or [PSR-16](https://www.php-fig.org/psr/psr-16/) compatible, such as [Symfony's cache component](https://symfony.com/doc/current/components/cache.html).
-- Update your application's jwt-auth-bundle configuration to follow the updated format outlined in the [README](README.md). Changes of note;
+- If you wish to use JWK caching (recommended), please ensure the caching component you are passing to the SDK's configuration is either [PSR-6](https://www.php-fig.org/psr/psr-6/) or [PSR-16](https://www.php-fig.org/psr/psr-16/) compatible, such as [Symfony's cache component](https://symfony.com/doc/current/components/cache.html).
+- Update your application's SDK configuration to follow the updated format outlined in the [README](README.md). Changes of note;
   - `api_identifier` is now `audience`.
   - `api_secret` is now `client_secret`.
   - `cache` requires a PSR-6/PSR-16 compatible component.

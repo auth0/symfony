@@ -1,12 +1,9 @@
-> **Warning** This SDK is in beta and is subject to breaking changes. It is not recommended for production use, but your feedback and help in testing is appreciated!
-
-![jwt-auth-bundle](https://cdn.auth0.com/website/sdks/banners/jwt-auth-bundle-banner.png)
+![auth0/symfony](https://cdn.auth0.com/website/sdks/banners/jwt-auth-bundle-banner.png)
 
 Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
-[![Package](https://img.shields.io/packagist/dt/auth0/jwt-auth-bundle)](https://packagist.org/packages/auth0/jwt-auth-bundle)
-[![Build](https://img.shields.io/circleci/project/github/auth0/jwt-auth-bundle/master.svg)](https://circleci.com/gh/auth0/jwt-auth-bundle)
-[![License](https://img.shields.io/packagist/l/auth0/jwt-auth-bundle)](https://doge.mit-license.org/)
+[![Build](https://img.shields.io/circleci/project/github/auth0/symfony/master.svg)](https://circleci.com/gh/auth0/symfony)
+[![License](https://img.shields.io/packagist/l/auth0/symfony)](https://doge.mit-license.org/)
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
 
@@ -28,7 +25,7 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 Add the dependency to your application with [Composer](https://getcomposer.org/):
 
 ```
-composer require auth0/jwt-auth-bundle
+composer require auth0/symfony
 ```
 
 ### Configure Auth0
@@ -241,12 +238,12 @@ If you visit the `/private` route in your browser, you should see the authentica
 
 Our support windows are determined by the [Symfony release support](https://symfony.com/doc/current/contributing/community/releases.html#maintenance) and [PHP release support](https://www.php.net/supported-versions.php) schedules, and support ends when either the Symfony framework or PHP runtime outlined below stop receiving security fixes, whichever may come first.
 
-| SDK Version | Symfony Version  | PHP Version  | Support Ends  |
-| ----------- | ---------------- | ------------ | ------------- |
-| 5           | 6.2              | 8.2          | Jul 2023      |
-|             |                  | 8.1          | Jul 2023      |
-|             | 6.1              | 8.2          | Jan 2023      |
-|             |                  | 8.1          | Jan 2023      |
+| SDK Version | Symfony Version | PHP Version | Support Ends |
+| ----------- | --------------- | ----------- | ------------ |
+| 5           | 6.2             | 8.2         | Jul 2023     |
+|             |                 | 8.1         | Jul 2023     |
+|             | 6.1             | 8.2         | Jan 2023     |
+|             |                 | 8.1         | Jan 2023     |
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
 
@@ -261,7 +258,7 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 
 ### Raise an issue
 
-To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/jwt-auth-bundle/issues).
+To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/symfony/issues).
 
 ### Vulnerability Reporting
 

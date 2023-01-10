@@ -1,5 +1,5 @@
 {
-  "name": "auth0/jwt-auth-bundle",
+  "name": "auth0/symfony",
   "description": "Symfony SDK for Auth0 Authentication and Management APIs.",
   "license": "MIT",
   "type": "symfony-bundle",
@@ -27,7 +27,7 @@
       "homepage": "https://auth0.com/"
     }
   ],
-  "homepage": "https://github.com/auth0/jwt-auth-bundle",
+  "homepage": "https://github.com/auth0/symfony",
   "require": {
     "php": "^8.1",
     "auth0/auth0-php": "^8.0",
