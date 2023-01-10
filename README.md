@@ -155,7 +155,7 @@ security:
 
 ### Optional: Add Authentication helper routes
 
-The SDK includes a number of pre-built HTTP controllers that can be used to handle authentication. These controllers are not required, but can be helpful in getting started.
+The SDK includes a number of pre-built HTTP controllers that can be used to handle authentication. These controllers are not required, but can be helpful in getting started. In many cases, these may provide all the functionality you need to integrate Auth0 into your application, providing a plug-and-play solution.
 
 To use these, open your application's `config/routes.yaml` file, and add the following lines:
 
