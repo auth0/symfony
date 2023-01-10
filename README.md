@@ -2,9 +2,6 @@
 
 Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
-[![Build](https://img.shields.io/circleci/project/github/auth0/symfony/master.svg)](https://circleci.com/gh/auth0/symfony)
-[![License](https://img.shields.io/packagist/l/auth0/symfony)](https://doge.mit-license.org/)
-
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :speech_balloon: [Feedback](#feedback)
 
 ## Documentation
