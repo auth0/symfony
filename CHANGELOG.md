@@ -10,9 +10,9 @@ We are excited to announce the release of V5.0 of Auth0's Symfony SDK! This vers
 - Expanded route authorization support
 - Support for Symfony's new Guard APIs
 - Improved performance and stability
-- Full integration with v8 of the [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP) and all of it's features, including Management APIs, passwordless, and more
+- Full integration with v8 of the [Auth0-PHP SDK](https://github.com/auth0/auth0-PHP) and all of its features, including Management APIs, passwordless, and more
 
-This release represents a significant upgrade to the API of our bundle, and we'd encourage you to refer to our updated [README.md](README.md) for usage of the new release, and guidance on upgrading your Symfony application. We hope you enjoy this new version and all of the features it has to offer. Thank you for using Auth0!
+This release represents a significant upgrade to the API of our bundle, and we'd encourage you to refer to our updated [README.md](README.md) for usage of the new release, and guidance on upgrading your Symfony application. We hope you enjoy this new version and all the features it has to offer. Thank you for using Auth0!
 
 > **Note:** As of this release, we have renamed the package to `auth0/symfony` (previously `auth0/jwt-auth-bundle`) so as to better clarify the elevated functionality of the SDK into a full Auth0 integration with this release. We have marked the `auth0/jwt-auth-bundle` package as deprecated with Packagist to inform customers of this change. Simply update your `composer.json` to reference the new package name to continue receiving updates.
 
