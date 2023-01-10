@@ -1,5 +1,11 @@
 # Change Log
 
+## [5.0.0](https://github.com/auth0/symfony/tree/5.0.0) (2023-10-01)
+
+[Full Changelog](https://github.com/auth0/symfony/compare/4.0.0...5.0.0)
+
+This release introduces PHP 8.1+ support, Symfony 6.1+ support, and upgrades the bundle to use Auth0's Auth0-PHP SDK 8.x branch. It also introduces a new configuration format, full authorization support, and other improvements. Please review the updated [README.md](README.md) for guidance on updating your application.
+
 ## [5.0.0 BETA-1](https://github.com/auth0/symfony/tree/5.0.0-BETA1) (2022-12-15)
 
 [Full Changelog](https://github.com/auth0/symfony/compare/5.0.0-BETA0...5.0.0-BETA1)
