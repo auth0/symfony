@@ -177,7 +177,7 @@ logout: # This route will clear the user's session and return them to the route 
 
 The SDK provides two caching properties in it's configuration: `token_cache` and `management_token_cache`. These are compatible with any PSR-6 cache implementation, of which Symfony offers several out of the box.
 
-These are used to store JSON Web Key Sets (JWKS) results for validating access token signatures and generated management API tokens, respectively. We recommended configuring this feature to improve your application's performance by reducing the number of network requests the SDK needs to make.
+These are used to store JSON Web Key Sets (JWKS) results for validating access token signatures and generated management API tokens, respectively. We recommended configuring this feature to improve your application's performance by reducing the number of network requests the SDK needs to make. It will also greatly help in avoiding hitting rate-limiting conditions, if you're making frequent Management API requests.
 
 The following is an example `config/packages/cache.yaml` file that would configure the SDK to use a Redis backend for caching:
 
