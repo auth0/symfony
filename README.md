@@ -131,12 +131,12 @@ security:
 
   firewalls:
     auth0:
-      pattern: ^/private$ # An example route for stateeful/authenticated (meaning session) requests
+      pattern: ^/private$ # A pattern example for stateful (session-based authentication) route requests
       provider: auth0_provider
       custom_authenticators:
         - auth0.authenticator
     api:
-      pattern: ^/api # An example route for stateless/authorized (meaning access token) requests
+      pattern: ^/api # A pattern example for stateless (token-based authorization) route requests
       stateless: true
       provider: auth0_provider
       custom_authenticators:
