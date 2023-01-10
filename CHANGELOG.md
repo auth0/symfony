@@ -14,7 +14,7 @@ We are excited to announce the release of V5.0 of Auth0's Symfony SDK! This vers
 
 This release represents a significant upgrade to the API of our bundle, and we'd encourage you to refer to our updated [README.md](README.md) for usage of the new release, and guidance on upgrading your Symfony application. We hope you enjoy this new version and all of the features it has to offer. Thank you for using Auth0!
 
-> **Note:** As of this release, we have renamed the package to `auth0/symfony` (previously `auth0/jwt-auth-bundle`) so as to better clarify the elevated functionality of the SDK into a full Auth0 integration with this release. We have marked the `auth0/jwt-auth-bundle` package as deprecated with Packagist to inform customers of this change. Simply update your `composer.json` to reference the new package name to continue receiving support.
+> **Note:** As of this release, we have renamed the package to `auth0/symfony` (previously `auth0/jwt-auth-bundle`) so as to better clarify the elevated functionality of the SDK into a full Auth0 integration with this release. We have marked the `auth0/jwt-auth-bundle` package as deprecated with Packagist to inform customers of this change. Simply update your `composer.json` to reference the new package name to continue receiving updates.
 
 ## [5.0.0 BETA-1](https://github.com/auth0/symfony/tree/5.0.0-BETA1) (2022-12-15)
 
