@@ -175,6 +175,11 @@ class User implements SymfonyUserInterface, UserInterface
         return $this->data['user_metadata'][$name];
     }
 
+    public function getCustomData(string $key): mixed
+    {
+        return $this->data[$key] ?? null;
+    }
+
     public function eraseCredentials()
     {
     }
