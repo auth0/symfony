@@ -153,6 +153,23 @@ security:
     - { path: ^/api/scoped$, roles: ROLE_READ_MESSAGES } # This route will expect the given access token to have the `read:messages` scope in order to access it.
 ```
 
+### Update your `config/bundle.php`
+
+The SDK bundle should be automatically detected and registered by [Symfony Flex](https://symfony.com/doc/current/setup.html#symfony-flex) projects, but you may need to add the Auth0Bundle to your application's bundle registry. Either way, it's a good idea to register the bundle anyway, just to be safe.
+
+```php
+<?php
+
+return [
+    /*
+     * Leave any existing entries in this array as they are.
+     * You should just append this line to the end:
+     */
+     
+    Auth0\Symfony\Auth0Bundle::class => ['all' => true],
+];
+```
+
 ### Optional: Add Authentication helper routes
 
 The SDK includes a number of pre-built HTTP controllers that can be used to handle authentication. These controllers are not required, but can be helpful in getting started. In many cases, these may provide all the functionality you need to integrate Auth0 into your application, providing a plug-and-play solution.
