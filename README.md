@@ -240,7 +240,7 @@ class ExampleController extends AbstractController
     public function private(): Response
     {
         return new Response(
-            '<html><body><pre>' . print_r($this->getUser(), true) . '</pre> <a href="/auth0/logout">Logout</a></body></html>'
+            '<html><body><pre>' . print_r($this->getUser(), true) . '</pre> <a href="/logout">Logout</a></body></html>'
         );
     }
 }
