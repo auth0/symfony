@@ -4,7 +4,7 @@
 
 **Added**
 
-- Organization Name support added for Authentication API and token handling ¹ ([#719](https://github.com/auth0/auth0-PHP/pull/719))
+- Organization Name support added for Authentication API and token handling ¹
 
 **Changed**
 
