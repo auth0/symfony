@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 final class Service implements ServiceInterface
 {
-    public const VERSION = '5.0.0-BETA1';
+    public const VERSION = '5.1.0';
 
     private ?Auth0 $sdk = null;
 
@@ -33,7 +33,7 @@ final class Service implements ServiceInterface
             $this->sdk = new Auth0($this->configuration);
 
             HttpTelemetry::setEnvProperty('Symfony', Kernel::VERSION);
-            HttpTelemetry::setPackage('jwt-auth-bundle', self::VERSION);
+            HttpTelemetry::setPackage('symfony', self::VERSION);
         }
 
         return $this->sdk;

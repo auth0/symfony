@@ -1,6 +1,20 @@
 # Change Log
 
-## [5.0.0](https://github.com/auth0/symfony/tree/5.0.0) (2023-10-01)
+## [5.1.0](https://github.com/auth0/symfony/tree/5.0.0) (2023-07-24)
+
+**Added**
+
+- Organization Name support added for Authentication API and token handling ¹ ([#719](https://github.com/auth0/auth0-PHP/pull/719))
+
+**Changed**
+
+- Bumped `auth0-php` dependency version range to `^8.7`.
+- Updated telemetry to indicate new `symfony` package name (previously `jwt-auth-bundle`.)
+
+> **Note**
+> ¹ To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.`
+
+## [5.0.0](https://github.com/auth0/symfony/tree/5.0.0) (2023-01-10)
 
 [Full Changelog](https://github.com/auth0/symfony/compare/4.0.0...5.0.0)
 
