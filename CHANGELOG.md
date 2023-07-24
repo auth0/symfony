@@ -12,7 +12,7 @@
 - Updated telemetry to indicate new `symfony` package name (previously `jwt-auth-bundle`.)
 
 > **Note**
-> ¹ To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.`
+> ¹ To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
 
 ## [5.0.0](https://github.com/auth0/symfony/tree/5.0.0) (2023-01-10)
 
