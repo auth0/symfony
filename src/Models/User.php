@@ -64,7 +64,7 @@ class User implements SymfonyUserInterface, UserInterface
         return $this->data['email_verified'] ?? false;
     }
 
-    public function gePhoneNumber(): ?string
+    public function getPhoneNumber(): ?string
     {
         return $this->data['phone_number'] ?? null;
     }
