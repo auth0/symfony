@@ -61,10 +61,10 @@ class User implements SymfonyUserInterface, UserInterface
 
     public function isEmailVerified(): bool
     {
-        return $this->data['email_verified'] ?? false;
+        return filter_var($this->data['email_verified'], FILTER_VALIDATE_BOOLEAN) ?? false;
     }
 
-    public function gePhoneNumber(): ?string
+    public function getPhoneNumber(): ?string
     {
         return $this->data['phone_number'] ?? null;
     }
