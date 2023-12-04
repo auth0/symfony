@@ -13,7 +13,8 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 ### Requirements
 
 - [PHP](http://php.net/) 8.1+
-- [Symfony](https://symfony.com/) 6.1+
+- [Symfony](https://symfony.com/) 6.1+, <6.4
+  - Symfony 7.0 is not currently supported.
 
 > Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
