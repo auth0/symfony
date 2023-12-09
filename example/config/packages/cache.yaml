@@ -20,3 +20,4 @@ framework:
     pools:
       auth0_token_cache: { adapter: cache.adapter.redis }
       auth0_management_token_cache: { adapter: cache.adapter.redis }
+      auth0_bachannel_logout_cache: { adapter: cache.adapter.redis }

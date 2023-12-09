@@ -120,6 +120,12 @@ return static function (DefinitionConfigurator $definition) {
                     ->scalarNode('event_listener_provider')
                         ->defaultNull()
                         ->end()
+                    ->scalarNode('backchannel_logout_cache')
+                        ->defaultNull()
+                        ->end()
+                    ->integerNode('backchannel_logout_expires')
+                        ->defaultValue(2592000)
+                        ->end()
                 ->end()
             ->end() // sdk
             ->arrayNode('authenticator')
