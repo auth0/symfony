@@ -1,0 +1,39 @@
+controllers:
+  resource: ../src/Controller/
+  type: attribute
+
+public:
+  path: /
+  controller: App\Controller\ExampleController::public
+
+# [AUTH0/SYMFONY] The following routes demonstrate how to use the Auth0 Symfony SDK for authentication.
+
+private:
+  path: /private
+  controller: App\Controller\ExampleController::private
+
+login:
+  path: /login
+  controller: Auth0\Symfony\Controllers\AuthenticationController::login
+
+logout:
+  path: /logout
+  controller: Auth0\Symfony\Controllers\AuthenticationController::logout
+
+callback:
+  path: /callback
+  controller: Auth0\Symfony\Controllers\AuthenticationController::callback
+
+# [AUTH0/SYMFONY] The following routes demonstrate how to use the Auth0 Symfony SDK for authorization.
+
+api_public:
+  path: /api
+  controller: App\Controller\ExampleController::apiPublic
+
+api_private:
+  path: /api/private
+  controller: App\Controller\ExampleController::apiPrivate
+
+api_private_scopes:
+  path: /api/scoped
+  controller: App\Controller\ExampleController::apiPrivateScopes

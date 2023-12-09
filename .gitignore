@@ -38,4 +38,7 @@ composer.lock
 /example/composer.phar
 
 **/.DS_Store
+
 .phpunit.result.cache
+.php-cs-fixer.cache
+/coverage/
