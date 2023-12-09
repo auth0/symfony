@@ -17,9 +17,9 @@ permissions:
 
 env:
   DX_SDKS_SNYK_ORGANIZATION: 8303ea71-ac72-4ae6-9cd0-ae2f3eda82b7
-  DX_SDKS_SNYK_PROJECT: auth0/auth0-PHP
+  DX_SDKS_SNYK_PROJECT: auth0/symfony
   DX_SDKS_SNYK_TAGS: Refactoring-target:DX,Refactoring-origin:auth0-sdks
-  DX_SDKS_SNYK_REMOTE_REPO_URL: https://github.com/auth0/auth0-PHP
+  DX_SDKS_SNYK_REMOTE_REPO_URL: https://github.com/auth0/symfony
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
