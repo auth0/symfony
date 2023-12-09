@@ -1,0 +1,36 @@
+security:
+  enable_authenticator_manager: true
+
+  providers:
+    # [AUTH0/SYMFONY] You must assign a compatible UserProvider to the firewall. We provide one for you, but you can also create your own.
+    auth0_provider:
+      id: Auth0\Symfony\Security\UserProvider
+
+  firewalls:
+    # [AUTH0/SYMFONY] The following firewall demonstrates how to use the Auth0 Symfony SDK for authentication.
+    auth0:
+      pattern: ^/private$
+      provider: auth0_provider
+      custom_authenticators:
+        - auth0.authenticator
+
+    # [AUTH0/SYMFONY] The following firewall demonstrates how to use the Auth0 Symfony SDK for authorization.
+    api:
+      pattern: ^/api
+      stateless: true
+      provider: auth0_provider
+      custom_authenticators:
+        - auth0.authorizer
+
+    # These are unrelated routes that are not protected by the SDK.
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      lazy: true
+
+  # [AUTH0/SYMFONY] The following customizes the access control for the demonstration `api` firewall.
+  access_control:
+    - { path: ^/api$, roles: PUBLIC_ACCESS }
+    - { path: ^/api/private$, roles: ROLE_USING_TOKEN }
+    - { path: ^/api/scoped$, roles: ROLE_READ_MESSAGES }

@@ -13,7 +13,7 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 ### Requirements
 
 - [PHP](http://php.net/) 8.1+
-- [Symfony](https://symfony.com/) 6.1+, <6.4
+- [Symfony](https://symfony.com/) 6.4 LTS
   - Symfony 7.0 is not currently supported.
 
 > Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
@@ -166,7 +166,7 @@ return [
      * Leave any existing entries in this array as they are.
      * You should just append this line to the end:
      */
-     
+
     Auth0\Symfony\Auth0Bundle::class => ['all' => true],
 ];
 ```

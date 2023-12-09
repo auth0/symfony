@@ -1,0 +1,27 @@
+auth0:
+  sdk:
+    domain: "%env(string:key:host:url:AUTH0_DOMAIN)%"
+    # custom_domain: "%env(string:key:host:url:AUTH0_CUSTOM_DOMAIN)%"
+    client_id: "%env(trim:string:AUTH0_CLIENT_ID)%"
+    client_secret: "%env(trim:string:AUTH0_CLIENT_SECRET)%"
+    token_cache: "auth0_token_cache"
+    management_token_cache: "auth0_management_token_cache"
+    cookie_secret: "%kernel.secret%"
+    cookie_expires: 3600
+    cookie_path: "/"
+    cookie_secure: false
+    # audiences:
+    #  - symfony-quickstart-api
+    scopes:
+      - openid
+      - profile
+      - email
+      - offline_access
+
+  authenticator:
+    routes:
+      callback: "%env(string:AUTH0_ROUTE_CALLBACK)%"
+      success: "%env(string:AUTH0_ROUTE_SUCCESS)%"
+      failure: "%env(string:AUTH0_ROUTE_FAILURE)%"
+      login: "%env(string:AUTH0_ROUTE_LOGIN)%"
+      logout: "%env(string:AUTH0_ROUTE_LOGOUT)%"
