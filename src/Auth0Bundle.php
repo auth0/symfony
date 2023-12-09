@@ -42,6 +42,30 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             $eventListenerProvider = new Reference($eventListenerProvider);
         }
 
+        $httpClient = $config['sdk']['http_client'] ?? null;
+
+        if (null !== $httpClient && '' !== $httpClient) {
+            $httpClient = new Reference($httpClient);
+        }
+
+        $httpRequestFactory = $config['sdk']['http_request_factory'] ?? null;
+
+        if (null !== $httpRequestFactory && '' !== $httpRequestFactory) {
+            $httpRequestFactory = new Reference($httpRequestFactory);
+        }
+
+        $httpResponseFactory = $config['sdk']['http_response_factory'] ?? null;
+
+        if (null !== $httpResponseFactory && '' !== $httpResponseFactory) {
+            $httpResponseFactory = new Reference($httpResponseFactory);
+        }
+
+        $httpStreamFactory = $config['sdk']['http_stream_factory'] ?? null;
+
+        if (null !== $httpStreamFactory && '' !== $httpStreamFactory) {
+            $httpStreamFactory = new Reference($httpStreamFactory);
+        }
+
         $audiences = $config['sdk']['audiences'] ?? [];
         $organizations = $config['sdk']['organizations'] ?? [];
         $scopes = $config['sdk']['scopes'] ?? [];
@@ -79,11 +103,11 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->arg('$tokenLeeway', $config['sdk']['token_leeway'] ?? 60)
             ->arg('$tokenCache', $tokenCache)
             ->arg('$tokenCacheTtl', $config['sdk']['token_cache_ttl'])
-            ->arg('$httpClient', $config['sdk']['http_client'])
+            ->arg('$httpClient', $httpClient)
             ->arg('$httpMaxRetries', $config['sdk']['http_max_retries'])
-            ->arg('$httpRequestFactory', $config['sdk']['http_request_factory'])
-            ->arg('$httpResponseFactory', $config['sdk']['http_response_factory'])
-            ->arg('$httpStreamFactory', $config['sdk']['http_stream_factory'])
+            ->arg('$httpRequestFactory', $httpRequestFactory)
+            ->arg('$httpResponseFactory', $httpResponseFactory)
+            ->arg('$httpStreamFactory', $httpStreamFactory)
             ->arg('$httpTelemetry', $config['sdk']['http_telemetry'])
             ->arg('$sessionStorage', $sessionStorage)
             ->arg('$sessionStorageId', $sessionStoragePrefix)
