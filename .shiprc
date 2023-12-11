@@ -1,6 +1,7 @@
 {
   "files": {
-    "src/Auth0Bundle.php": []
+    "src/Service.php": [],
+    ".version": []
   },
   "prefixVersion": false
 }
