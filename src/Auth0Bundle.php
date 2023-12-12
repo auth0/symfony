@@ -30,6 +30,9 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
         $managementTokenCache = $config['sdk']['management_token_cache'] ?? 'cache.app';
         $managementTokenCache = new Reference($managementTokenCache);
 
+        $backchannelLogoutCache = $config['sdk']['backchannel_logout_cache'] ?? 'cache.app';
+        $backchannelLogoutCache = new Reference($backchannelLogoutCache);
+
         $transientStorage = new Reference($config['sdk']['transient_storage'] ?? 'auth0.store_transient');
         $sessionStorage = new Reference($config['sdk']['session_storage'] ?? 'auth0.store_session');
 
@@ -126,7 +129,9 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->arg('$queryUserInfo', false)
             ->arg('$managementToken', $config['sdk']['management_token'])
             ->arg('$managementTokenCache', $managementTokenCache)
-            ->arg('$eventListenerProvider', $eventListenerProvider);
+            ->arg('$eventListenerProvider', $eventListenerProvider)
+            ->arg('$backchannelLogoutCache', $backchannelLogoutCache)
+            ->arg('$backchannelLogoutExpires', $config['sdk']['backchannel_logout_expires']);
 
         $container->services()
             ->set('auth0', Service::class)
