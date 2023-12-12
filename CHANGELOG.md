@@ -1,6 +1,22 @@
 # Change Log
 
-## [5.1.0](https://github.com/auth0/symfony/tree/5.0.0) (2023-07-24)
+## [5.2.0](https://github.com/auth0/symfony/tree/5.2.0) (2023-12-12)
+
+**Added**
+
+- Implement support for Back-Channel Logout [\#167](https://github.com/auth0/wordpress/pull/167) ([evansims](https://github.com/evansims)) ¹
+
+**Changed**
+
+- Bumped `auth0-php` dependency version range to `^8.10`.
+- Raised the minimum supported PHP version to `8.1`.
+- Added support for Symfony `^6.4`.
+  - Symfony `^7.0` support will be added in a forthcoming release.
+
+> [!NOTE]
+> ¹ To use this feature, an Auth0 tenant must have support for it enabled.
+
+## [5.1.0](https://github.com/auth0/symfony/tree/5.1.0) (2023-07-24)
 
 **Added**
 
