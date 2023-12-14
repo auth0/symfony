@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Symfony\Stores;
 
 use Auth0\SDK\Contract\StoreInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\{Request, RequestStack};
 use Throwable;
@@ -14,6 +15,7 @@ final class SessionStore implements StoreInterface
     public function __construct(
         private $namespace,
         private RequestStack $requestStack,
+        private LoggerInterface $logger,
     ) {
     }
 

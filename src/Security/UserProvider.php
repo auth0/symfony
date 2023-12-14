@@ -11,11 +11,17 @@ use Auth0\Symfony\Contracts\Security\UserProviderInterface;
 use Auth0\Symfony\Models\Stateful\User as StatefulUser;
 use Auth0\Symfony\Models\Stateless\User as StatelessUser;
 use Auth0\Symfony\Models\User;
+use Auth0\Symfony\Service;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\{UserInterface as SymfonyUserInterface, UserProviderInterface as SymfonyUserProviderInterface};
 
 final class UserProvider implements SymfonyUserProviderInterface, UserProviderInterface
 {
+    public function __construct(
+        private Service $service,
+    ) {
+    }
+
     public function loadByUserModel(User $user): SymfonyUserInterface
     {
         return $user;

@@ -458,7 +458,7 @@ return static function (RectorConfig $rectorConfig): void {
         RemoveUnusedPrivateClassConstantRector::class,
         RemoveUnusedPrivateMethodParameterRector::class,
         RemoveUnusedPrivatePropertyRector::class,
-        RemoveUnusedPromotedPropertyRector::class,
+        // RemoveUnusedPromotedPropertyRector::class,
         RemoveUnusedVariableAssignRector::class,
         RemoveUnusedVariableInCatchRector::class,
         RemoveUselessReturnTagRector::class,
