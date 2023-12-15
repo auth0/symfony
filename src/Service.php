@@ -8,6 +8,7 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpTelemetry;
 use Auth0\Symfony\Contracts\ServiceInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -20,6 +21,7 @@ final class Service implements ServiceInterface
     public function __construct(
         private SdkConfiguration $configuration,
         private RequestStack $requestStack,
+        private LoggerInterface $logger,
     ) {
     }
 
