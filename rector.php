@@ -384,7 +384,7 @@ return static function (RectorConfig $rectorConfig): void {
         EncapsedStringsToSprintfRector::class,
         ExplicitBoolCompareRector::class,
         // ExplicitMethodCallOverMagicGetSetRector::class,
-        FinalizeClassesWithoutChildrenRector::class,
+        // FinalizeClassesWithoutChildrenRector::class,
         FinalPrivateToPrivateVisibilityRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
         FloatvalToTypeCastRector::class,

@@ -12,13 +12,13 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 use function array_key_exists;
 use function is_string;
 
-final class User implements SymfonyUserInterface, UserInterface
+class User implements SymfonyUserInterface, UserInterface
 {
-    private array $roleAuthenticatedUsing = [];
+    protected array $roleAuthenticatedUsing = [];
 
-    private array $roles = ['IS_AUTHENTICATED_FULLY', 'ROLE_USER'];
+    protected array $roles = ['IS_AUTHENTICATED_FULLY', 'ROLE_USER'];
 
-    public function __construct(private array $data)
+    public function __construct(protected array $data)
     {
     }
 
