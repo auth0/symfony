@@ -4,7 +4,7 @@
 [Full Changelog](https://github.com/auth0/symfony/compare/5.2.0...5.2.1)
 
 **Fixed**
-- fix: Restore method signatures [\#174](https://github.com/auth0/symfony/pull/174) ([evansims](https://github.com/evansims))
+- Restore method signatures [\#174](https://github.com/auth0/symfony/pull/174) ([evansims](https://github.com/evansims))
 
 ## [5.2.0](https://github.com/auth0/symfony/tree/5.2.0) (2023-12-12)
 
