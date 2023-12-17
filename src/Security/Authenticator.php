@@ -6,6 +6,7 @@ namespace Auth0\Symfony\Security;
 
 use Auth0\Symfony\Contracts\Security\AuthenticatorInterface;
 use Auth0\Symfony\Service;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -21,6 +22,7 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
         public array $configuration,
         public Service $service,
         private RouterInterface $router,
+        private LoggerInterface $logger,
     ) {
     }
 
