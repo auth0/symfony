@@ -8,5 +8,5 @@ use Auth0\Symfony\Contracts\Models\Stateless\UserInterface;
 
 class User extends \Auth0\Symfony\Models\User implements UserInterface
 {
-    protected $roleAuthenticatedUsing = 'ROLE_USING_TOKEN';
+    protected array $roleAuthenticatedUsing = ['ROLE_USING_TOKEN'];
 }
