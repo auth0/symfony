@@ -19,6 +19,8 @@ parameters:
         - '#Cannot call method purge\(\) on Auth0\\SDK\\Contract\\StoreInterface\|null.#'
         - '#Casting to string something that(.*) already string.#'
         - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
+        - '#Property (.*) is never read, only written.#'
+        - '#Call to function is_string\(\) with string will always evaluate to true.$#'
         -
             message: '#Parameter \#3 \$(.*) of function openssl_verify expects (.*), (.*) given.#'
             path: src\Token\Verifier.php
@@ -48,3 +50,4 @@ parameters:
             path: src\Utility\HttpRequest.php
 
     reportUnmatchedIgnoredErrors: false
+    checkGenericClassInNonGenericObjectType: false

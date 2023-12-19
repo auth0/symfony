@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Auth0\Symfony;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Token;
 use Auth0\Symfony\Contracts\BundleInterface;
 use Auth0\Symfony\Controllers\AuthenticationController;
 use Auth0\Symfony\Security\{Authenticator, Authorizer, UserProvider};
 use Auth0\Symfony\Stores\SessionStore;
+use OpenSSLAsymmetricKey;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\{RequestFactoryInterface, ResponseFactoryInterface, StreamFactoryInterface};
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\{ContainerBuilder, Reference};
@@ -22,56 +28,84 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
         $definition->import('../config/definition.php');
     }
 
+    /**
+     * @param array<mixed>          $config    The configuration array.
+     * @param ContainerConfigurator $container The container configurator.
+     * @param ContainerBuilder      $builder   The container builder.
+     */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $tokenCache = $config['sdk']['token_cache'] ?? 'cache.app';
-        $tokenCache = new Reference($tokenCache);
+        $sdkConfig = $config['sdk'] ?? [];
 
-        $managementTokenCache = $config['sdk']['management_token_cache'] ?? 'cache.app';
-        $managementTokenCache = new Reference($managementTokenCache);
+        /**
+         * @var array{strategy: string, domain: ?string, custom_domain: ?string, client_id: ?string, redirect_uri: ?string, client_secret: ?string, audiences: null|array<string>, organizations: null|array<string>, use_pkce: bool, scopes: null|array<string>, response_mode: string, response_type: string, token_algorithm: ?string, token_jwks_uri: ?string, token_max_age: ?int, token_leeway: ?int, token_cache: ?CacheItemPoolInterface, token_cache_ttl: int, http_client: null|ClientInterface|string, http_max_retries: int, http_request_factory: null|RequestFactoryInterface|string, http_response_factory: null|ResponseFactoryInterface|string, http_stream_factory: null|StreamFactoryInterface|string, http_telemetry: bool, session_storage: ?StoreInterface, session_storage_prefix: ?string, cookie_secret: ?string, cookie_domain: ?string, cookie_expires: int, cookie_path: string, cookie_secure: bool, cookie_same_site: ?string, persist_user: bool, persist_id_token: bool, persist_access_token: bool, persist_refresh_token: bool, transient_storage: ?StoreInterface, transient_storage_prefix: ?string, query_user_info: bool, management_token: ?string, management_token_cache: ?CacheItemPoolInterface, event_listener_provider: null|ListenerProviderInterface|string, client_assertion_signing_key: null|OpenSSLAsymmetricKey|string, client_assertion_signing_algorithm: string, pushed_authorization_request: bool, backchannel_logout_cache: ?CacheItemPoolInterface, backchannel_logout_expires: int} $sdkConfig
+         */
+        $tokenCache = $sdkConfig['token_cache'] ?? 'cache.app';
 
-        $backchannelLogoutCache = $config['sdk']['backchannel_logout_cache'] ?? 'cache.app';
-        $backchannelLogoutCache = new Reference($backchannelLogoutCache);
+        if (! $tokenCache instanceof CacheItemPoolInterface) {
+            $tokenCache = new Reference($tokenCache);
+        }
 
-        $transientStorage = new Reference($config['sdk']['transient_storage'] ?? 'auth0.store_transient');
-        $sessionStorage = new Reference($config['sdk']['session_storage'] ?? 'auth0.store_session');
+        $managementTokenCache = $sdkConfig['management_token_cache'] ?? 'cache.app';
 
-        $transientStoragePrefix = $config['sdk']['transient_storage_prefix'] ?? 'auth0_transient';
-        $sessionStoragePrefix = $config['sdk']['session_storage_prefix'] ?? 'auth0_session';
+        if (! $managementTokenCache instanceof CacheItemPoolInterface) {
+            $managementTokenCache = new Reference($managementTokenCache);
+        }
 
-        $eventListenerProvider = $config['sdk']['event_listener_provider'] ?? null;
+        $backchannelLogoutCache = $sdkConfig['backchannel_logout_cache'] ?? 'cache.app';
 
-        if (null !== $eventListenerProvider && '' !== $eventListenerProvider) {
+        if (! $backchannelLogoutCache instanceof CacheItemPoolInterface) {
+            $backchannelLogoutCache = new Reference($backchannelLogoutCache);
+        }
+
+        $transientStorage = $sdkConfig['transient_storage'] ?? 'auth0.store_transient';
+
+        if (! $transientStorage instanceof StoreInterface) {
+            $transientStorage = new Reference($transientStorage);
+        }
+
+        $sessionStorage = $sdkConfig['session_storage'] ?? 'auth0.store_session';
+
+        if (! $sessionStorage instanceof StoreInterface) {
+            $sessionStorage = new Reference($sessionStorage);
+        }
+
+        $transientStoragePrefix = $sdkConfig['transient_storage_prefix'] ?? 'auth0_transient';
+        $sessionStoragePrefix = $sdkConfig['session_storage_prefix'] ?? 'auth0_session';
+
+        $eventListenerProvider = $sdkConfig['event_listener_provider'] ?? null;
+
+        if (! $eventListenerProvider instanceof ListenerProviderInterface && '' !== $eventListenerProvider && null !== $eventListenerProvider) {
             $eventListenerProvider = new Reference($eventListenerProvider);
         }
 
-        $httpClient = $config['sdk']['http_client'] ?? null;
+        $httpClient = $sdkConfig['http_client'] ?? null;
 
-        if (null !== $httpClient && '' !== $httpClient) {
+        if (! $httpClient instanceof ClientInterface && '' !== $httpClient && null !== $httpClient) {
             $httpClient = new Reference($httpClient);
         }
 
-        $httpRequestFactory = $config['sdk']['http_request_factory'] ?? null;
+        $httpRequestFactory = $sdkConfig['http_request_factory'] ?? null;
 
-        if (null !== $httpRequestFactory && '' !== $httpRequestFactory) {
+        if (! $httpRequestFactory instanceof RequestFactoryInterface && '' !== $httpRequestFactory && null !== $httpRequestFactory) {
             $httpRequestFactory = new Reference($httpRequestFactory);
         }
 
-        $httpResponseFactory = $config['sdk']['http_response_factory'] ?? null;
+        $httpResponseFactory = $sdkConfig['http_response_factory'] ?? null;
 
-        if (null !== $httpResponseFactory && '' !== $httpResponseFactory) {
+        if (! $httpResponseFactory instanceof ResponseFactoryInterface && '' !== $httpResponseFactory && null !== $httpResponseFactory) {
             $httpResponseFactory = new Reference($httpResponseFactory);
         }
 
-        $httpStreamFactory = $config['sdk']['http_stream_factory'] ?? null;
+        $httpStreamFactory = $sdkConfig['http_stream_factory'] ?? null;
 
-        if (null !== $httpStreamFactory && '' !== $httpStreamFactory) {
+        if (! $httpStreamFactory instanceof StreamFactoryInterface && '' !== $httpStreamFactory && null !== $httpStreamFactory) {
             $httpStreamFactory = new Reference($httpStreamFactory);
         }
 
-        $audiences = $config['sdk']['audiences'] ?? [];
-        $organizations = $config['sdk']['organizations'] ?? [];
-        $scopes = $config['sdk']['scopes'] ?? [];
+        $audiences = $sdkConfig['audiences'] ?? [];
+        $organizations = $sdkConfig['organizations'] ?? [];
+        $scopes = $sdkConfig['scopes'] ?? [];
 
         if ([] === $audiences) {
             $audiences = null;
@@ -88,38 +122,38 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
         $container->services()
             ->set('auth0.configuration', SdkConfiguration::class)
             ->arg('$configuration', null)
-            ->arg('$strategy', $config['sdk']['strategy'])
-            ->arg('$domain', $config['sdk']['domain'])
-            ->arg('$customDomain', $config['sdk']['custom_domain'])
-            ->arg('$clientId', $config['sdk']['client_id'])
-            ->arg('$redirectUri', $config['sdk']['redirect_uri'])
-            ->arg('$clientSecret', $config['sdk']['client_secret'])
+            ->arg('$strategy', $sdkConfig['strategy'])
+            ->arg('$domain', $sdkConfig['domain'])
+            ->arg('$customDomain', $sdkConfig['custom_domain'])
+            ->arg('$clientId', $sdkConfig['client_id'])
+            ->arg('$redirectUri', $sdkConfig['redirect_uri'])
+            ->arg('$clientSecret', $sdkConfig['client_secret'])
             ->arg('$audience', $audiences)
             ->arg('$organization', $organizations)
             ->arg('$usePkce', true)
             ->arg('$scope', $scopes)
             ->arg('$responseMode', 'query')
             ->arg('$responseType', 'code')
-            ->arg('$tokenAlgorithm', $config['sdk']['token_algorithm'] ?? Token::ALGO_RS256)
-            ->arg('$tokenJwksUri', $config['sdk']['token_jwks_uri'])
-            ->arg('$tokenMaxAge', $config['sdk']['token_max_age'])
-            ->arg('$tokenLeeway', $config['sdk']['token_leeway'] ?? 60)
+            ->arg('$tokenAlgorithm', $sdkConfig['token_algorithm'] ?? Token::ALGO_RS256)
+            ->arg('$tokenJwksUri', $sdkConfig['token_jwks_uri'])
+            ->arg('$tokenMaxAge', $sdkConfig['token_max_age'])
+            ->arg('$tokenLeeway', $sdkConfig['token_leeway'] ?? 60)
             ->arg('$tokenCache', $tokenCache)
-            ->arg('$tokenCacheTtl', $config['sdk']['token_cache_ttl'])
+            ->arg('$tokenCacheTtl', $sdkConfig['token_cache_ttl'])
             ->arg('$httpClient', $httpClient)
-            ->arg('$httpMaxRetries', $config['sdk']['http_max_retries'])
+            ->arg('$httpMaxRetries', $sdkConfig['http_max_retries'])
             ->arg('$httpRequestFactory', $httpRequestFactory)
             ->arg('$httpResponseFactory', $httpResponseFactory)
             ->arg('$httpStreamFactory', $httpStreamFactory)
-            ->arg('$httpTelemetry', $config['sdk']['http_telemetry'])
+            ->arg('$httpTelemetry', $sdkConfig['http_telemetry'])
             ->arg('$sessionStorage', $sessionStorage)
             ->arg('$sessionStorageId', $sessionStoragePrefix)
-            ->arg('$cookieSecret', $config['sdk']['cookie_secret'])
-            ->arg('$cookieDomain', $config['sdk']['cookie_domain'])
-            ->arg('$cookieExpires', $config['sdk']['cookie_expires'])
-            ->arg('$cookiePath', $config['sdk']['cookie_path'])
-            ->arg('$cookieSameSite', $config['sdk']['cookie_same_site'])
-            ->arg('$cookieSecure', $config['sdk']['cookie_secure'])
+            ->arg('$cookieSecret', $sdkConfig['cookie_secret'])
+            ->arg('$cookieDomain', $sdkConfig['cookie_domain'])
+            ->arg('$cookieExpires', $sdkConfig['cookie_expires'])
+            ->arg('$cookiePath', $sdkConfig['cookie_path'])
+            ->arg('$cookieSameSite', $sdkConfig['cookie_same_site'])
+            ->arg('$cookieSecure', $sdkConfig['cookie_secure'])
             ->arg('$persistUser', true)
             ->arg('$persistIdToken', true)
             ->arg('$persistAccessToken', true)
@@ -127,11 +161,11 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->arg('$transientStorage', $transientStorage)
             ->arg('$transientStorageId', $transientStoragePrefix)
             ->arg('$queryUserInfo', false)
-            ->arg('$managementToken', $config['sdk']['management_token'])
+            ->arg('$managementToken', $sdkConfig['management_token'])
             ->arg('$managementTokenCache', $managementTokenCache)
             ->arg('$eventListenerProvider', $eventListenerProvider)
             ->arg('$backchannelLogoutCache', $backchannelLogoutCache)
-            ->arg('$backchannelLogoutExpires', $config['sdk']['backchannel_logout_expires']);
+            ->arg('$backchannelLogoutExpires', $sdkConfig['backchannel_logout_expires']);
 
         $container->services()
             ->set('auth0', Service::class)

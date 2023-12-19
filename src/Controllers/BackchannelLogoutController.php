@@ -7,6 +7,7 @@ namespace Auth0\Symfony\Controllers;
 use Auth0\SDK\Auth0;
 use Auth0\Symfony\Contracts\Controllers\AuthenticationControllerInterface;
 use Auth0\Symfony\Security\Authenticator;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
 use Throwable;
@@ -17,9 +18,15 @@ final class BackchannelLogoutController extends AbstractController implements Au
 {
     public function __construct(
         private Authenticator $authenticator,
+        protected ContainerInterface $container,
     ) {
     }
 
+    /**
+     * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
+     */
     public function handle(Request $request): Response
     {
         if ('POST' !== $request->getMethod()) {

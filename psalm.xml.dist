@@ -10,10 +10,6 @@
 >
     <projectFiles>
         <directory name="src" />
-
-        <ignoreFiles>
-            <file name="src/Utility/Assert.php" />
-        </ignoreFiles>
     </projectFiles>
 
     <issueHandlers>
