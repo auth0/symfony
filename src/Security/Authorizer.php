@@ -14,8 +14,15 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\{Passport, SelfValidatingPassport};
 
+use function is_string;
+
 final class Authorizer extends AbstractAuthenticator implements AuthorizerInterface
 {
+    /**
+     * @param array<mixed>    $configuration
+     * @param Service         $service
+     * @param LoggerInterface $logger
+     */
     public function __construct(
         private array $configuration,
         private Service $service,
@@ -23,16 +30,21 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
     ) {
     }
 
+    /**
+     * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
+     */
     public function authenticate(Request $request): Passport
     {
         // Extract any available value from the authorization header
         $param = $request->get('token', null);
-        $header = trim($request->headers->get('Authorization', ''));
+        $header = trim($request->headers->get('Authorization', '') ?? '');
         $token = $param ?? $header;
         $usingHeader = null === $param;
 
         // Ensure the 'authorization' header is present in the request
-        if ('' === $token) {
+        if (! is_string($token) || '' === $token) {
             throw new AuthenticationException('`Authorization` header not present.');
         }
 
@@ -47,14 +59,17 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
         // Decode, validate and verify token.
         $token = $this->getService()->getSdk()->decode(
             token: $token,
-            tokenType: \Auth0\SDK\Token::TYPE_TOKEN,
+            tokenType: \Auth0\SDK\Token::TYPE_ACCESS_TOKEN,
         );
 
-        $user = json_encode(['type' => 'stateless', 'data' => ['user' => $token->toArray()]]);
+        $user = json_encode(['type' => 'stateless', 'data' => ['user' => $token->toArray()]], JSON_THROW_ON_ERROR);
 
         return new SelfValidatingPassport(new UserBadge($user));
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getConfiguration(): array
     {
         return $this->configuration;
@@ -85,6 +100,11 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
         return null;
     }
 
+    /**
+     * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
+     */
     public function supports(Request $request): ?bool
     {
         if (null !== $request->get('token')) {
