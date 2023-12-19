@@ -274,10 +274,8 @@ class User implements SymfonyUserInterface, UserInterface
             }
         }
 
-        if ($this->roleAuthenticatedUsing !== []) {
-            foreach ($this->roleAuthenticatedUsing as $using) {
-                $response[] = $using;
-            }
+        foreach ($this->roleAuthenticatedUsing as $using) {
+            $response[] = $using;
         }
 
         return array_unique(array_values($response));
@@ -348,12 +346,6 @@ class User implements SymfonyUserInterface, UserInterface
 
     public function isEmailVerified(): bool
     {
-        $emailVerified = filter_var($this->data['email_verified'], FILTER_VALIDATE_BOOLEAN);
-
-        if ($emailVerified === true) {
-            return true;
-        }
-
-        return false;
+        return filter_var($this->data['email_verified'], FILTER_VALIDATE_BOOLEAN);
     }
 }
