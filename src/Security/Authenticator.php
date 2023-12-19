@@ -18,6 +18,13 @@ use Throwable;
 
 final class Authenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
+    /**
+     * @param array<mixed> $configuration
+     * @param Service $service
+     * @param RouterInterface $router
+     * @param LoggerInterface $logger
+     * @return void
+     */
     public function __construct(
         public array $configuration,
         public Service $service,
@@ -34,7 +41,7 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
             throw new CustomUserMessageAuthenticationException('No Auth0 session was found.');
         }
 
-        $user = json_encode(['type' => 'stateful', 'data' => $session]);
+        $user = json_encode(['type' => 'stateful', 'data' => $session], JSON_THROW_ON_ERROR);
 
         return new SelfValidatingPassport(new UserBadge($user));
     }
@@ -45,9 +52,15 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
             $request->getSession()->set('auth0:callback_redirect', $request->getUri());
         }
 
-        $route = $this->configuration['routes']['login'] ?? null;
+        $routes = $this->configuration['routes'] ?? [];
 
-        if (null !== $route && '' !== $route) {
+        if (! is_array($routes)) {
+            $routes = [];
+        }
+
+        $route = $routes['login'] ?? null;
+
+        if (is_string($route) && '' !== $route) {
             try {
                 return new RedirectResponse($this->router->generate($route));
             } catch (Throwable) {

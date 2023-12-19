@@ -7,8 +7,14 @@ namespace Auth0\Symfony\Controllers;
 use Auth0\SDK\Auth0;
 use Auth0\Symfony\Contracts\Controllers\AuthenticationControllerInterface;
 use Auth0\Symfony\Security\Authenticator;
+use Psr\Cache\InvalidArgumentException;
+use LogicException;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
+use Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\Routing\RouterInterface;
 use Throwable;
 
@@ -17,9 +23,13 @@ final class AuthenticationController extends AbstractController implements Authe
     public function __construct(
         private Authenticator $authenticator,
         private RouterInterface $router,
+        protected ContainerInterface $container,
     ) {
     }
 
+    /**
+     * @psalm-suppress InternalMethod
+     */
     public function callback(Request $request): Response
     {
         $host = $request->getSchemeAndHttpHost();
@@ -31,7 +41,10 @@ final class AuthenticationController extends AbstractController implements Authe
             $code = $request->get('code');
             $state = $request->get('state');
 
-            if (null !== $code && null !== $state) {
+            $code = is_string($code) ? trim($code) : '';
+            $state = is_string($state) ? trim($state) : '';
+
+            if ('' !== $code && '' !== $state) {
                 $route = $this->getRedirectUrl('success');
 
                 try {
@@ -49,6 +62,10 @@ final class AuthenticationController extends AbstractController implements Authe
                 }
             }
         }
+
+        /**
+         * @var string $redirect
+         */
 
         return new RedirectResponse($redirect);
     }
@@ -87,9 +104,14 @@ final class AuthenticationController extends AbstractController implements Authe
     private function getRedirectUrl(string $route): string
     {
         $routes = $this->authenticator->configuration['routes'] ?? [];
+
+        if (! is_array($routes)) {
+            $routes = [];
+        }
+
         $route = $routes[$route] ?? null;
 
-        if (null !== $route && '' !== $route) {
+        if (is_string($route) && '' !== $route) {
             try {
                 return $this->router->generate($route);
             } catch (Throwable) {

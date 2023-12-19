@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Symfony\Stores;
 
 use Auth0\SDK\Contract\StoreInterface;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\{Request, RequestStack};
@@ -12,11 +13,25 @@ use Throwable;
 
 final class SessionStore implements StoreInterface
 {
+    /**
+     * @param string $namespace
+     * @param RequestStack $requestStack
+     * @param LoggerInterface $logger
+     *
+     * @psalm-suppress DocblockTypeContradiction
+     */
     public function __construct(
         private $namespace,
         private RequestStack $requestStack,
         private LoggerInterface $logger,
     ) {
+        if (! is_string($namespace)) {
+            $this->logger->error('SessionStore: $namespace must be a string, {type} given.', [
+                'type' => gettype($namespace),
+            ]);
+
+            throw new InvalidArgumentException('$namespace must be a string.');
+        }
     }
 
     /**
@@ -41,7 +56,7 @@ final class SessionStore implements StoreInterface
     ): void {
         $manifest = $this->session()?->get($this->namespace, []);
 
-        if ([] === $manifest) {
+        if (! is_array($manifest) || [] === $manifest) {
             return;
         }
 
@@ -73,7 +88,7 @@ final class SessionStore implements StoreInterface
     ) {
         $manifest = $this->session()?->get($this->namespace, []);
 
-        if ([] === $manifest || ! isset($manifest[$key])) {
+        if (! is_array($manifest) || [] === $manifest || ! isset($manifest[$key])) {
             return $default;
         }
 
@@ -100,6 +115,10 @@ final class SessionStore implements StoreInterface
     ): void {
         $manifest = $this->session()?->get($this->namespace, []);
 
+        if (! is_array($manifest)) {
+            $manifest = [];
+        }
+
         $manifest[$key] = $value;
 
         $this->session()?->set($this->namespace, $manifest);
@@ -115,13 +134,17 @@ final class SessionStore implements StoreInterface
         $request ??= $this->requestStack->getCurrentRequest();
         $session = null;
 
+        if (! $request instanceof Request) {
+            return null;
+        }
+
         try {
             $session = $request->getSession();
         } catch (Throwable) {
         }
 
         if ($session instanceof \Symfony\Component\HttpFoundation\Session\SessionInterface) {
-            if ($session instanceof \Symfony\Component\HttpFoundation\Session\SessionInterface && ! $session->isStarted()) {
+            if (! $session->isStarted()) {
                 $session->start();
             }
 

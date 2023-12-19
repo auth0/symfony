@@ -15,6 +15,9 @@ use Auth0\Symfony\Service;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\{UserInterface as SymfonyUserInterface, UserProviderInterface as SymfonyUserProviderInterface};
 
+/**
+ * @template-implements SymfonyUserProviderInterface<SymfonyUserInterface>
+ */
 final class UserProvider implements SymfonyUserProviderInterface, UserProviderInterface
 {
     public function __construct(
@@ -29,13 +32,21 @@ final class UserProvider implements SymfonyUserProviderInterface, UserProviderIn
 
     public function loadUserByIdentifier(string $identifier): SymfonyUserInterface
     {
-        $identifier = json_decode($identifier, true);
+        $identifier = json_decode($identifier, true, 512, JSON_THROW_ON_ERROR);
 
-        if ('stateful' === $identifier['type']) {
-            return new StatefulUser($identifier['data']['user']);
+        if (! is_array($identifier)) {
+            throw new UnsupportedUserException();
         }
 
-        return new StatelessUser($identifier['data']['user']);
+        $type = $identifier['type'] ?? null;
+        $data = $identifier['data'] ?? [];
+        $user = $data['user'] ?? null;
+
+        if ('stateful' === $type) {
+            return new StatefulUser($user);
+        }
+
+        return new StatelessUser($user);
     }
 
     public function refreshUser(SymfonyUserInterface $user): SymfonyUserInterface
@@ -47,6 +58,9 @@ final class UserProvider implements SymfonyUserProviderInterface, UserProviderIn
         return $user;
     }
 
+    /**
+     * @param UserInterface|string $class
+     */
     public function supportsClass($class): bool
     {
         return $class instanceof UserInterface || is_subclass_of($class, UserInterface::class);
