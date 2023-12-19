@@ -10,6 +10,9 @@ use DateTimeInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 use function array_key_exists;
+use function is_array;
+use function is_bool;
+use function is_int;
 use function is_string;
 
 class User implements SymfonyUserInterface, UserInterface
@@ -37,7 +40,7 @@ class User implements SymfonyUserInterface, UserInterface
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -163,7 +166,7 @@ class User implements SymfonyUserInterface, UserInterface
 
     public function getLastPasswordResetAt(): ?DateTimeInterface
     {
-        $lastPasswordResetAt =$this->data['last_password_reset'];
+        $lastPasswordResetAt = $this->data['last_password_reset'];
 
         if (! is_string($lastPasswordResetAt)) {
             return null;
@@ -305,7 +308,7 @@ class User implements SymfonyUserInterface, UserInterface
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */

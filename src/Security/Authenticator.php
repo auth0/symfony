@@ -16,14 +16,16 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\{Passport, SelfValidatingPassport};
 use Throwable;
 
+use function is_array;
+use function is_string;
+
 final class Authenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
     /**
-     * @param array<mixed> $configuration
-     * @param Service $service
+     * @param array<mixed>    $configuration
+     * @param Service         $service
      * @param RouterInterface $router
      * @param LoggerInterface $logger
-     * @return void
      */
     public function __construct(
         public array $configuration,

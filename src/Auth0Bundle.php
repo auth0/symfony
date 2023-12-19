@@ -11,16 +11,14 @@ use Auth0\Symfony\Contracts\BundleInterface;
 use Auth0\Symfony\Controllers\AuthenticationController;
 use Auth0\Symfony\Security\{Authenticator, Authorizer, UserProvider};
 use Auth0\Symfony\Stores\SessionStore;
-use LogicException;
 use OpenSSLAsymmetricKey;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{RequestFactoryInterface, ResponseFactoryInterface, StreamFactoryInterface};
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
-use Symfony\Component\DependencyInjection\{ContainerBuilder, Reference};
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\{ContainerBuilder, Reference};
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 final class Auth0Bundle extends AbstractBundle implements BundleInterface
@@ -31,45 +29,44 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
     }
 
     /**
-     * @param array<mixed> $config The configuration array.
+     * @param array<mixed>          $config    The configuration array.
      * @param ContainerConfigurator $container The container configurator.
-     * @param ContainerBuilder $builder The container builder.
+     * @param ContainerBuilder      $builder   The container builder.
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $sdkConfig = $config['sdk'] ?? [];
 
         /**
-         * @var array{strategy: string, domain: ?string, custom_domain: ?string, client_id: ?string, redirect_uri: ?string, client_secret: ?string, audiences: null|array<string>, organizations: array<string>|null, use_pkce: bool, scopes: array<string>|null, response_mode: string, response_type: string, token_algorithm: ?string, token_jwks_uri: ?string, token_max_age: ?int, token_leeway: ?int, token_cache: ?CacheItemPoolInterface, token_cache_ttl: int, http_client: null|string|ClientInterface, http_max_retries: int, http_request_factory: null|string|RequestFactoryInterface, http_response_factory: null|string|ResponseFactoryInterface, http_stream_factory: null|string|StreamFactoryInterface, http_telemetry: bool, session_storage: ?StoreInterface, session_storage_prefix: ?string, cookie_secret: ?string, cookie_domain: ?string, cookie_expires: int, cookie_path: string, cookie_secure: bool, cookie_same_site: ?string, persist_user: bool, persist_id_token: bool, persist_access_token: bool, persist_refresh_token: bool, transient_storage: ?StoreInterface, transient_storage_prefix: ?string, query_user_info: bool, management_token: ?string, management_token_cache: ?CacheItemPoolInterface, event_listener_provider: null|string|ListenerProviderInterface, client_assertion_signing_key: null|OpenSSLAsymmetricKey|string, client_assertion_signing_algorithm: string, pushed_authorization_request: bool, backchannel_logout_cache: ?CacheItemPoolInterface, backchannel_logout_expires: int} $sdkConfig
+         * @var array{strategy: string, domain: ?string, custom_domain: ?string, client_id: ?string, redirect_uri: ?string, client_secret: ?string, audiences: null|array<string>, organizations: null|array<string>, use_pkce: bool, scopes: null|array<string>, response_mode: string, response_type: string, token_algorithm: ?string, token_jwks_uri: ?string, token_max_age: ?int, token_leeway: ?int, token_cache: ?CacheItemPoolInterface, token_cache_ttl: int, http_client: null|ClientInterface|string, http_max_retries: int, http_request_factory: null|RequestFactoryInterface|string, http_response_factory: null|ResponseFactoryInterface|string, http_stream_factory: null|StreamFactoryInterface|string, http_telemetry: bool, session_storage: ?StoreInterface, session_storage_prefix: ?string, cookie_secret: ?string, cookie_domain: ?string, cookie_expires: int, cookie_path: string, cookie_secure: bool, cookie_same_site: ?string, persist_user: bool, persist_id_token: bool, persist_access_token: bool, persist_refresh_token: bool, transient_storage: ?StoreInterface, transient_storage_prefix: ?string, query_user_info: bool, management_token: ?string, management_token_cache: ?CacheItemPoolInterface, event_listener_provider: null|ListenerProviderInterface|string, client_assertion_signing_key: null|OpenSSLAsymmetricKey|string, client_assertion_signing_algorithm: string, pushed_authorization_request: bool, backchannel_logout_cache: ?CacheItemPoolInterface, backchannel_logout_expires: int} $sdkConfig
          */
-
         $tokenCache = $sdkConfig['token_cache'] ?? 'cache.app';
 
-        if (! $tokenCache instanceOf CacheItemPoolInterface) {
+        if (! $tokenCache instanceof CacheItemPoolInterface) {
             $tokenCache = new Reference($tokenCache);
         }
 
         $managementTokenCache = $sdkConfig['management_token_cache'] ?? 'cache.app';
 
-        if (! $managementTokenCache instanceOf CacheItemPoolInterface) {
+        if (! $managementTokenCache instanceof CacheItemPoolInterface) {
             $managementTokenCache = new Reference($managementTokenCache);
         }
 
         $backchannelLogoutCache = $sdkConfig['backchannel_logout_cache'] ?? 'cache.app';
 
-        if (! $backchannelLogoutCache instanceOf CacheItemPoolInterface) {
+        if (! $backchannelLogoutCache instanceof CacheItemPoolInterface) {
             $backchannelLogoutCache = new Reference($backchannelLogoutCache);
         }
 
         $transientStorage = $sdkConfig['transient_storage'] ?? 'auth0.store_transient';
 
-        if (! $transientStorage instanceOf StoreInterface) {
+        if (! $transientStorage instanceof StoreInterface) {
             $transientStorage = new Reference($transientStorage);
         }
 
         $sessionStorage = $sdkConfig['session_storage'] ?? 'auth0.store_session';
 
-        if (! $sessionStorage instanceOf StoreInterface) {
+        if (! $sessionStorage instanceof StoreInterface) {
             $sessionStorage = new Reference($sessionStorage);
         }
 
@@ -78,31 +75,31 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
 
         $eventListenerProvider = $sdkConfig['event_listener_provider'] ?? null;
 
-        if (! $eventListenerProvider instanceOf ListenerProviderInterface && $eventListenerProvider !== '' && $eventListenerProvider !== null) {
+        if (! $eventListenerProvider instanceof ListenerProviderInterface && '' !== $eventListenerProvider && null !== $eventListenerProvider) {
             $eventListenerProvider = new Reference($eventListenerProvider);
         }
 
         $httpClient = $sdkConfig['http_client'] ?? null;
 
-        if (! $httpClient instanceOf ClientInterface && $httpClient !== '' && $httpClient !== null) {
+        if (! $httpClient instanceof ClientInterface && '' !== $httpClient && null !== $httpClient) {
             $httpClient = new Reference($httpClient);
         }
 
         $httpRequestFactory = $sdkConfig['http_request_factory'] ?? null;
 
-        if (! $httpRequestFactory instanceOf RequestFactoryInterface && $httpRequestFactory !== '' && $httpRequestFactory !== null) {
+        if (! $httpRequestFactory instanceof RequestFactoryInterface && '' !== $httpRequestFactory && null !== $httpRequestFactory) {
             $httpRequestFactory = new Reference($httpRequestFactory);
         }
 
         $httpResponseFactory = $sdkConfig['http_response_factory'] ?? null;
 
-        if (! $httpResponseFactory instanceOf ResponseFactoryInterface && $httpResponseFactory !== '' && $httpResponseFactory !== null) {
+        if (! $httpResponseFactory instanceof ResponseFactoryInterface && '' !== $httpResponseFactory && null !== $httpResponseFactory) {
             $httpResponseFactory = new Reference($httpResponseFactory);
         }
 
         $httpStreamFactory = $sdkConfig['http_stream_factory'] ?? null;
 
-        if (! $httpStreamFactory instanceOf StreamFactoryInterface && $httpStreamFactory !== '' && $httpStreamFactory !== null) {
+        if (! $httpStreamFactory instanceof StreamFactoryInterface && '' !== $httpStreamFactory && null !== $httpStreamFactory) {
             $httpStreamFactory = new Reference($httpStreamFactory);
         }
 

@@ -24,6 +24,8 @@ final class BackchannelLogoutController extends AbstractController implements Au
 
     /**
      * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
      */
     public function handle(Request $request): Response
     {

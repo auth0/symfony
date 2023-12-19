@@ -14,14 +14,14 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\{Passport, SelfValidatingPassport};
 
+use function is_string;
+
 final class Authorizer extends AbstractAuthenticator implements AuthorizerInterface
 {
     /**
-     * @param array<mixed> $configuration
-     * @param Service $service
+     * @param array<mixed>    $configuration
+     * @param Service         $service
      * @param LoggerInterface $logger
-     *
-     * @return void
      */
     public function __construct(
         private array $configuration,
@@ -32,6 +32,8 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
 
     /**
      * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
      */
     public function authenticate(Request $request): Passport
     {
@@ -100,6 +102,8 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
 
     /**
      * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
      */
     public function supports(Request $request): ?bool
     {

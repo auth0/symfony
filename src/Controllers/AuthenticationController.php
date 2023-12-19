@@ -7,16 +7,15 @@ namespace Auth0\Symfony\Controllers;
 use Auth0\SDK\Auth0;
 use Auth0\Symfony\Contracts\Controllers\AuthenticationControllerInterface;
 use Auth0\Symfony\Security\Authenticator;
-use Psr\Cache\InvalidArgumentException;
-use LogicException;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\{BadRequestException, ConflictingHeadersException, SuspiciousOperationException};
 use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
-use Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
-use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\Routing\RouterInterface;
 use Throwable;
+
+use function is_array;
+use function is_string;
 
 final class AuthenticationController extends AbstractController implements AuthenticationControllerInterface
 {
@@ -29,6 +28,8 @@ final class AuthenticationController extends AbstractController implements Authe
 
     /**
      * @psalm-suppress InternalMethod
+     *
+     * @param Request $request
      */
     public function callback(Request $request): Response
     {

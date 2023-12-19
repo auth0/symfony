@@ -15,6 +15,8 @@ use Auth0\Symfony\Service;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\{UserInterface as SymfonyUserInterface, UserProviderInterface as SymfonyUserProviderInterface};
 
+use function is_array;
+
 /**
  * @template-implements SymfonyUserProviderInterface<SymfonyUserInterface>
  */
@@ -59,7 +61,7 @@ final class UserProvider implements SymfonyUserProviderInterface, UserProviderIn
     }
 
     /**
-     * @param UserInterface|string $class
+     * @param string|UserInterface $class
      */
     public function supportsClass($class): bool
     {

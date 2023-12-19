@@ -11,11 +11,15 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\{Request, RequestStack};
 use Throwable;
 
+use function gettype;
+use function is_array;
+use function is_string;
+
 final class SessionStore implements StoreInterface
 {
     /**
-     * @param string $namespace
-     * @param RequestStack $requestStack
+     * @param string          $namespace
+     * @param RequestStack    $requestStack
      * @param LoggerInterface $logger
      *
      * @psalm-suppress DocblockTypeContradiction
