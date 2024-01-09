@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - id: set-matrix
         run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -70,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -86,47 +86,45 @@ jobs:
       #     directory: ./coverage/
       #     flags: unittestsvalidate
 
-  # TODO: Fix PHPStan tests
-  # phpstan:
-  #   name: PHPStan
-  #   needs: [configure, prepare]
-  #   runs-on: ubuntu-latest
+  phpstan:
+    name: PHPStan
+    needs: [configure, prepare]
+    runs-on: ubuntu-latest
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
 
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
-  #     - uses: ./.github/actions/setup
-  #       with:
-  #         php: ${{ matrix.php }}
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
 
-  #     - run: composer phpstan
+      - run: composer phpstan
 
-  # TODO: Fix Psalm tests
-  # psalm:
-  #   name: Psalm
-  #   needs: [configure, prepare]
-  #   runs-on: ubuntu-latest
+  psalm:
+    name: Psalm
+    needs: [configure, prepare]
+    runs-on: ubuntu-latest
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
 
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
-  #     - uses: ./.github/actions/setup
-  #       with:
-  #         php: ${{ matrix.php }}
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
 
-  #     - run: composer psalm
+      - run: composer psalm
 
   rector:
     name: Rector
@@ -136,7 +134,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -152,7 +150,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -168,7 +166,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -184,7 +182,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:

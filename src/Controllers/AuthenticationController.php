@@ -24,7 +24,7 @@ final class AuthenticationController extends AbstractController implements Authe
         private RouterInterface $router,
         ContainerInterface $container,
     ) {
-        $this->setContainer($container);
+        $this->container = $container;
     }
 
     /**

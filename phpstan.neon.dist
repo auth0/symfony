@@ -20,6 +20,7 @@ parameters:
         - '#Casting to string something that(.*) already string.#'
         - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
         - '#Property (.*) is never read, only written.#'
+        - '#Constructor of class (.*) has an unused parameter (.*).#'
         - '#Call to function is_string\(\) with string will always evaluate to true.$#'
         -
             message: '#Parameter \#3 \$(.*) of function openssl_verify expects (.*), (.*) given.#'

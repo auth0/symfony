@@ -18,8 +18,9 @@ final class BackchannelLogoutController extends AbstractController implements Au
 {
     public function __construct(
         private Authenticator $authenticator,
-        protected ContainerInterface $container,
+        ContainerInterface $container,
     ) {
+        $this->container = $container;
     }
 
     /**
