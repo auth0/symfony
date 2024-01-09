@@ -27,7 +27,7 @@ final class Service implements ServiceInterface
 
     public function getSdk(): Auth0
     {
-        if (! $this->sdk instanceof \Auth0\SDK\Auth0) {
+        if (! $this->sdk instanceof Auth0) {
             $this->warmUp();
             $this->sdk = new Auth0($this->configuration);
 

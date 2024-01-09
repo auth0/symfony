@@ -147,7 +147,7 @@ final class SessionStore implements StoreInterface
         } catch (Throwable) {
         }
 
-        if ($session instanceof \Symfony\Component\HttpFoundation\Session\SessionInterface) {
+        if ($session instanceof SessionInterface) {
             if (! $session->isStarted()) {
                 $session->start();
             }
