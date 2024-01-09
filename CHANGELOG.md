@@ -1,5 +1,18 @@
 # Change Log
 
+## [5.2.3](https://github.com/auth0/symfony/tree/5.2.3) (2024-01-08)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.2.2...5.2.3)
+
+**Fixed**
+- Syntax typo in AuthenticationController::__construct() [\#180](https://github.com/auth0/symfony/pull/180) ([mkilmanas](https://github.com/mkilmanas))
+- Controller container property assignment [\#179](https://github.com/auth0/symfony/pull/179) ([mkilmanas](https://github.com/mkilmanas))
+
+## [5.2.2](https://github.com/auth0/symfony/tree/5.2.2) (2023-12-19)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.2.1...5.2.2)
+
+**Fixed**
+- Disallow installation with Symfony 7.0 until fully compatible
+
 ## [5.2.1](https://github.com/auth0/symfony/tree/5.2.1) (2023-12-16)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.2.0...5.2.1)
 
