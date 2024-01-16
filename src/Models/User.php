@@ -254,7 +254,7 @@ class User implements SymfonyUserInterface, UserInterface
         $scopes = $this->data['scope'] ?? [];
 
         if (is_string($scopes)) {
-            $scopes = [$scopes];
+            $scopes = explode(' ', $scopes);
         }
 
         foreach ($roles as $role) {
