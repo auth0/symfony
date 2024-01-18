@@ -258,13 +258,13 @@ class User implements SymfonyUserInterface, UserInterface
         }
 
         foreach ($roles as $role) {
-            $response[] = implode('_', explode(':', strtoupper($role)));
+            $response[] = str_replace([':', '-'], '_', strtoupper($role));
         }
 
         if (is_array($permissions)) {
             foreach ($permissions as $permission) {
                 if (is_string($permission)) {
-                    $response[] = 'ROLE_' . implode('_', explode(':', strtoupper($permission)));
+                    $response[] = 'ROLE_' . str_replace([':', '-'], '_', strtoupper($permission));
                 }
             }
         }
@@ -272,7 +272,7 @@ class User implements SymfonyUserInterface, UserInterface
         if (is_array($scopes)) {
             foreach ($scopes as $scope) {
                 if (is_string($scope)) {
-                    $response[] = 'ROLE_' . implode('_', explode(':', strtoupper($scope)));
+                    $response[] = 'ROLE_' . str_replace([':', '-'], '_', strtoupper($scope));
                 }
             }
         }
