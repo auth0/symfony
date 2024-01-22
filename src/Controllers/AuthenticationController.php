@@ -7,9 +7,7 @@ namespace Auth0\Symfony\Controllers;
 use Auth0\SDK\Auth0;
 use Auth0\Symfony\Contracts\Controllers\AuthenticationControllerInterface;
 use Auth0\Symfony\Security\Authenticator;
-use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\{BadRequestException, ConflictingHeadersException, SuspiciousOperationException};
 use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
 use Symfony\Component\Routing\RouterInterface;
 use Throwable;
@@ -22,9 +20,7 @@ final class AuthenticationController extends AbstractController implements Authe
     public function __construct(
         private Authenticator $authenticator,
         private RouterInterface $router,
-        ContainerInterface $container,
     ) {
-        $this->container = $container;
     }
 
     /**
