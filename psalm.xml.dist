@@ -24,5 +24,10 @@
         <PossiblyNullArgument errorLevel="suppress" />
         <PossiblyNullPropertyAssignmentValue errorLevel="suppress" />
         <PossiblyNullReference errorLevel="suppress" />
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <referencedProperty name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::$container" />    <!-- Injected by Symfony DI via setContainer() because marked as #[Required] -->
+            </errorLevel>
+        </PropertyNotSetInConstructor>
     </issueHandlers>
 </psalm>
