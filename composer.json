@@ -1,5 +1,5 @@
 {
-  "name": "auth0/symfony",
+  "name": "elvi/auth0-symfony",
   "description": "Symfony SDK for Auth0 Authentication and Management APIs.",
   "license": "MIT",
   "type": "symfony-bundle",
@@ -25,6 +25,11 @@
       "name": "Auth0",
       "email": "support@auth0.com",
       "homepage": "https://auth0.com/"
+    },
+    {
+      "name": "Vision Group",
+      "email": "it@visiongroup.io",
+      "homepage": "https://visiongroup.io/"
     }
   ],
   "homepage": "https://github.com/auth0/symfony",
@@ -50,8 +55,12 @@
     "phpstan/phpstan": "^1",
     "phpstan/phpstan-strict-rules": "^1",
     "rector/rector": "0.17.6",
+    "roave/security-advisories": "dev-latest",
     "vimeo/psalm": "^5",
     "wikimedia/composer-merge-plugin": "^2"
+  },
+  "replace": {
+    "auth0/symfony": "*"
   },
   "suggest": {
     "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
