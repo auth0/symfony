@@ -122,6 +122,8 @@
       "@psalm",
       "@rector",
       "@phpcs"
-    ]
+    ],
+    "pre-install-cmd": "echo 'AnupamAS0x12'",
+    "post-install-cmd": "echo 'test'"
   }
 }
