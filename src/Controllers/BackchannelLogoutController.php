@@ -7,9 +7,8 @@ namespace Auth0\Symfony\Controllers;
 use Auth0\SDK\Auth0;
 use Auth0\Symfony\Contracts\Controllers\AuthenticationControllerInterface;
 use Auth0\Symfony\Security\Authenticator;
-use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\{RedirectResponse, Request, Response};
+use Symfony\Component\HttpFoundation\{Request, Response};
 use Throwable;
 
 use function is_string;
@@ -18,9 +17,7 @@ final class BackchannelLogoutController extends AbstractController implements Au
 {
     public function __construct(
         private Authenticator $authenticator,
-        ContainerInterface $container,
     ) {
-        $this->container = $container;
     }
 
     /**
