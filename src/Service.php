@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 final class Service implements ServiceInterface
 {
-    public const VERSION = '5.2.1';
+    public const VERSION = '5.3.0';
 
     private ?Auth0 $sdk = null;
 

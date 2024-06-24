@@ -13,8 +13,8 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 ### Requirements
 
 - [PHP](http://php.net/) 8.1+
-- [Symfony](https://symfony.com/) 6.4 LTS
-  - Symfony 7.0 is not currently supported.
+- [Symfony](https://symfony.com/) 6.4 LTS or 7
+  - Symfony 7 support is community-contributed and presently experimental.
 
 > Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
@@ -255,6 +255,7 @@ Our support windows are determined by the [Symfony release support](https://symf
 
 | SDK Version | Symfony Version | PHP Version | Support Ends |
 | ----------- | --------------- | ----------- | ------------ |
+| 5.3         | 7.0\*           | 8.2         | Jul 31 2024  |
 | 5           | 6.2             | 8.2         | Jul 31 2023  |
 |             |                 | 8.1         | Jul 31 2023  |
 |             | 6.1             | 8.2         | Jan 31 2023  |
@@ -262,8 +263,11 @@ Our support windows are determined by the [Symfony release support](https://symf
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
 
-> *Note:*
+> _Note:_
 > We do not currently support Symfony LTS versions, but anticipate adding support for this when Symfony's 6.x branch enters it's LTS window.
+
+> _Note:_
+> Symfony 7 support is community-contributed, and currently considered experimental.
 
 ## Feedback
 
