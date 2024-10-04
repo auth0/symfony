@@ -195,7 +195,6 @@ return (new PhpCsFixer\Config())
         'single_line_comment_style' => ['comment_types' => ['hash']],
         'single_line_throw' => true,
         'single_quote' => true,
-        //'single_space_after_construct' => true,
         'single_space_around_construct' => true,
         'single_trait_insert_per_statement' => true,
         'space_after_semicolon' => true,
