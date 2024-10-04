@@ -8,6 +8,8 @@ use Auth0\Symfony\Contracts\Exceptions\ExceptionInterface;
 use Exception;
 use Throwable;
 
+use function sprintf;
+
 final class UnsupportedUserException extends Exception implements ExceptionInterface
 {
     public const MSG_CLASS_NOT_SUPPORTED = 'Instances of `%s` are not supported.';
