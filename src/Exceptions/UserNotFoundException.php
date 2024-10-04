@@ -8,6 +8,8 @@ use Auth0\Symfony\Contracts\Exceptions\ExceptionInterface;
 use Exception;
 use Throwable;
 
+use function sprintf;
+
 final class UserNotFoundException extends Exception implements ExceptionInterface
 {
     public const MSG_CANNOT_LOAD_BY_USERNAME = '%1$s cannot load user "%2$s" by username. Use %1$s::loadUserByJWT instead.';
