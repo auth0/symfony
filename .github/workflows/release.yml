@@ -4,10 +4,6 @@ on:
   pull_request:
     types:
       - closed
-  workflow_dispatch:
-  push:
-    branches:
-      - 'add-reversing-labs'
 
 permissions:
   contents: write
