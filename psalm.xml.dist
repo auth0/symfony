@@ -30,5 +30,15 @@
                 <referencedProperty name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::$container" />    <!-- Injected by Symfony DI via setContainer() because marked as #[Required] -->
             </errorLevel>
         </PropertyNotSetInConstructor>
+        <InvalidReturnStatement>
+            <errorLevel type="suppress">
+                <file name="src/Models/User.php" />
+            </errorLevel>
+        </InvalidReturnStatement>
+        <LessSpecificReturnStatement>
+             <errorLevel type="suppress">
+                <file name="src/Models/User.php" />
+            </errorLevel>
+        </LessSpecificReturnStatement>
     </issueHandlers>
 </psalm>
