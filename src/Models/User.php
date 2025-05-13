@@ -300,7 +300,7 @@ class User implements SymfonyUserInterface, UserInterface
         $userIdentifier = $this->getId() ?? $this->data['sub'];
 
         if (! is_string($userIdentifier)) {
-            return '';
+            return 'unknown';
         }
 
         return $userIdentifier;
