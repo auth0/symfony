@@ -53,7 +53,7 @@ parameters:
             message: '#Method Auth0\\Symfony\\Models\\User::getUserIdentifier\(\) should return non-empty-string but returns string.#'
             path: src\Models\User.php
         - 
-            message: '#Method Auth0\\Symfony\\Models\\User::getUserIdentifier\(\) should return non-empty-string but returns \"\".#'
+            message: "#^Method Auth0\\\\Symfony\\\\Models\\\\User::getUserIdentifier\\(\\) should return non-empty-string but returns ''\\.$#"
             path: src\Models\User.php
 
     reportUnmatchedIgnoredErrors: false
