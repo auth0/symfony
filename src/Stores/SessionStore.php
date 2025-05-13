@@ -7,8 +7,8 @@ namespace Auth0\Symfony\Stores;
 use Auth0\SDK\Contract\StoreInterface;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\{Request, RequestStack};
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Throwable;
 
 use function gettype;
