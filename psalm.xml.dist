@@ -13,6 +13,7 @@
     </projectFiles>
 
     <issueHandlers>
+        <MoreSpecificReturnType errorLevel="suppress" />
         <InvalidStringClass errorLevel="suppress" />
         <MixedArgument errorLevel="suppress" />
         <MixedArgumentTypeCoercion errorLevel="suppress" />
