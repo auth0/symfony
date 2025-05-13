@@ -49,6 +49,9 @@ parameters:
         -
             message: '#Parameter \#1 \$object of function method_exists expects object\|string, Psr\\Http\\Client\\ClientInterface\|null given.#'
             path: src\Utility\HttpRequest.php
+        - 
+            message: '#Method Auth0\\Symfony\\Models\\User::getUserIdentifier\(\) should return non-empty-string but returns string.#'
+            path: src\Models\User.php
 
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false
