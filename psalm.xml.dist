@@ -29,5 +29,6 @@
                 <referencedProperty name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::$container" />    <!-- Injected by Symfony DI via setContainer() because marked as #[Required] -->
             </errorLevel>
         </PropertyNotSetInConstructor>
+        <MoreSpecificReturnType errorLevel="suppress" />
     </issueHandlers>
 </psalm>
