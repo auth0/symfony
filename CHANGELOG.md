@@ -1,5 +1,12 @@
 # Change Log
 
+## [5.3.1](https://github.com/auth0/symfony/tree/5.3.1) (2025-05-13)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.3.0...5.3.1)
+
+**Fixed**
+- fix : Unit Tests [\#200](https://github.com/auth0/symfony/pull/200) ([kishore7snehil](https://github.com/kishore7snehil))
+- Removed Deprecated Rules From PHP CS Fixer [\#195](https://github.com/auth0/symfony/pull/195) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [5.3.0](https://github.com/auth0/symfony/tree/5.3.0) (2024-06-24)
 
 [Full Changelog](https://github.com/auth0/symfony/compare/5.2.3...5.3.0)
