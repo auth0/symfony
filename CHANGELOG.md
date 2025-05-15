@@ -1,5 +1,12 @@
 # Change Log
 
+## [5.4.0](https://github.com/auth0/symfony/tree/5.4.0) (2025-05-16)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.3.1...5.4.0)
+
+**Fixed**
+
+-   Security fix: Resolve CVE-2025-47275
+
 ## [5.3.1](https://github.com/auth0/symfony/tree/5.3.1) (2025-05-13)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.3.0...5.3.1)
 
