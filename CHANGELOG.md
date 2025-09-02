@@ -5,7 +5,7 @@
 
 **Fixed**
 
--   Security fix: Resolve CVE-2025-47275
+-   Security fix: Resolve <TBD>
 
 ## [5.4.1](https://github.com/auth0/symfony/tree/5.4.1) (2025-09-02)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.4.0...5.4.1)
