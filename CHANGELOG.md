@@ -1,5 +1,11 @@
 # Change Log
 
+## [5.4.1](https://github.com/auth0/symfony/tree/5.4.1) (2025-09-02)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.4.0...5.4.1)
+
+**Fixed**
+- fix: Remove unused ext-json requirement from composer.json [\#209](https://github.com/auth0/symfony/pull/209) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [5.4.0](https://github.com/auth0/symfony/tree/5.4.0) (2025-05-16)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.3.1...5.4.0)
 
