@@ -59,7 +59,7 @@
     "wikimedia/composer-merge-plugin": "^2"
   },
   "replace": {
-    "auth0/symfony": "*"
+    "auth0/symfony": "self.version"
   },
   "suggest": {
     "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
