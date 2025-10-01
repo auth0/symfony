@@ -1,11 +1,11 @@
 # Change Log
 
-## [5.5.0](https://github.com/auth0/symfony/tree/5.4.0) (2025-09-02)
+## [5.5.0](https://github.com/auth0/symfony/tree/5.4.0) (2025-10-01)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.4.1...5.5.0)
 
 **Fixed**
 
--   Security fix: Resolve <TBD>
+-   Security fix: Resolve CVE-2025-58769
 
 ## [5.4.1](https://github.com/auth0/symfony/tree/5.4.1) (2025-09-02)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.4.0...5.4.1)
