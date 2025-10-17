@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/auth0/symfony)
+
 ![auth0/symfony](https://cdn.auth0.com/website/sdks/banners/jwt-auth-bundle-banner.png)
 
 Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
