@@ -36,8 +36,8 @@ final class AuthenticationController extends AbstractController implements Authe
         $session = $this->getSdk()->getCredentials();
 
         if (null === $session) {
-            $code = $request->get('code');
-            $state = $request->get('state');
+            $code = $request->query->get('code');
+            $state = $request->query->get('state');
 
             $code = is_string($code) ? trim($code) : '';
             $state = is_string($state) ? trim($state) : '';
