@@ -8,10 +8,6 @@
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
 >
-    <!-- <php>
-        <ini name="max_execution_time" value="120"/>
-        <ini name="memory_limit" value="512M"/>
-    </php> -->
 
     <projectFiles>
         <directory name="src" />
