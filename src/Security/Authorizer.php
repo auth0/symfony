@@ -38,12 +38,14 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
     public function authenticate(Request $request): Passport
     {
         // Extract any available value from the authorization header
-        $param = $request->get('token', null);
+        $param = $request->query->get('token');
         $header = trim($request->headers->get('Authorization', '') ?? '');
-        $token = $param ?? $header;
         $usingHeader = null === $param;
 
-        // Ensure the 'authorization' header is present in the request
+        /** @var mixed $token */
+        $token = $param ?? $header;
+
+        // Ensure the token is a valid string
         if (! is_string($token) || '' === $token) {
             throw new AuthenticationException('`Authorization` header not present.');
         }
@@ -107,7 +109,7 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
      */
     public function supports(Request $request): ?bool
     {
-        if (null !== $request->get('token')) {
+        if (null !== $request->query->get('token')) {
             return true;
         }
 

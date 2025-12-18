@@ -37,7 +37,7 @@
     "php": "^8.1",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "auth0/auth0-php": "^8.17",
+    "auth0/auth0-php": "^8.18",
     "symfony/cache": "^6.4 || ^7.0",
     "symfony/framework-bundle": "^6.4 || ^7.0",
     "symfony/security-bundle": "^6.4 || ^7.0"
