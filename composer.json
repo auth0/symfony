@@ -33,23 +33,23 @@
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "auth0/auth0-php": "^8.18",
-    "symfony/cache": "^6.4 || ^7.0",
-    "symfony/framework-bundle": "^6.4 || ^7.0",
-    "symfony/security-bundle": "^6.4 || ^7.0"
+    "symfony/cache": "^6.4 || ^7.0 || ^8.0",
+    "symfony/framework-bundle": "^6.4 || ^7.0 || ^8.0",
+    "symfony/security-bundle": "^6.4 || ^7.0 || ^8.0"
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2",
     "firebase/php-jwt": "^6",
     "friendsofphp/php-cs-fixer": "^3",
-    "hyperf/event": "^2",
+    "hyperf/event": "^2 || ^3",
     "mockery/mockery": "^1",
     "nyholm/psr7": "^1",
-    "pestphp/pest": "^2",
+    "pestphp/pest": "^2 || ^3",
     "php-http/mock-client": "^1",
-    "phpstan/phpstan": "^1",
-    "phpstan/phpstan-strict-rules": "^1",
-    "rector/rector": "0.17.6",
-    "vimeo/psalm": "^5",
+    "phpstan/phpstan": "^1 || ^2",
+    "phpstan/phpstan-strict-rules": "^1 || ^2",
+    "rector/rector": "^2.0",
+    "vimeo/psalm": "^5 || ^6",
     "wikimedia/composer-merge-plugin": "^2"
   },
   "suggest": {
