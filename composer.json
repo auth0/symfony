@@ -39,7 +39,7 @@
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2",
-    "firebase/php-jwt": "^6",
+    "firebase/php-jwt": "^6 || ^7",
     "friendsofphp/php-cs-fixer": "^3",
     "hyperf/event": "^2 || ^3",
     "mockery/mockery": "^1",
