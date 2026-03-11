@@ -31,7 +31,7 @@ final class BackchannelLogoutController extends AbstractController implements Au
             return new Response('', Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
-        $logoutToken = $request->get('logout_token');
+        $logoutToken = $request->request->get('logout_token');
 
         if (! is_string($logoutToken)) {
             return new Response('', Response::HTTP_BAD_REQUEST);
