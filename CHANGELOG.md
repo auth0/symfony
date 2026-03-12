@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.7.0](https://github.com/auth0/symfony/tree/5.7.0) (2026-03-12)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.6.0...5.7.0)
+
+**Added**
+- feat: Add Symfony 8 support [\#230](https://github.com/auth0/symfony/pull/230) ([kishore7snehil](https://github.com/kishore7snehil))
+
+**Fixed**
+- fix: correct .gitattributes [\#231](https://github.com/auth0/symfony/pull/231) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [5.6.0](https://github.com/auth0/symfony/tree/5.6.0) (2025-12-16)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.5.0...5.6.0)
 
