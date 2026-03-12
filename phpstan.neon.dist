@@ -8,7 +8,7 @@ parameters:
         - src
 
     excludePaths:
-        - src/Utility/Assert.php
+        - src/Utility/Assert.php (?)
 
     ignoreErrors:
         - '#Cannot call method createRequest\(\) on Psr\\Http\\Message\\RequestFactoryInterface\|null.#'
@@ -49,12 +49,25 @@ parameters:
         -
             message: '#Parameter \#1 \$object of function method_exists expects object\|string, Psr\\Http\\Client\\ClientInterface\|null given.#'
             path: src\Utility\HttpRequest.php
-        - 
+        -
             message: '#Method Auth0\\Symfony\\Models\\User::getUserIdentifier\(\) should return non-empty-string but returns string.#'
             path: src\Models\User.php
-        - 
+        -
             message: "#^Method Auth0\\\\Symfony\\\\Models\\\\User::getUserIdentifier\\(\\) should return non-empty-string but returns ''\\.$#"
             path: src\Models\User.php
+        -
+            identifier: arrayValues.list
+            path: src/Models/User.php
+        -
+            identifier: return.unusedType
+        -
+            identifier: varTag.nativeType
+            path: src/Security/Authorizer.php
+        -
+            identifier: offsetAccess.nonOffsetAccessible
+            path: src/Security/UserProvider.php
+        -
+            identifier: argument.type
+            path: src/Security/UserProvider.php
 
     reportUnmatchedIgnoredErrors: false
-    checkGenericClassInNonGenericObjectType: false

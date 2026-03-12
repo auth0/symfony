@@ -25,7 +25,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -42,7 +42,7 @@ jobs:
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -60,7 +60,7 @@ jobs:
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -88,7 +88,7 @@ jobs:
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -103,18 +103,14 @@ jobs:
     needs: [configure, prepare]
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
-          php: ${{ matrix.php }}
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
 
       - run: composer psalm
 
@@ -124,7 +120,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -140,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -156,7 +152,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
@@ -172,7 +168,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 

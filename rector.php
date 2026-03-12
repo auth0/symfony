@@ -6,9 +6,7 @@ use Rector\Arguments\Rector\ClassMethod\ArgumentAdderRector;
 use Rector\Arguments\Rector\FuncCall\FunctionArgumentDefaultValueReplacerRector;
 use Rector\Arguments\ValueObject\{ArgumentAdder,
     ReplaceFuncCallArgumentDefaultValue};
-use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
-use Rector\CodeQuality\Rector\Assign\{CombinedAssignRector,
-    SplitListAssignToSeparateLineRector};
+use Rector\CodeQuality\Rector\Assign\CombinedAssignRector;
 use Rector\CodeQuality\Rector\BooleanAnd\SimplifyEmptyArrayCheckRector;
 use Rector\CodeQuality\Rector\BooleanNot\{ReplaceMultipleBooleanNotRector,
     SimplifyDeMorganBinaryRector};
@@ -17,8 +15,7 @@ use Rector\CodeQuality\Rector\Class_\{CompleteDynamicPropertiesRector,
     InlineConstructorDefaultToPropertyRector};
 use Rector\CodeQuality\Rector\ClassMethod\{InlineArrayReturnAssignRector,
     NarrowUnionTypeDocRector,
-    OptionalParametersAfterRequiredRector,
-    ReturnTypeFromStrictScalarReturnExprRector};
+    OptionalParametersAfterRequiredRector};
 use Rector\CodeQuality\Rector\Concat\JoinStringConcatRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\Equal\UseIdenticalOverEqualWithSameTypeRector;
@@ -34,13 +31,10 @@ use Rector\CodeQuality\Rector\Foreach_\{ForeachItemsAssignToEmptyArrayToAssignRe
 use Rector\CodeQuality\Rector\FuncCall\{AddPregQuoteDelimiterRector,
     ArrayKeysAndInArrayToArrayKeyExistsRector,
     ArrayMergeOfNonArraysToSimpleArrayRector,
-    BoolvalToTypeCastRector,
     CallUserFuncWithArrowFunctionToInlineRector,
     ChangeArrayPushToArrayAssignRector,
     CompactToVariablesRector,
-    FloatvalToTypeCastRector,
     InlineIsAInstanceOfRector,
-    IntvalToTypeCastRector,
     IsAWithStringWithThirdArgumentRector,
     RemoveSoleValueSprintfRector,
     SetTypeToCastRector,
@@ -49,14 +43,12 @@ use Rector\CodeQuality\Rector\FuncCall\{AddPregQuoteDelimiterRector,
     SimplifyRegexPatternRector,
     SimplifyStrposLowerRector,
     SingleInArrayToCompareRector,
-    StrvalToTypeCastRector,
     UnwrapSprintfOneArgumentRector};
 use Rector\CodeQuality\Rector\FunctionLike\{RemoveAlwaysTrueConditionSetInConstructorRector,
     SimplifyUselessLastVariableAssignRector,
     SimplifyUselessVariableRector};
 use Rector\CodeQuality\Rector\Identical\{BooleanNotIdenticalToNotIdenticalRector,
     FlipTypeControlToUseExclusiveTypeRector,
-    GetClassToInstanceOfRector,
     SimplifyArraySearchRector,
     SimplifyBoolIdenticalTrueRector,
     SimplifyConditionsRector,
@@ -86,19 +78,16 @@ use Rector\CodeQuality\Rector\Ternary\{ArrayKeyExistsTernaryThenValueToCoalescin
 use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
 use Rector\CodingStyle\Rector\Assign\SplitDoubleAssignRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
-use Rector\CodingStyle\Rector\Class_\AddArrayDefaultToArrayPropertyRector;
 use Rector\CodingStyle\Rector\ClassConst\{RemoveFinalFromConstRector, SplitGroupedClassConstantsRector, VarConstantCommentRector};
-use Rector\CodingStyle\Rector\ClassMethod\{FuncGetArgsToVariadicParamRector, MakeInheritedMethodVisibilitySameAsParentRector, NewlineBeforeNewAssignSetRector, RemoveDoubleUnderscoreInMethodNameRector, UnSpreadOperatorRector};
+use Rector\CodingStyle\Rector\ClassMethod\{FuncGetArgsToVariadicParamRector, MakeInheritedMethodVisibilitySameAsParentRector, NewlineBeforeNewAssignSetRector, RemoveDoubleUnderscoreInMethodNameRector};
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\CodingStyle\Rector\Encapsed\{EncapsedStringsToSprintfRector, WrapEncapsedVariableInCurlyBracesRector};
 use Rector\CodingStyle\Rector\FuncCall\{CallUserFuncArrayToVariadicRector, CallUserFuncToMethodCallRector, ConsistentImplodeRector, ConsistentPregDelimiterRector, CountArrayToEmptyArrayComparisonRector, StrictArraySearchRector, VersionCompareFuncCallToConstantRector};
 use Rector\CodingStyle\Rector\If_\NullableCompareToNullRector;
-use Rector\CodingStyle\Rector\Plus\UseIncrementAssignRector;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\CodingStyle\Rector\Property\{AddFalseDefaultToBoolPropertyRector, SplitGroupedPropertiesRector};
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
-use Rector\CodingStyle\Rector\String_\{SymplifyQuoteEscapeRector, UseClassKeywordForClassNameResolutionRector};
-use Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector;
+use Rector\CodingStyle\Rector\String_\{SimplifyQuoteEscapeRector, UseClassKeywordForClassNameResolutionRector};
 use Rector\CodingStyle\Rector\Ternary\TernaryConditionVariableAssignmentRector;
 use Rector\CodingStyle\Rector\Use_\SeparateMultiUseImportsRector;
 use Rector\Config\RectorConfig;
@@ -141,12 +130,10 @@ use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRect
 use Rector\DeadCode\Rector\Return_\RemoveDeadConditionAboveReturnRector;
 use Rector\DeadCode\Rector\StaticCall\RemoveParentCallWithoutParentRector;
 use Rector\DeadCode\Rector\Stmt\RemoveUnreachableStatementRector;
-use Rector\DeadCode\Rector\StmtsAwareInterface\{RemoveJustPropertyFetchForAssignRector,
-    RemoveJustVariableAssignRector};
+use Rector\DeadCode\Rector\StmtsAwareInterface\RemoveJustVariableAssignRector;
 use Rector\DeadCode\Rector\Switch_\RemoveDuplicatedCaseInSwitchRector;
 use Rector\DeadCode\Rector\Ternary\TernaryToBooleanOrFalseToBooleanAndRector;
 use Rector\DeadCode\Rector\TryCatch\RemoveDeadTryCatchRector;
-use Rector\DependencyInjection\Rector\Class_\ActionInjectionToConstructorInjectionRector;
 use Rector\EarlyReturn\Rector\Foreach_\ChangeNestedForeachIfsToEarlyContinueRector;
 use Rector\EarlyReturn\Rector\If_\{ChangeAndIfToEarlyReturnRector,
     ChangeIfElseValueAssignToEarlyReturnRector,
@@ -184,7 +171,6 @@ use Rector\Php80\Rector\Identical\{StrEndsWithRector,
 use Rector\Php80\Rector\NotIdentical\StrContainsRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Php80\Rector\Ternary\GetDebugTypeRector;
-use Rector\PHPUnit\Rector\ClassMethod\RemoveEmptyTestMethodRector;
 use Rector\Privatization\Rector\Class_\{ChangeGlobalVariablesToPropertiesRector,
     ChangeReadOnlyVariableWithDefaultValueToConstantRector,
     FinalizeClassesWithoutChildrenRector};
@@ -192,8 +178,6 @@ use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
 use Rector\Privatization\Rector\MethodCall\PrivatizeLocalGetterToPropertyRector;
 use Rector\Privatization\Rector\Property\{ChangeReadOnlyPropertyWithDefaultValueToConstantRector,
     PrivatizeFinalClassPropertyRector};
-use Rector\PSR4\Rector\FileWithoutNamespace\NormalizeNamespaceByPSR4ComposerAutoloadRector;
-use Rector\PSR4\Rector\Namespace_\MultipleClassFileToPsr4ClassesRector;
 use Rector\Renaming\Rector\FuncCall\RenameFunctionRector;
 use Rector\Transform\Rector\FuncCall\FuncCallToConstFetchRector;
 use Rector\Transform\Rector\StaticCall\StaticCallToFuncCallRector;
@@ -207,27 +191,22 @@ use Rector\TypeDeclaration\Rector\ClassMethod\{AddMethodCallBasedStrictParamType
     AddReturnTypeDeclarationBasedOnParentClassMethodRector,
     AddVoidReturnTypeWhereNoReturnRector,
     ArrayShapeFromConstantArrayReturnRector,
-    ParamAnnotationIncorrectNullableRector,
     ParamTypeByMethodCallTypeRector,
     ParamTypeByParentCallTypeRector,
-    ReturnAnnotationIncorrectNullableRector,
     ReturnNeverTypeRector,
     ReturnTypeFromReturnDirectArrayRector,
     ReturnTypeFromReturnNewRector,
-    ReturnTypeFromStrictBoolReturnExprRector,
     ReturnTypeFromStrictConstantReturnRector,
     ReturnTypeFromStrictNativeCallRector,
     ReturnTypeFromStrictNewArrayRector,
     ReturnTypeFromStrictTypedCallRector,
     ReturnTypeFromStrictTypedPropertyRector};
-use Rector\TypeDeclaration\Rector\Closure\AddClosureReturnTypeRector;
+use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Empty_\EmptyOnNullableObjectToInstanceOfRector;
 use Rector\TypeDeclaration\Rector\FunctionLike\{AddParamTypeSplFixedArrayRector,
     AddReturnTypeDeclarationFromYieldsRector};
-use Rector\TypeDeclaration\Rector\Param\ParamTypeFromStrictTypedPropertyRector;
 use Rector\TypeDeclaration\Rector\Property\{TypedPropertyFromAssignsRector,
     TypedPropertyFromStrictConstructorRector,
-    TypedPropertyFromStrictGetterMethodReturnTypeRector,
     TypedPropertyFromStrictSetUpRector,
     VarAnnotationIncorrectNullableRector};
 
@@ -240,47 +219,27 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->ruleWithConfiguration(
         RenameFunctionRector::class,
         [
-            'chop'         => 'rtrim',
-            'doubleval'    => 'floatval',
-            'fputs'        => 'fwrite',
-            'gzputs'       => 'gzwrites',
-            'ini_alter'    => 'ini_set',
-            'is_double'    => 'is_float',
-            'is_integer'   => 'is_int',
-            'is_long'      => 'is_int',
-            'is_real'      => 'is_float',
-            'is_writeable' => 'is_writable',
-            'join'         => 'implode',
-            'key_exists'   => 'array_key_exists',
-            'mbstrcut'     => 'mb_strcut',
-            'mbstrlen'     => 'mb_strlen',
-            'mbstrpos'     => 'mb_strpos',
-            'mbstrrpos'    => 'mb_strrpos',
-            'mbsubstr'     => 'mb_substr',
-            'pos'          => 'current',
-            'sizeof'       => 'count',
-            'split'        => 'explode',
-            'strchr'       => 'strstr',
-        ],
-    );
-
-    $rectorConfig->ruleWithConfiguration(
-        StaticCallToFuncCallRector::class,
-        [
-            new StaticCallToFuncCall('Nette\\Utils\\Strings', 'contains', 'str_contains'),
-            new StaticCallToFuncCall('Nette\\Utils\\Strings', 'endsWith', 'str_ends_with'),
-            new StaticCallToFuncCall('Nette\\Utils\\Strings', 'startsWith', 'str_starts_with'),
-        ],
-    );
-
-    $rectorConfig->ruleWithConfiguration(
-        ArgumentAdderRector::class,
-        [new ArgumentAdder('Nette\\Utils\\Strings', 'replace', 2, 'replacement', '')],
-    );
-
-    $rectorConfig->ruleWithConfiguration(
-        RenameFunctionRector::class,
-        [
+            'chop'                 => 'rtrim',
+            'doubleval'            => 'floatval',
+            'fputs'                => 'fwrite',
+            'gzputs'               => 'gzwrites',
+            'ini_alter'            => 'ini_set',
+            'is_double'            => 'is_float',
+            'is_integer'           => 'is_int',
+            'is_long'              => 'is_int',
+            'is_real'              => 'is_float',
+            'is_writeable'         => 'is_writable',
+            'join'                 => 'implode',
+            'key_exists'           => 'array_key_exists',
+            'mbstrcut'             => 'mb_strcut',
+            'mbstrlen'             => 'mb_strlen',
+            'mbstrpos'             => 'mb_strpos',
+            'mbstrrpos'            => 'mb_strrpos',
+            'mbsubstr'             => 'mb_substr',
+            'pos'                  => 'current',
+            'sizeof'               => 'count',
+            'split'                => 'explode',
+            'strchr'               => 'strstr',
             'pg_clientencoding'    => 'pg_client_encoding',
             'pg_cmdtuples'         => 'pg_affected_rows',
             'pg_errormessage'      => 'pg_last_error',
@@ -304,8 +263,22 @@ return static function (RectorConfig $rectorConfig): void {
             'pg_numfields'         => 'pg_num_fields',
             'pg_numrows'           => 'pg_num_rows',
             'pg_result'            => 'pg_fetch_result',
-            'pg_setclientencoding' => 'pg_set_client_encoding'
+            'pg_setclientencoding' => 'pg_set_client_encoding',
         ],
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        StaticCallToFuncCallRector::class,
+        [
+            new StaticCallToFuncCall('Nette\\Utils\\Strings', 'contains', 'str_contains'),
+            new StaticCallToFuncCall('Nette\\Utils\\Strings', 'endsWith', 'str_ends_with'),
+            new StaticCallToFuncCall('Nette\\Utils\\Strings', 'startsWith', 'str_starts_with'),
+        ],
+    );
+
+    $rectorConfig->ruleWithConfiguration(
+        ArgumentAdderRector::class,
+        [new ArgumentAdder('Nette\\Utils\\Strings', 'replace', 2, 'replacement', '')],
     );
 
     $rectorConfig->ruleWithConfiguration(
@@ -334,9 +307,10 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rules([
         AbsolutizeRequireAndIncludePathRector::class,
         // ActionInjectionToConstructorInjectionRector::class,
-        AddArrayDefaultToArrayPropertyRector::class,
+        // AddArrayDefaultToArrayPropertyRector::class, // Removed in Rector 2.x
         AddArrowFunctionReturnTypeRector::class,
-        AddClosureReturnTypeRector::class,
+        // AddClosureReturnTypeRector::class, // Renamed to ClosureReturnTypeRector in Rector 2.x
+        ClosureReturnTypeRector::class,
         // AddFalseDefaultToBoolPropertyRector::class,
         AddMethodCallBasedStrictParamTypeRector::class,
         AddParamBasedOnParentClassMethodRector::class,
@@ -351,13 +325,13 @@ return static function (RectorConfig $rectorConfig): void {
         // ArrayKeysAndInArrayToArrayKeyExistsRector::class,
         ArrayMergeOfNonArraysToSimpleArrayRector::class,
         // ArrayShapeFromConstantArrayReturnRector::class,
-        BinarySwitchToIfElseRector::class,
+        // BinarySwitchToIfElseRector::class, // Removed in Rector 2.x
         BooleanNotIdenticalToNotIdenticalRector::class,
-        BoolvalToTypeCastRector::class,
-        CallableThisArrayToAnonymousFunctionRector::class,
+        // BoolvalToTypeCastRector::class, // Removed in Rector 2.x
         CallUserFuncArrayToVariadicRector::class,
         CallUserFuncToMethodCallRector::class,
         CallUserFuncWithArrowFunctionToInlineRector::class,
+        // CallableThisArrayToAnonymousFunctionRector::class, // Removed in Rector 2.x
         CatchExceptionNameMatchingTypeRector::class,
         ChangeArrayPushToArrayAssignRector::class,
         // ChangeGlobalVariablesToPropertiesRector::class,
@@ -387,19 +361,19 @@ return static function (RectorConfig $rectorConfig): void {
         // FinalizeClassesWithoutChildrenRector::class,
         FinalPrivateToPrivateVisibilityRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
-        FloatvalToTypeCastRector::class,
+        // FloatvalToTypeCastRector::class, // Removed in Rector 2.x
         ForeachItemsAssignToEmptyArrayToAssignRector::class,
         ForeachToInArrayRector::class,
         ForRepeatedCountToOwnVariableRector::class,
         // ForToForeachRector::class,
         FuncGetArgsToVariadicParamRector::class,
-        GetClassToInstanceOfRector::class,
+        // GetClassToInstanceOfRector::class, // Removed in Rector 2.x
         GetDebugTypeRector::class,
         InlineArrayReturnAssignRector::class,
         InlineConstructorDefaultToPropertyRector::class,
         InlineIfToExplicitIfRector::class,
         InlineIsAInstanceOfRector::class,
-        IntvalToTypeCastRector::class,
+        // IntvalToTypeCastRector::class, // Removed in Rector 2.x
         IsAWithStringWithThirdArgumentRector::class,
         IssetOnPropertyObjectToPropertyExistsRector::class,
         JoinStringConcatRector::class,
@@ -412,10 +386,10 @@ return static function (RectorConfig $rectorConfig): void {
         // NormalizeNamespaceByPSR4ComposerAutoloadRector::class,
         NullableCompareToNullRector::class,
         OptionalParametersAfterRequiredRector::class,
-        ParamAnnotationIncorrectNullableRector::class,
+        // ParamAnnotationIncorrectNullableRector::class, // Removed in Rector 2.x
         ParamTypeByMethodCallTypeRector::class,
         ParamTypeByParentCallTypeRector::class,
-        ParamTypeFromStrictTypedPropertyRector::class,
+        // ParamTypeFromStrictTypedPropertyRector::class, // Removed in Rector 2.x
         // Php8ResourceReturnToObjectRector::class,
         PostIncDecToPreIncDecRector::class,
         PrivatizeFinalClassMethodRector::class,
@@ -442,9 +416,9 @@ return static function (RectorConfig $rectorConfig): void {
         RemoveEmptyClassMethodRector::class,
         // RemoveEmptyMethodCallRector::class,
         // RemoveEmptyTestMethodRector::class,
+        // RemoveJustPropertyFetchForAssignRector::class, // Removed in Rector 2.x
         RemoveExtraParametersRector::class,
         RemoveFinalFromConstRector::class,
-        RemoveJustPropertyFetchForAssignRector::class,
         // RemoveJustVariableAssignRector::class,
         // RemoveLastReturnRector::class,
         RemoveNonExistingVarAnnotationRector::class,
@@ -466,18 +440,18 @@ return static function (RectorConfig $rectorConfig): void {
         RenameForeachValueVariableToMatchExprVariableRector::class,
         RenameForeachValueVariableToMatchMethodCallReturnTypeRector::class,
         ReplaceMultipleBooleanNotRector::class,
-        ReturnAnnotationIncorrectNullableRector::class,
+        // ReturnAnnotationIncorrectNullableRector::class, // Removed in Rector 2.x
         // ReturnBinaryAndToEarlyReturnRector::class,
         ReturnBinaryOrToEarlyReturnRector::class,
         ReturnEarlyIfVariableRector::class,
         ReturnNeverTypeRector::class,
         ReturnTypeFromReturnDirectArrayRector::class,
         ReturnTypeFromReturnNewRector::class,
-        ReturnTypeFromStrictBoolReturnExprRector::class,
+        // ReturnTypeFromStrictBoolReturnExprRector::class, // Removed in Rector 2.x
         ReturnTypeFromStrictConstantReturnRector::class,
         ReturnTypeFromStrictNativeCallRector::class,
         ReturnTypeFromStrictNewArrayRector::class,
-        ReturnTypeFromStrictScalarReturnExprRector::class,
+        // ReturnTypeFromStrictScalarReturnExprRector::class, // Removed in Rector 2.x
         ReturnTypeFromStrictTernaryRector::class,
         ReturnTypeFromStrictTypedCallRector::class,
         ReturnTypeFromStrictTypedPropertyRector::class,
@@ -521,9 +495,9 @@ return static function (RectorConfig $rectorConfig): void {
         StringableForToStringRector::class,
         StrlenZeroToIdenticalEmptyStringRector::class,
         StrStartsWithRector::class,
-        StrvalToTypeCastRector::class,
+        // StrvalToTypeCastRector::class, // Removed in Rector 2.x
         SwitchNegatedTernaryRector::class,
-        SymplifyQuoteEscapeRector::class,
+        SimplifyQuoteEscapeRector::class,
         TernaryConditionVariableAssignmentRector::class,
         TernaryEmptyArrayArrayDimFetchToCoalesceRector::class,
         TernaryFalseExpressionToIfRector::class,
@@ -532,16 +506,16 @@ return static function (RectorConfig $rectorConfig): void {
         // TokenGetAllToObjectRector::class,
         TypedPropertyFromAssignsRector::class,
         TypedPropertyFromStrictConstructorRector::class,
-        TypedPropertyFromStrictGetterMethodReturnTypeRector::class,
+        // TypedPropertyFromStrictGetterMethodReturnTypeRector::class, // Removed in Rector 2.x
         TypedPropertyFromStrictSetUpRector::class,
         UnnecessaryTernaryExpressionRector::class,
-        UnSpreadOperatorRector::class,
+        // UnSpreadOperatorRector::class, // Removed in Rector 2.x
         UnusedForeachValueToArrayKeysRector::class,
         UnwrapFutureCompatibleIfPhpVersionRector::class,
         UnwrapSprintfOneArgumentRector::class,
         UseClassKeywordForClassNameResolutionRector::class,
         UseIdenticalOverEqualWithSameTypeRector::class,
-        UseIncrementAssignRector::class,
+        // UseIncrementAssignRector::class, // Removed in Rector 2.x
         // VarAnnotationIncorrectNullableRector::class,
         // VarConstantCommentRector::class,
         VarToPublicPropertyRector::class,
