@@ -42,3 +42,6 @@ composer.lock
 .phpunit.result.cache
 .php-cs-fixer.cache
 /coverage/
+
+# AI tools
+.claude
