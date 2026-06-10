@@ -14,8 +14,6 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\{Passport, SelfValidatingPassport};
 
-use function is_string;
-
 final class Authorizer extends AbstractAuthenticator implements AuthorizerInterface
 {
     /**
@@ -37,28 +35,14 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
      */
     public function authenticate(Request $request): Passport
     {
-        // Extract any available value from the authorization header
-        $param = $request->query->get('token');
         $header = trim($request->headers->get('Authorization', '') ?? '');
-        $usingHeader = null === $param;
 
-        /** @var mixed $token */
-        $token = $param ?? $header;
-
-        // Ensure the token is a valid string
-        if (! is_string($token) || '' === $token) {
-            throw new AuthenticationException('`Authorization` header not present.');
+        if ('' === $header || 0 !== stripos($header, 'bearer ')) {
+            throw new AuthenticationException('`Authorization` header is missing or malformed.');
         }
 
-        // Ensure the 'authorization' header includes a bearer prefixed JSON web token.
-        if ($usingHeader && 0 !== stripos($token, 'bearer ')) {
-            throw new AuthenticationException('`Authorization` header is malformed.');
-        }
+        $token = substr($header, 7);
 
-        // Strip the 'bearer' portion of the authorization string.
-        $token = str_ireplace('bearer ', '', $token);
-
-        // Decode, validate and verify token.
         $token = $this->getService()->getSdk()->decode(
             token: $token,
             tokenType: \Auth0\SDK\Token::TYPE_ACCESS_TOKEN,
@@ -109,10 +93,6 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
      */
     public function supports(Request $request): ?bool
     {
-        if (null !== $request->query->get('token')) {
-            return true;
-        }
-
         return $request->headers->has('Authorization') && 0 === stripos((string) $request->headers->get('Authorization'), 'Bearer ');
     }
 }
