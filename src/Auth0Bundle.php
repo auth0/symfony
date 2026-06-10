@@ -29,11 +29,11 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
     }
 
     /**
-     * @param array<mixed>          $config    The configuration array.
-     * @param ContainerConfigurator $container The container configurator.
-     * @param ContainerBuilder      $builder   The container builder.
+     * @param array<mixed>          $config       The configuration array.
+     * @param ContainerConfigurator $configurator The container configurator.
+     * @param ContainerBuilder      $container    The container builder.
      */
-    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
         $sdkConfig = $config['sdk'] ?? [];
 
@@ -119,7 +119,7 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             $scopes = null;
         }
 
-        $container->services()
+        $configurator->services()
             ->set('auth0.configuration', SdkConfiguration::class)
             ->arg('$configuration', null)
             ->arg('$strategy', $sdkConfig['strategy'])
@@ -167,14 +167,14 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->arg('$backchannelLogoutCache', $backchannelLogoutCache)
             ->arg('$backchannelLogoutExpires', $sdkConfig['backchannel_logout_expires']);
 
-        $container->services()
+        $configurator->services()
             ->set('auth0', Service::class)
             ->arg('$configuration', new Reference('auth0.configuration'))
             ->arg('$requestStack', new Reference('request_stack'))
             ->arg('$logger', new Reference('logger'))
             ->tag('routing.condition_service');
 
-        $container->services()
+        $configurator->services()
             ->set('auth0.authenticator', Authenticator::class)
             ->arg('$configuration', $config['authenticator'] ?? [])
             ->arg('$service', new Reference('auth0'))
@@ -182,32 +182,32 @@ final class Auth0Bundle extends AbstractBundle implements BundleInterface
             ->arg('$logger', new Reference('logger'))
             ->tag('security.authenticator');
 
-        $container->services()
+        $configurator->services()
             ->set('auth0.store_session', SessionStore::class)
             ->arg('$namespace', $sessionStoragePrefix)
             ->arg('$requestStack', new Reference('request_stack'))
             ->arg('$logger', new Reference('logger'));
 
-        $container->services()
+        $configurator->services()
             ->set('auth0.store_transient', SessionStore::class)
             ->arg('$namespace', $transientStoragePrefix)
             ->arg('$requestStack', new Reference('request_stack'))
             ->arg('$logger', new Reference('logger'));
 
-        $container->services()
+        $configurator->services()
             ->set('auth0.authorizer', Authorizer::class)
             ->arg('$configuration', $config['authorizer'] ?? [])
             ->arg('$service', new Reference('auth0'))
             ->arg('$logger', new Reference('logger'));
 
-        $container->services()
+        $configurator->services()
             ->set(AuthenticationController::class)
             ->arg('$authenticator', new Reference('auth0.authenticator'))
             ->arg('$router', new Reference('router'))
             ->call('setContainer', [new Reference('service_container')])
             ->tag('controller.service_arguments');
 
-        $container->services()
+        $configurator->services()
             ->set(UserProvider::class)
             ->arg('$service', new Reference('auth0'));
     }
