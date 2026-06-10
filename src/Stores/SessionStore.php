@@ -58,7 +58,8 @@ final class SessionStore implements StoreInterface
     public function delete(
         string $key,
     ): void {
-        $manifest = $this->session()?->get($this->namespace, []);
+        $session = $this->session();
+        $manifest = $session?->get($this->namespace, []);
 
         if (! is_array($manifest) || [] === $manifest) {
             return;
@@ -68,12 +69,12 @@ final class SessionStore implements StoreInterface
             unset($manifest[$key]);
 
             if ([] === $manifest) {
-                $this->session()?->remove($this->namespace);
+                $session->remove($this->namespace);
 
                 return;
             }
 
-            $this->session()?->set($this->namespace, $manifest);
+            $session->set($this->namespace, $manifest);
         }
     }
 
