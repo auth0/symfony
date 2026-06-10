@@ -1,5 +1,12 @@
 # Change Log
 
+## [5.9.0](https://github.com/auth0/symfony/tree/5.9.0) (2026-06-10)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.8.0...5.9.0)
+
+**Fixed**
+
+-   Security fix: Resolve CVE-2026-50157
+
 ## [5.8.0](https://github.com/auth0/symfony/tree/5.8.0) (2026-04-01)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.7.0...5.8.0)
 
