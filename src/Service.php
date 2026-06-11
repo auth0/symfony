@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Symfony;
 
-use Auth0\SDK\API\Management\Wrapper\ManagementClient;
-use Auth0\SDK\API\Management\Wrapper\ManagementClientOptions;
+use Auth0\SDK\API\Management\Wrapper\{ManagementClient, ManagementClientOptions};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpTelemetry;
@@ -18,28 +17,15 @@ final class Service implements ServiceInterface
 {
     public const VERSION = '5.9.0';
 
-    private ?Auth0 $sdk = null;
-
     private ?ManagementClient $management = null;
+
+    private ?Auth0 $sdk = null;
 
     public function __construct(
         private SdkConfiguration $configuration,
         private RequestStack $requestStack,
         private LoggerInterface $logger,
     ) {
-    }
-
-    public function getSdk(): Auth0
-    {
-        if (! $this->sdk instanceof Auth0) {
-            $this->warmUp();
-            $this->sdk = new Auth0($this->configuration);
-
-            HttpTelemetry::setEnvProperty('Symfony', Kernel::VERSION);
-            HttpTelemetry::setPackage('symfony', self::VERSION);
-        }
-
-        return $this->sdk;
     }
 
     /**
@@ -67,6 +53,19 @@ final class Service implements ServiceInterface
         }
 
         return $this->management;
+    }
+
+    public function getSdk(): Auth0
+    {
+        if (! $this->sdk instanceof Auth0) {
+            $this->warmUp();
+            $this->sdk = new Auth0($this->configuration);
+
+            HttpTelemetry::setEnvProperty('Symfony', Kernel::VERSION);
+            HttpTelemetry::setPackage('symfony', self::VERSION);
+        }
+
+        return $this->sdk;
     }
 
     public function warmUp(): void
