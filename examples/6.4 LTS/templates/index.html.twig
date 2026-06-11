@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth0 Symfony SDK - Sample App</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #635dff; }
+        a { color: #635dff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; margin-bottom: 30px; }
+        .navbar .brand { font-weight: 600; color: #635dff; font-size: 1.1em; }
+        .navbar .auth { display: flex; align-items: center; gap: 12px; }
+        .navbar .auth img { width: 32px; height: 32px; border-radius: 50%; }
+        .btn { display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 0.9em; }
+        .btn-primary { background: #635dff; color: #fff; }
+        .btn-primary:hover { background: #4f49e0; text-decoration: none; }
+        .btn-outline { border: 1px solid #635dff; color: #635dff; }
+        .btn-outline:hover { background: #f0eeff; text-decoration: none; }
+        .card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 16px 0; }
+        .card h3 { margin-top: 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <span class="brand">Auth0 Symfony SDK</span>
+        <div class="auth">
+            {% if session %}
+                {% if session.user.picture is defined %}
+                    <img src="{{ session.user.picture }}" alt="">
+                {% endif %}
+                <span>{{ session.user.name ?? session.user.email ?? 'User' }}</span>
+                <a href="/private" class="btn btn-outline">Profile</a>
+                <a href="/logout" class="btn btn-outline">Logout</a>
+            {% else %}
+                <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <h1>Sample App</h1>
+    <p>This app demonstrates authenticating users, authorizing API requests, and calling the Management API with the Auth0 Symfony SDK.</p>
+
+    <div class="card">
+        <h3>Authentication</h3>
+        <ul>
+            <li><a href="/login">Login</a> - begin Auth0 login flow</li>
+            <li><a href="/private">Profile</a> - protected page (requires auth)</li>
+            <li><a href="/logout">Logout</a> - end session</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>API Authorization</h3>
+        <p>Uncomment the <code>audiences</code> array in <code>config/packages/auth0.yaml</code> to use these routes.</p>
+        <ul>
+            <li><a href="/api">Public API</a> - no auth needed</li>
+            <li><a href="/api/private">Private API</a> - requires valid token</li>
+            <li><a href="/api/scoped">Scoped API</a> - requires <code>read:messages</code> scope</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>Management API</h3>
+        <ul>
+            <li><a href="/management">Management Explorer</a> - iterate through Management API endpoints via the bundle's <code>getManagement()</code> accessor</li>
+        </ul>
+    </div>
+</body>
+</html>

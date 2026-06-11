@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Symfony;
 
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
+use Auth0\SDK\API\Management\Wrapper\ManagementClientOptions;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpTelemetry;
@@ -17,6 +19,8 @@ final class Service implements ServiceInterface
     public const VERSION = '5.9.0';
 
     private ?Auth0 $sdk = null;
+
+    private ?ManagementClient $management = null;
 
     public function __construct(
         private SdkConfiguration $configuration,
@@ -36,6 +40,33 @@ final class Service implements ServiceInterface
         }
 
         return $this->sdk;
+    }
+
+    /**
+     * Return a v9 Management API client built from the bundle's existing
+     * configuration. Use this instead of the v8-style `getSdk()->management()`,
+     * which is non-functional in auth0-php v9.
+     *
+     * The wrapper resolves its token in this order: a configured static
+     * `management_token` if present, otherwise a client-credentials token
+     * fetched and cached via the `management_token_cache` pool. Sub-clients are
+     * reached by property access, e.g. `$service->getManagement()->users->list()`.
+     */
+    public function getManagement(): ManagementClient
+    {
+        if (! $this->management instanceof ManagementClient) {
+            $this->warmUp();
+
+            $this->management = new ManagementClient(new ManagementClientOptions(
+                domain: (string) $this->configuration->getDomain(),
+                token: $this->configuration->getManagementToken(),
+                clientId: $this->configuration->getClientId(),
+                clientSecret: $this->configuration->getClientSecret(),
+                tokenCache: $this->configuration->getManagementTokenCache(),
+            ));
+        }
+
+        return $this->management;
     }
 
     public function warmUp(): void

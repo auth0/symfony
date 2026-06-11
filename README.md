@@ -12,7 +12,7 @@ Symfony SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ### Requirements
 
-- [PHP](http://php.net/) 8.1+
+- [PHP](http://php.net/) 8.2+
 - [Symfony](https://symfony.com/) 6.4 LTS, 7, or 8
   - Symfony 8 support is community-contributed and presently experimental.
 
@@ -249,18 +249,62 @@ class ExampleController extends AbstractController
 
 If you visit the `/private` route in your browser, you should see the authenticated user's details. If you are not already authenticated, you will be redirected to the `/login` route to login, and then back to `/private` afterward.
 
+### Example: Accessing the Management API
+
+To call the [Auth0 Management API](https://auth0.com/docs/api/management/v2), use the `getManagement()` method on the `auth0` service. This returns a Management client built from your existing SDK configuration, so no additional setup is required beyond the `domain`, `client_id`, and `client_secret` you already configured.
+
+> **Note**
+> Use `getManagement()`, **not** `getSdk()->management()`. The latter is non-functional with auth0-php v9 and will throw a `TypeError`.
+
+The Management client fetches and caches a client credentials token for you automatically. Sub-resources are reached by property access, and each `list()` returns a pager you can iterate directly:
+
+```php
+<?php
+
+namespace App\Controller;
+
+use Auth0\Symfony\Service;
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+class ManagementController extends AbstractController
+{
+    public function __construct(private Service $auth0)
+    {
+    }
+
+    public function users(): Response
+    {
+        $management = $this->auth0->getManagement();
+
+        $users = $management->users->list(
+            new ListUsersRequestParameters(['perPage' => 25])
+        );
+
+        $emails = [];
+
+        foreach ($users as $user) {
+            $emails[] = $user->getEmail();
+        }
+
+        return new Response('<pre>' . print_r($emails, true) . '</pre>');
+    }
+}
+```
+
+> **Note**
+> For your application to call the Management API, your Auth0 Application must be authorized for it. See [Machine-to-Machine Applications](https://auth0.com/docs/get-started/applications/machine-to-machine-apps) for granting your client the required scopes.
+
+The full set of available sub-clients, request objects, and response types is documented in the [auth0-php Management API reference](https://github.com/auth0/auth0-php). Configuring a `management_token_cache` (see [Recommended: Configure caching](#recommended-configure-caching)) is strongly encouraged to persist the management token across requests.
+
 ## Support Policy
 
 Our support windows are determined by the [Symfony release support](https://symfony.com/doc/current/contributing/community/releases.html#maintenance) and [PHP release support](https://www.php.net/supported-versions.php) schedules, and support ends when either the Symfony framework or PHP runtime outlined below stop receiving security fixes, whichever may come first.
 
-| SDK Version | Symfony Version | PHP Version | Support Ends |
-| ----------- | --------------- | ----------- | ------------ |
-| 5.7         | 8.0\*           | 8.4         | TBD          |
-| 5.3         | 7.0             | 8.2         | Jul 31 2024  |
-| 5           | 6.2             | 8.2         | Jul 31 2023  |
-|             |                 | 8.1         | Jul 31 2023  |
-|             | 6.1             | 8.2         | Jan 31 2023  |
-|             |                 | 8.1         | Jan 31 2023  |
+| SDK Version | Symfony Version  | PHP Version | Support Ends |
+| ----------- | ---------------- | ----------- | ------------ |
+| 6.x         | 6.4, 7, 8\*      | 8.2 - 8.4   | TBD          |
 
 Deprecations of EOL'd language or framework versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions.
 
