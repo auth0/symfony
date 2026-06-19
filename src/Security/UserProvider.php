@@ -45,10 +45,10 @@ final class UserProvider implements SymfonyUserProviderInterface, UserProviderIn
         $user = $data['user'] ?? null;
 
         if ('stateful' === $type) {
-            return new StatefulUser($user);
+            return new StatefulUser(data: $user);
         }
 
-        return new StatelessUser($user);
+        return new StatelessUser(data: $user);
     }
 
     public function refreshUser(SymfonyUserInterface $user): SymfonyUserInterface

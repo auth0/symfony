@@ -35,10 +35,10 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
      */
     public function authenticate(Request $request): Passport
     {
-        $header = trim($request->headers->get('Authorization', '') ?? '');
+        $header = trim($request->headers->get(key: 'Authorization', default: '') ?? '');
 
         if ('' === $header || 0 !== stripos($header, 'bearer ')) {
-            throw new AuthenticationException('`Authorization` header is missing or malformed.');
+            throw new AuthenticationException(message: '`Authorization` header is missing or malformed.');
         }
 
         $token = substr($header, 7);
@@ -50,7 +50,7 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
 
         $user = json_encode(['type' => 'stateless', 'data' => ['user' => $token->toArray()]], JSON_THROW_ON_ERROR);
 
-        return new SelfValidatingPassport(new UserBadge($user));
+        return new SelfValidatingPassport(userBadge: new UserBadge(userIdentifier: $user));
     }
 
     /**
@@ -78,7 +78,7 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
             ],
         ];
 
-        return new JsonResponse($response, JsonResponse::HTTP_UNAUTHORIZED);
+        return new JsonResponse(data: $response, status: JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -93,6 +93,6 @@ final class Authorizer extends AbstractAuthenticator implements AuthorizerInterf
      */
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('Authorization') && 0 === stripos((string) $request->headers->get('Authorization'), 'Bearer ');
+        return $request->headers->has(key: 'Authorization') && 0 === stripos((string) $request->headers->get(key: 'Authorization'), 'Bearer ');
     }
 }

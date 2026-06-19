@@ -36,26 +36,26 @@ final class AuthenticationController extends AbstractController implements Authe
         $session = $this->getSdk()->getCredentials();
 
         if (null === $session) {
-            $code = $request->query->get('code');
-            $state = $request->query->get('state');
+            $code = $request->query->get(key: 'code');
+            $state = $request->query->get(key: 'state');
 
             $code = is_string($code) ? trim($code) : '';
             $state = is_string($state) ? trim($state) : '';
 
             if ('' !== $code && '' !== $state) {
-                $route = $this->getRedirectUrl('success');
+                $route = $this->getRedirectUrl(route: 'success');
 
                 try {
-                    $this->getSdk()->exchange($host . $route, $code, $state);
+                    $this->getSdk()->exchange(redirectUri: $host . $route, code: $code, state: $state);
 
                     if ($request->hasSession()) {
                         $redirect = $request->getSession()->get('auth0:callback_redirect', $redirect);
                         $request->getSession()->remove('auth0:callback_redirect');
                     }
                 } catch (Throwable $th) {
-                    $this->addFlash('error', $th->getMessage());
+                    $this->addFlash(type: 'error', message: $th->getMessage());
 
-                    $route = $this->getRedirectUrl('failure');
+                    $route = $this->getRedirectUrl(route: 'failure');
                     $redirect = $host . $route;
                 }
             }
@@ -65,7 +65,7 @@ final class AuthenticationController extends AbstractController implements Authe
          * @var string $redirect
          */
 
-        return new RedirectResponse($redirect);
+        return new RedirectResponse(url: $redirect);
     }
 
     public function login(Request $request): Response
@@ -73,15 +73,15 @@ final class AuthenticationController extends AbstractController implements Authe
         $session = $this->getSdk()->getCredentials();
 
         $host = $request->getSchemeAndHttpHost();
-        $route = $this->getRedirectUrl('success');
+        $route = $this->getRedirectUrl(route: 'success');
         $url = $host . $route;
 
         if (null === $session) {
-            $route = $this->getRedirectUrl('callback');
-            $url = $this->getSdk()->login($host . $route);
+            $route = $this->getRedirectUrl(route: 'callback');
+            $url = $this->getSdk()->login(redirectUrl: $host . $route);
         }
 
-        return new RedirectResponse($url);
+        return new RedirectResponse(url: $url);
     }
 
     public function logout(Request $request): Response
@@ -89,14 +89,14 @@ final class AuthenticationController extends AbstractController implements Authe
         $session = $this->getSdk()->getCredentials();
 
         $host = $request->getSchemeAndHttpHost();
-        $route = $this->getRedirectUrl('logout');
+        $route = $this->getRedirectUrl(route: 'logout');
         $url = $host . $route;
 
         if (null !== $session) {
-            $url = $this->getSdk()->logout($url);
+            $url = $this->getSdk()->logout(returnUri: $url);
         }
 
-        return new RedirectResponse($url);
+        return new RedirectResponse(url: $url);
     }
 
     private function getRedirectUrl(string $route): string

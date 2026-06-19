@@ -29,10 +29,10 @@ final class Service implements ServiceInterface
     {
         if (! $this->sdk instanceof Auth0) {
             $this->warmUp();
-            $this->sdk = new Auth0($this->configuration);
+            $this->sdk = new Auth0(configuration: $this->configuration);
 
-            HttpTelemetry::setEnvProperty('Symfony', Kernel::VERSION);
-            HttpTelemetry::setPackage('symfony', self::VERSION);
+            HttpTelemetry::setEnvProperty(name: 'Symfony', version: Kernel::VERSION);
+            HttpTelemetry::setPackage(name: 'symfony', version: self::VERSION);
         }
 
         return $this->sdk;

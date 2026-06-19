@@ -40,12 +40,12 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
         $session = $this->service->getSdk()->getCredentials();
 
         if (null === $session) {
-            throw new CustomUserMessageAuthenticationException('No Auth0 session was found.');
+            throw new CustomUserMessageAuthenticationException(message: 'No Auth0 session was found.');
         }
 
         $user = json_encode(['type' => 'stateful', 'data' => $session], JSON_THROW_ON_ERROR);
 
-        return new SelfValidatingPassport(new UserBadge($user));
+        return new SelfValidatingPassport(userBadge: new UserBadge(userIdentifier: $user));
     }
 
     public function onAuthenticationFailure(Request $request, SymfonyAuthenticationException $exception): ?Response
@@ -64,7 +64,7 @@ final class Authenticator extends AbstractAuthenticator implements Authenticator
 
         if (is_string($route) && '' !== $route) {
             try {
-                return new RedirectResponse($this->router->generate($route));
+                return new RedirectResponse(url: $this->router->generate($route));
             } catch (Throwable) {
             }
         }
