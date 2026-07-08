@@ -2,7 +2,7 @@
 
 ## 5.x to 6.x
 
-The 6.0 release moves the bundle onto [auth0-php v9](https://github.com/auth0/auth0-php), which rewrites the Management API. The authentication surface (login, logout, callback, token handling) is unchanged, so most applications only need the dependency and runtime updates below.
+The 6.0 release moves the bundle onto [auth0-php v9](https://github.com/auth0/auth0-php/tree/v9), which rewrites the Management API. The authentication surface (login, logout, callback, token handling) is unchanged, so most applications only need the dependency and runtime updates below.
 
 Check that your environment is compatible with 6.0's requirements before upgrading:
 
@@ -35,7 +35,7 @@ Update your application, if necessary:
   }
   ```
 
-- If your application calls the Management API directly, review the [auth0-php v9 migration guide](https://github.com/auth0/auth0-php) for the full set of changes: sub-resources are now reached by property access (`->users->list()` rather than `->users()->getAll()`), responses are typed objects instead of raw PSR-7 responses (no more `HttpResponse::decodeContent()`), errors throw exceptions, and request parameters use camelCase typed objects.
+- If your application calls the Management API directly, review the [auth0-php v9 migration guide](https://github.com/auth0/auth0-php/blob/v9/v9_MIGRATION_GUIDE.md) for the full set of changes: sub-resources are now reached by property access (`->users->list()` rather than `->users()->getAll()`), responses are typed objects instead of raw PSR-7 responses (no more `HttpResponse::decodeContent()`), errors throw exceptions, and request parameters use camelCase typed objects.
 
 ## 3.x to 4.x
 

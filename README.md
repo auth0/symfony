@@ -296,7 +296,7 @@ class ManagementController extends AbstractController
 > **Note**
 > For your application to call the Management API, your Auth0 Application must be authorized for it. See [Machine-to-Machine Applications](https://auth0.com/docs/get-started/applications/machine-to-machine-apps) for granting your client the required scopes.
 
-The full set of available sub-clients, request objects, and response types is documented in the [auth0-php Management API reference](https://github.com/auth0/auth0-php). Configuring a `management_token_cache` (see [Recommended: Configure caching](#recommended-configure-caching)) is strongly encouraged to persist the management token across requests.
+The full set of available sub-clients, request objects, and response types is documented in the [auth0-php Management API reference](https://github.com/auth0/auth0-php/blob/v9/reference.md). Configuring a `management_token_cache` (see [Recommended: Configure caching](#recommended-configure-caching)) is strongly encouraged to persist the management token across requests.
 
 ## Support Policy
 
