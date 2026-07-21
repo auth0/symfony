@@ -267,11 +267,15 @@ use Auth0\Symfony\Service;
 use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ManagementController extends AbstractController
 {
-    public function __construct(private Service $auth0)
-    {
+    // The bundle registers its service under the id `auth0`, so autowire it by id.
+    public function __construct(
+        #[Autowire(service: 'auth0')]
+        private Service $auth0,
+    ) {
     }
 
     public function users(): Response
