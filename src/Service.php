@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 final class Service implements ServiceInterface
 {
-    public const VERSION = '5.9.0';
+    public const VERSION = '6.0.0-beta.0';
 
     private ?ManagementClient $management = null;
 
