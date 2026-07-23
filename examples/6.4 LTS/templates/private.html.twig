@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Auth0 Symfony SDK</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+        h1 { color: #635dff; }
+        a { color: #635dff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; margin-bottom: 30px; }
+        .navbar .brand { font-weight: 600; color: #635dff; font-size: 1.1em; }
+        .navbar .auth { display: flex; align-items: center; gap: 12px; }
+        .navbar .auth img { width: 32px; height: 32px; border-radius: 50%; }
+        .btn { display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 0.9em; }
+        .btn-outline { border: 1px solid #635dff; color: #635dff; }
+        .btn-outline:hover { background: #f0eeff; text-decoration: none; }
+        .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
+        .profile-header img { width: 80px; height: 80px; border-radius: 50%; }
+        .profile-header h2 { margin: 0; }
+        .profile-header p { margin: 4px 0 0; color: #666; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; }
+        th { color: #666; font-weight: 500; width: 180px; }
+        td { font-family: 'SF Mono', Monaco, monospace; font-size: 0.9em; word-break: break-all; }
+        .section { margin-top: 30px; }
+        .section h3 { color: #635dff; border-bottom: 2px solid #635dff; padding-bottom: 6px; }
+        .badge { display: inline-block; background: #e8e6ff; color: #635dff; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; margin: 2px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="brand">Auth0 Symfony SDK</a>
+        <div class="auth">
+            {% if user.picture %}
+                <img src="{{ user.picture }}" alt="">
+            {% endif %}
+            <span>{{ user.name ?? user.email ?? 'User' }}</span>
+            <a href="/logout" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="profile-header">
+        {% if user.picture %}
+            <img src="{{ user.picture }}" alt="Profile picture">
+        {% endif %}
+        <div>
+            <h2>{{ user.name ?? 'Unknown User' }}</h2>
+            <p>{{ user.email ?? '' }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Profile</h3>
+        <table>
+            <tr><th>User ID</th><td>{{ user.userIdentifier }}</td></tr>
+            <tr><th>Nickname</th><td>{{ user.nickname ?? '-' }}</td></tr>
+            <tr><th>Email</th><td>{{ user.email ?? '-' }}</td></tr>
+            <tr><th>Email Verified</th><td>{{ user.emailVerified ? 'Yes' : 'No' }}</td></tr>
+            {% if user.givenName %}<tr><th>Given Name</th><td>{{ user.givenName }}</td></tr>{% endif %}
+            {% if user.familyName %}<tr><th>Family Name</th><td>{{ user.familyName }}</td></tr>{% endif %}
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Roles</h3>
+        {% for role in user.roles %}
+            <span class="badge">{{ role }}</span>
+        {% endfor %}
+    </div>
+</body>
+</html>

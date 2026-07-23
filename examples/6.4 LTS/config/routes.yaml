@@ -4,7 +4,7 @@ controllers:
 
 public:
   path: /
-  controller: App\Controller\ExampleController::public
+  controller: App\Controller\ExampleController::index
 
 # [AUTH0/SYMFONY] The following routes demonstrate how to use the Auth0 Symfony SDK for authentication.
 
@@ -24,6 +24,12 @@ callback:
   path: /callback
   controller: Auth0\Symfony\Controllers\AuthenticationController::callback
 
+# [AUTH0/SYMFONY] The following route demonstrates how to call the Auth0 Management API via the bundle's getManagement() accessor.
+
+management:
+  path: /management
+  controller: App\Controller\ManagementController::index
+
 # [AUTH0/SYMFONY] The following routes demonstrate how to use the Auth0 Symfony SDK for authorization.
 
 api_public:
@@ -34,6 +40,6 @@ api_private:
   path: /api/private
   controller: App\Controller\ExampleController::apiPrivate
 
-api_private_scopes:
+api_private_scoped:
   path: /api/scoped
-  controller: App\Controller\ExampleController::apiPrivateScopes
+  controller: App\Controller\ExampleController::apiPrivateScoped

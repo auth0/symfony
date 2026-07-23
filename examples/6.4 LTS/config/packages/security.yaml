@@ -7,9 +7,14 @@ security:
       id: Auth0\Symfony\Security\UserProvider
 
   firewalls:
+    # These are unrelated routes that are not protected by the SDK.
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
     # [AUTH0/SYMFONY] The following firewall demonstrates how to use the Auth0 Symfony SDK for authentication.
     auth0:
-      pattern: ^/private$
+      pattern: ^/(private|logout)$
       provider: auth0_provider
       custom_authenticators:
         - auth0.authenticator
@@ -22,10 +27,6 @@ security:
       custom_authenticators:
         - auth0.authorizer
 
-    # These are unrelated routes that are not protected by the SDK.
-    dev:
-      pattern: ^/(_(profiler|wdt)|css|images|js)/
-      security: false
     main:
       lazy: true
 
