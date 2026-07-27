@@ -1,5 +1,23 @@
 # Change Log
 
+## [6.0.0-beta.0](https://github.com/auth0/symfony/tree/6.0.0-beta.0) (2026-07-23)
+[Full Changelog](https://github.com/auth0/symfony/compare/5.9.0...6.0.0-beta.0)
+
+**Breaking Changes**
+
+- Bumped the `auth0/auth0-php` dependency from `^8.19` to `^9.0`, which rewrites the Management API
+- Raised the minimum PHP version from `8.1` to `8.2`
+- `getSdk()->management()` is non-functional with auth0-php v9 and throws a `TypeError`; use the new `getManagement()` accessor instead
+
+**Added**
+
+- New `Service::getManagement()` accessor returning a `ManagementClient` wrapper with automatic client credentials token management and PSR-6 caching
+- `UPGRADING.md` 5.x to 6.x migration guide
+
+**Unchanged**
+
+- Authentication surface (login, logout, callback, token handling) — the authenticator, authorizer, user provider, session store, and backchannel logout controller behave exactly as in 5.x
+
 ## [5.9.0](https://github.com/auth0/symfony/tree/5.9.0) (2026-06-10)
 [Full Changelog](https://github.com/auth0/symfony/compare/5.8.0...5.9.0)
 
